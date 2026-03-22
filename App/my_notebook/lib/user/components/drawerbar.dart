@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_notebook/user/pages/home.dart';
+import 'package:my_notebook/user/pages/login/login.dart';
 import 'package:my_notebook/user/pages/register/regitster.dart';
 
 class Drawerbar extends StatefulWidget {
@@ -59,7 +60,7 @@ class _DrawerbarState extends State<Drawerbar> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Regitster()),
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
                 );
               },
             ),
@@ -69,7 +70,7 @@ class _DrawerbarState extends State<Drawerbar> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Home()),
+                  MaterialPageRoute(builder: (context) => const Regitster()),
                 );
               },
             ),
