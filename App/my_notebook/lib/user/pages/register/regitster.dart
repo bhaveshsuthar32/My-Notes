@@ -1,55 +1,6 @@
-// import 'package:flutter/material.dart';
-// import 'package:my_notebook/user/components/header.dart';
-
-// class Regitster extends StatefulWidget {
-//   const Regitster({super.key});
-
-//   @override
-//   State<Regitster> createState() => _RegitsterState();
-// }
-
-// class _RegitsterState extends State<Regitster> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Container(
-//         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           mainAxisAlignment: MainAxisAlignment.center,
-          
-//           children: [
-//             Center(
-
-//             child: Image.network("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUcRukhIeQOYXoLvcgWi1NJDhXdEBlwdypuA&s"),
-//             ),
-
-//             Text("Regiter Now", style: TextStyle(color:Colors.black, fontSize: 28, fontFamily: "poppins" , ),),
-//             SizedBox(height: 20,),
-
-//             Text("Username", style: TextStyle(color : Colors.blue, fontSize: 20),),
-
-//             TextFormField(
-//               decoration: InputDecoration(
-//                 // labelText: "Username",
-//                 hintText: "Enter your username",
-//                 border:OutlineInputBorder(),
-//                 labelStyle: TextStyle(
-//                   color: Colors.black54,
-//                   fontSize: 14
-//                 )
-//               ),
-//             )
-            
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
 import 'package:flutter/material.dart';
+import 'package:my_notebook/user/pages/login/login.dart';
+// import 'login_page.dart';
 
 class Regitster extends StatefulWidget {
   const Regitster({super.key});
@@ -59,94 +10,236 @@ class Regitster extends StatefulWidget {
 }
 
 class _RegitsterState extends State<Regitster> {
+
+  bool isPasswordVisible = false;
+
   @override
   Widget build(BuildContext context) {
+
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+      backgroundColor: Colors.grey[100],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: width * 0.06),
+            child: Column(
+              children: [
 
-              /// 🔹 Logo
-              Center(
-                child: Image.network(
-                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUcRukhIeQOYXoLvcgWi1NJDhXdEBlwdypuA&s",
-                  height: 120,
-                ),
-              ),
+                SizedBox(height: height * 0.05),
 
-              const SizedBox(height: 20),
-
-              /// 🔹 Title
-              Text(
-                "Register Now",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 28,
-                  fontFamily: "Poppins",
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              /// 🔹 Username label
-              Text(
-                "Username",
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 14,
-                  fontFamily: "Poppins",
-                ),
-              ),
-
-              const SizedBox(height: 6),
-
-              /// 🔹 Username field
-              TextFormField(
-                style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                ),
-                decoration: InputDecoration(
-                  hintText: "Enter your username",
-                  hintStyle: TextStyle(color: Colors.grey),
-
-                  filled: true,
-                  fillColor: Colors.grey.shade100,
-
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 14,
+                // 🔵 Logo
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 20,
+                        color: Colors.black12,
+                      ),
+                    ],
                   ),
-
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Colors.grey.shade300,
-                    ),
-                  ),
-
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Colors.blue,
-                      width: 1.5,
-                    ),
-                  ),
-
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Colors.red,
+                  child: ClipOval(
+                    child: Image.network(
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYvFySBZqQl9cpe0WOVFBgs8WhJqS7huXACg&s",
+                      width: width * 0.28,
+                      height: width * 0.28,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
-              ),
-            ],
+
+                SizedBox(height: height * 0.04),
+
+                Text(
+                  "Create Account 🚀",
+                  style: TextStyle(
+                    fontSize: width * 0.065,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                SizedBox(height: 5),
+
+                Text(
+                  "Register to get started",
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+
+                SizedBox(height: height * 0.04),
+
+                // 🔵 Form Card
+                Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 15,
+                        color: Colors.black12,
+                        offset: Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+
+                      // 🔵 First + Last Name Row
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: "First Name",
+                                filled: true,
+                                fillColor: Colors.grey[100],
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide.none,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(width: 10),
+
+                          Expanded(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: "Last Name",
+                                filled: true,
+                                fillColor: Colors.grey[100],
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide.none,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 15),
+
+                      // 🔵 Email
+                      TextField(
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.email_outlined),
+                          hintText: "Email",
+                          filled: true,
+                          fillColor: Colors.grey[100],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 15),
+
+                      // 🔵 Password with toggle
+                      TextField(
+                        obscureText: !isPasswordVisible,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.lock_outline),
+                          hintText: "Password",
+                          filled: true,
+                          fillColor: Colors.grey[100],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                isPasswordVisible = !isPasswordVisible;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 25),
+
+                      // 🔵 Register Button
+                      Container(
+                        width: double.infinity,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          gradient: LinearGradient(
+                            colors: [Colors.blue, Colors.blueAccent],
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.blue.withOpacity(0.4),
+                              blurRadius: 10,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(
+                            "Register",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 30),
+
+                // 🔵 Login Navigation
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Already have an account? "),
+                    GestureDetector(
+                      // onTap: () {
+                      //   // 👉 Login page open
+                      //   // Navigator.push(
+                      //   //   context,
+                      //   //   MaterialPageRoute(
+                      //   //     builder: (context) => LoginPage(),
+                      //   //   ),
+                      //   // );
+                      // },
+
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+                      },
+                      child: Text(
+                        "Login",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: height * 0.05),
+              ],
+            ),
           ),
         ),
       ),
