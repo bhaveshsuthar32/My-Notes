@@ -1,4 +1,4 @@
-import { createTopicService } from "../services/topics.services.js";
+import { createTopicService, deleteTopic, getTopic, getTopicBYId} from "../services/topics.services.js";
 
 
 // export const createTopic = async (req, res) => {
@@ -60,3 +60,55 @@ export const createTopic = async (req, res) => {
 
   }
 };
+
+
+export const getTopicList = async(req, res) =>{
+
+  try {
+    const topicList = await getTopic();
+     return res.status(200).json({
+      success: true,
+      data: topicList
+    });
+  } catch (error) {
+        return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+}
+
+
+export const getTopicListById = async (req, res)=>{
+  try {
+const topicId = req.params.topicId;
+
+    const result1 = await getTopicBYId(topicId);
+    return res.status(200).json({
+      success: true,
+      data : result1
+
+    })
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+export const deleteTopicById = async(req, res) =>{
+  try {
+    const topicId = req.params.topicId;
+    const removeTopic = await deleteTopic(topicId)
+    
+    return res.status(200).json({
+      success:true,
+      data: removeTopic
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+}

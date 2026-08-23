@@ -43,7 +43,7 @@ export const registerUser = async (req, res) => {
     }
 }
 
-export const loign = async (req, res) => {
+export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -82,7 +82,7 @@ export const loign = async (req, res) => {
         };
 
         const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN, {
-            expiresIn: "5M",
+            expiresIn: "10M",
         }); 
 
         const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN, {

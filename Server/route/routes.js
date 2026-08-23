@@ -1,14 +1,23 @@
 import express from "express"
-import { loign, registerUser } from "../controllers/admin.controller.js";
-import { createNotes } from "../controllers/notes.controller.js";
-import { createTopic } from "../controllers/topics.controller.js";
+import { login, registerUser } from "../controllers/admin.controller.js";
+import { createNotes, deleteNotesById, getNoteDetailsById, getNotesByTopic, getNotesList } from "../controllers/notes.controller.js";
+import { createTopic, deleteTopicById, getTopicList, getTopicListById } from "../controllers/topics.controller.js";
 import upload from "../middleware/upload.js";
+import { getTopic } from "../services/topics.services.js";
+import { getNotes } from "../services/notes.service.js";
 const router = express.Router();
 
 
 router.post("/register", registerUser );
-router.post("/login", loign)
+router.post("/login", login)
 router.post("/notes", upload.array("images") ,createNotes);
 router.post("/topics", upload.single("coverImage"), createTopic);
+router.get("/getTopic", getTopicList);
+router.get("/getNotes" , getNotesList);
+router.get("/topic/:topicId", getTopicListById);
+router.get("/note-details/:notesId",getNoteDetailsById);
+router.get("/notesbytopic/:topicId", getNotesByTopic);
+router.delete("/delete-notes/:notesId", deleteNotesById);
+router.delete("/delete-topic/:topicId", deleteTopicById);
 
 export default router;
