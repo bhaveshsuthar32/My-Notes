@@ -1,15 +1,14 @@
 import express from "express"
-import { login, registerUser } from "../controllers/admin.controller.js";
+import { getUser, login, registerUser } from "../controllers/admin.controller.js";
 import { createNotes, deleteNotesById, getNoteDetailsById, getNotesByTopic, getNotesList } from "../controllers/notes.controller.js";
 import { createTopic, deleteTopicById, getTopicList, getTopicListById } from "../controllers/topics.controller.js";
 import upload from "../middleware/upload.js";
-import { getTopic } from "../services/topics.services.js";
-import { getNotes } from "../services/notes.service.js";
 const router = express.Router();
 
 
 router.post("/register", registerUser );
-router.post("/login", login)
+router.post("/login", login);
+router.get("/user", getUser);
 router.post("/notes", upload.array("images") ,createNotes);
 router.post("/topics", upload.single("coverImage"), createTopic);
 router.get("/getTopic", getTopicList);

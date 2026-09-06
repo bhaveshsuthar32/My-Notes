@@ -76,22 +76,22 @@ export const login = async (req, res) => {
         }
 
         const payload = {
-            id : user.id,
-            email : user.email,
-            isadmin : user.isadmin
+            id: user.id,
+            email: user.email,
+            isadmin: user.isadmin
         };
 
         const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN, {
             expiresIn: "10M",
-        }); 
+        });
 
         const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN, {
             expiresIn: "7d",
-        }); 
+        });
 
         return res.status(200).json({
             success: true,
-            data : {
+            data: {
                 accessToken,
                 refreshToken,
             }
@@ -109,47 +109,70 @@ export const login = async (req, res) => {
 
 // ================= REFRESH TOKEN =================
 export const refreshAccessToken = async (req, res) => {
-  try {
-    const { refreshToken } = req.body;
+    try {
+        const { refreshToken } = req.body;
 
-    if (!refreshToken) {
-      return res.status(401).json({
-        success: false,
-        message: "Refresh token required",
-      });
+        if (!refreshToken) {
+            return res.status(401).json({
+                success: false,
+                message: "Refresh token required",
+            });
+        }
+
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, decoded) => {
+            if (err) {
+                return res.status(403).json({
+                    success: false,
+                    message: "Invalid refresh token",
+                });
+            }
+
+            const payload = {
+                id: decoded.id,
+                email: decoded.email,
+                isadmin: decoded.isadmin,
+            };
+
+            const newAccessToken = jwt.sign(payload, process.env.ACCESS_TOKEN, {
+                expiresIn: "15m",
+            });
+
+            return res.status(200).json({
+                success: true,
+                data: {
+                    accessToken: newAccessToken,
+                    refreshToken,
+                },
+            });
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
     }
 
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, decoded) => {
-      if (err) {
-        return res.status(403).json({
-          success: false,
-          message: "Invalid refresh token",
+}
+
+
+export const getUser = async (req, res) => {
+    try {
+        const userData = await pool.query(
+            'SELECT * FROM users'
+        );
+
+        return res.status(200).json({
+            success: true,
+            data: userData.rows
         });
-      }
 
-      const payload = {
-        id: decoded.id,
-        email: decoded.email,
-        isadmin: decoded.isadmin,
-      };
+    } catch (error) {
+        console.log(error);
 
-      const newAccessToken = jwt.sign(payload, process.env.ACCESS_TOKEN, {
-        expiresIn: "15m",
-      });
-
-      return res.status(200).json({
-        success: true,
-        data: {
-          accessToken: newAccessToken,
-          refreshToken,
-        },
-      });
-    });
-
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
-  }
-};
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+}
