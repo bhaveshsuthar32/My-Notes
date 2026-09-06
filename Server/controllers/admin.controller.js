@@ -156,15 +156,46 @@ export const refreshAccessToken = async (req, res) => {
 }
 
 
+// export const getUser = async (req, res) => {
+//     try {
+//         const userData = await pool.query(
+//             'SELECT * FROM users'
+//         );
+
+//         return res.status(200).json({
+//             success: true,
+//             data: userData.rows
+//         });
+
+//     } catch (error) {
+//         console.log(error);
+
+//         return res.status(500).json({
+//             success: false,
+//             message: "Internal server error",
+//         });
+//     }
+// }
+
+// get user with useing pagination
+
 export const getUser = async (req, res) => {
     try {
-        const userData = await pool.query(
-            'SELECT * FROM users'
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 20;
+        const offset = (page - 1) * limit;
+
+        const result = await pool.query(
+            `SELECT id, firstname, lastname, email, isadmin
+             FROM users
+             ORDER BY id DESC
+             LIMIT $1 OFFSET $2`,
+            [limit, offset]
         );
 
         return res.status(200).json({
             success: true,
-            data: userData.rows
+            data: result.rows
         });
 
     } catch (error) {
@@ -172,7 +203,7 @@ export const getUser = async (req, res) => {
 
         return res.status(500).json({
             success: false,
-            message: "Internal server error",
+            message: "Internal server error"
         });
     }
-}
+};
