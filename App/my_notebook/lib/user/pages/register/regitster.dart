@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_notebook/services/api_services.dart';
 import 'package:my_notebook/user/pages/login/login.dart';
 // import 'login_page.dart';
 
@@ -18,6 +19,35 @@ class _RegitsterState extends State<Regitster> {
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
+    final firstNameController = TextEditingController();
+    final lastNameController = TextEditingController();
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+
+    Future<void> regiterUser() async {
+      try {
+        final res = await ApiServices().RegisterAPI(
+          firstNameController.text,
+          lastNameController.text,
+          emailController.text,
+          passwordController.text
+        );
+
+        print(res);
+
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage()),);
+      } catch (e) {
+        print(e); 
+        
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    }
+
+
+
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -92,6 +122,7 @@ class _RegitsterState extends State<Regitster> {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: firstNameController,
                               decoration: InputDecoration(
                                 hintText: "First Name",
                                 filled: true,
@@ -108,6 +139,7 @@ class _RegitsterState extends State<Regitster> {
 
                           Expanded(
                             child: TextField(
+                              controller: lastNameController,
                               decoration: InputDecoration(
                                 hintText: "Last Name",
                                 filled: true,
@@ -126,6 +158,7 @@ class _RegitsterState extends State<Regitster> {
 
                       // 🔵 Email
                       TextField(
+                        controller: emailController,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.email_outlined),
                           hintText: "Email",
@@ -142,6 +175,7 @@ class _RegitsterState extends State<Regitster> {
 
                       // 🔵 Password with toggle
                       TextField(
+                        controller: passwordController,
                         obscureText: !isPasswordVisible,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.lock_outline),
@@ -187,7 +221,7 @@ class _RegitsterState extends State<Regitster> {
                           ],
                         ),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: regiterUser,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent,
