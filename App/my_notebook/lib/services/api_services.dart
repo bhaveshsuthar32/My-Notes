@@ -95,4 +95,23 @@ class ApiServices {
     }
   }
 
+    Future<List<dynamic>> getUserAPI() async {
+    try {
+      final res = await http.get(
+        Uri.parse('$baseURL/user')
+      );
+
+      if(res.statusCode == 200){
+        final decoded = jsonDecode(res.body);
+        return decoded["data"];
+      }else {
+        throw Exception("Failed to load Usre data: ${res.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("Error: $e");
+    }
+  }
+
+
+
 }
