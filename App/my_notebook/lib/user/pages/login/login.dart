@@ -6,11 +6,16 @@ import 'package:my_notebook/user/pages/register/regitster.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  bool isPasswordVisible = false;
+
+  
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -27,8 +32,6 @@ class _LoginPageState extends State<LoginPage> {
         );
 
         print(res);
-
-        // login successfull
 
         // Login successful
         Navigator.pushReplacement(
@@ -139,19 +142,47 @@ class _LoginPageState extends State<LoginPage> {
 
                       SizedBox(height: 15),
 
-                      // 🔵 Password
-                      TextField(
-                        obscureText: true,
+                      // // 🔵 Password
+                      // TextField(
+                      //   obscureText: true,
+                      //   controller: passwordController,
+                      //   decoration: InputDecoration(
+                      //     prefixIcon: Icon(Icons.lock_outline),
+                      //     hintText: "Password",
+                      //     filled: true,
+                      //     fillColor: Colors.grey[100],
+                      //     contentPadding: EdgeInsets.symmetric(vertical: 16),
+                      //     border: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //       borderSide: BorderSide.none,
+                      //     ),
+                      //   ),
+                      // ),
+
+
+                       TextField(
                         controller: passwordController,
+                        obscureText: !isPasswordVisible,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.lock_outline),
                           hintText: "Password",
                           filled: true,
                           fillColor: Colors.grey[100],
-                          contentPadding: EdgeInsets.symmetric(vertical: 16),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide.none,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                isPasswordVisible = !isPasswordVisible;
+                              });
+                            },
                           ),
                         ),
                       ),
@@ -274,3 +305,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+
+//   Suthar Arjun32@gmail.com arjun

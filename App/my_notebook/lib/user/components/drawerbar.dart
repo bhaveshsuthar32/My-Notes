@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_notebook/user/pages/notes/new_notes_form.dart';
 import 'package:my_notebook/user/pages/notes/notes_page.dart';
+import 'package:my_notebook/user/pages/topics/topics_page.dart';
 import 'package:provider/provider.dart';
 
 import 'package:my_notebook/theme/theme_provider.dart';
@@ -52,7 +53,7 @@ class Drawerbar extends StatelessWidget {
 
           ListTile(
             leading: const Icon(Icons.contact_page_outlined),
-            title: const Text("Contact Us"),
+            title: const Text("Admin"),
             onTap: () {
               Navigator.push(
                 context,
@@ -78,7 +79,7 @@ class Drawerbar extends StatelessWidget {
 
           ListTile(
             leading: const Icon(Icons.admin_panel_settings),
-            title: const Text("Admin"),
+            title: const Text("Register"),
             onTap: () {
               Navigator.push(
                 context,
@@ -103,6 +104,14 @@ class Drawerbar extends StatelessWidget {
           title: Text("Notes"),
           onTap: (){
             Navigator.push(context, MaterialPageRoute(builder: (_) => NotesPage(),),);
+          },
+        ),
+
+          ListTile(
+          leading: const Icon(Icons.note_alt_outlined) ,
+          title: Text("Topics"),
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (_) => TopicsPage(),),);
           },
         ),
 

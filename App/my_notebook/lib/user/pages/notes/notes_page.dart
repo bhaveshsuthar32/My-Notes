@@ -172,8 +172,9 @@ class _NotesPageState extends State<NotesPage> {
 
                 style: TextStyle(
                   color: isDark
-                      ? Colors.white
-                      : Colors.black,
+                    ? Colors.red[200] : Colors.red,
+                      // ? Colors.white
+                      // : Colors.black,
                 ),
               ),
             )
