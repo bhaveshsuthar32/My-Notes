@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_notebook/services/api_services.dart';
+import 'package:my_notebook/user/pages/home.dart';
 import 'package:my_notebook/user/pages/register/regitster.dart';
 
 class LoginPage extends StatefulWidget {
@@ -13,6 +15,41 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+
+    Future<void> loginUser() async {
+      try {
+        final res = await ApiServices().loginApi(
+          emailController.text,
+          passwordController.text,
+        );
+
+        print(res);
+
+        // login successfull
+
+        // Login successful
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Home()),
+        );
+      } catch (e) {
+        print(e);
+        // Error show
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    }
+
+    @override
+    void dispose(){
+      emailController.dispose();
+      passwordController.dispose();
+      super.dispose();
+    }
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -55,6 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(
                     fontSize: width * 0.065,
                     fontWeight: FontWeight.bold,
+                    color: Colors.black54,
                   ),
                 ),
 
@@ -62,9 +100,7 @@ class _LoginPageState extends State<LoginPage> {
 
                 Text(
                   "Login to your account",
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(color: Colors.grey[600]),
                 ),
 
                 SizedBox(height: height * 0.04),
@@ -87,6 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       // 🔵 Email
                       TextField(
+                        controller: emailController,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.email_outlined),
                           hintText: "Email",
@@ -105,6 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                       // 🔵 Password
                       TextField(
                         obscureText: true,
+                        controller: passwordController,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.lock_outline),
                           hintText: "Password",
@@ -138,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                         ),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: loginUser,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent,
@@ -148,7 +186,11 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           child: Text(
                             "Login",
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -172,31 +214,33 @@ class _LoginPageState extends State<LoginPage> {
                 //     socialBox(Icons.facebook),
                 //   ],
                 // ),
-
                 SizedBox(height: 30),
 
                 // 🔵 Signup Text with Navigation
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Don't have an account? "),
+                    Text(
+                      "Don't have an account? ",
+                      style: TextStyle(color: Colors.black54),
+                    ),
                     GestureDetector(
                       // onTap: () {
-                        // 👉 Navigation to Register Page
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => RegisterPage(),
-                        //   ),
-                        // );
+                      // 👉 Navigation to Register Page
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => RegisterPage(),
+                      //   ),
+                      // );
                       // },
-
                       onTap: () {
-                        Navigator.push(context, 
-                          MaterialPageRoute(builder: (context)=>Regitster()),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Regitster()),
                         );
                       },
-                      
+
                       child: Text(
                         "Sign Up",
                         style: TextStyle(
@@ -224,12 +268,7 @@ class _LoginPageState extends State<LoginPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 10,
-            color: Colors.black12,
-          ),
-        ],
+        boxShadow: [BoxShadow(blurRadius: 10, color: Colors.black12)],
       ),
       child: Icon(icon, size: 30),
     );

@@ -36,8 +36,10 @@
 //   }
 
 import 'package:flutter/material.dart';
+import 'package:my_notebook/theme/theme_provider.dart';
 import 'package:my_notebook/user/components/drawerbar.dart';
 import 'package:my_notebook/user/components/header.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -69,6 +71,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    
     return Scaffold(
       appBar: const Header(),
       drawer: Drawerbar(),
@@ -180,107 +184,285 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _category_part() {
-    return Padding(
-      padding: const EdgeInsets.all(24), // outer padding
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, // center CATEGORY text
-        children: [
-          // Category title
-          const Text(
-            "🔖CATEGORY",
-            textAlign: TextAlign.left,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
+  // Widget _category_part() {
+  //    final themeProvider = Provider.of<ThemeProvider>(context);
+  //   return Padding(
+  //     padding: const EdgeInsets.all(24), // outer padding
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start, // center CATEGORY text
+  //       children: [
+  //         // Category title
+  //         const Text(
+  //           "🔖CATEGORY",
+  //           textAlign: TextAlign.left,
+  //           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+  //         ),
 
-          const SizedBox(height: 16), // spacing
-          // First Row
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  margin: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: Colors.green[100],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(Icons.person, color: Colors.black54, size: 32),
-                      SizedBox(height: 8),
-                      Text("Personal"),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  margin: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: Colors.blue[100],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(Icons.work, color: Colors.black54, size: 32),
-                      SizedBox(height: 8),
-                      Text("Work"),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+  //         const SizedBox(height: 16), // spacing
+  //         // First Row
+  //         Row(
+  //           children: [
+  //             Expanded(
+  //               child: Container(
+  //                 padding: const EdgeInsets.all(16),
+  //                 margin: const EdgeInsets.all(5),
+  //                 decoration: BoxDecoration(
+  //                   color: Colors.green[100],
+  //                   borderRadius: BorderRadius.circular(8),
+  //                 ),
+  //                 child: Column(
+  //                   mainAxisSize: MainAxisSize.min,
+  //                   children: const [
+  //                     Icon(Icons.person, color: Colors.black54, size: 32),
+  //                     SizedBox(height: 8),
+  //                     Text(
+  //                       "Personal",
+  //                       style: TextStyle(
+  //                         color: themeProvider.isDarkMode
+  //                             ? Colors.white
+  //                             : Colors.black,
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //             Expanded(
+  //               child: Container(
+  //                 padding: const EdgeInsets.all(16),
+  //                 margin: const EdgeInsets.all(5),
+  //                 decoration: BoxDecoration(
+  //                   color: Colors.blue[100],
+  //                   borderRadius: BorderRadius.circular(8),
+  //                 ),
+  //                 child: Column(
+  //                   mainAxisSize: MainAxisSize.min,
+  //                   children: const [
+  //                     Icon(Icons.work, color: Colors.black54, size: 32),
+  //                     SizedBox(height: 8),
+  //                     Text("Work"),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
 
-          // Second Row
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  margin: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: Colors.orange[100],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(Icons.school, color: Colors.black54, size: 32),
-                      SizedBox(height: 8),
-                      Text("Study"),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  margin: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: Colors.purple[100],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(Icons.lightbulb, color: Colors.black54, size: 32),
-                      SizedBox(height: 8),
-                      Text("Ideas"),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+  //         // Second Row
+  //         Row(
+  //           children: [
+  //             Expanded(
+  //               child: Container(
+  //                 padding: const EdgeInsets.all(16),
+  //                 margin: const EdgeInsets.all(5),
+  //                 decoration: BoxDecoration(
+  //                   color: Colors.orange[100],
+  //                   borderRadius: BorderRadius.circular(8),
+  //                 ),
+  //                 child: Column(
+  //                   mainAxisSize: MainAxisSize.min,
+  //                   children: const [
+  //                     Icon(Icons.school, color: Colors.black54, size: 32),
+  //                     SizedBox(height: 8),
+  //                     Text("Study"),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //             Expanded(
+  //               child: Container(
+  //                 padding: const EdgeInsets.all(16),
+  //                 margin: const EdgeInsets.all(5),
+  //                 decoration: BoxDecoration(
+  //                   color: Colors.purple[100],
+  //                   borderRadius: BorderRadius.circular(8),
+  //                 ),
+  //                 child: Column(
+  //                   mainAxisSize: MainAxisSize.min,
+  //                   children: const [
+  //                     Icon(Icons.lightbulb, color: Colors.black54, size: 32),
+  //                     SizedBox(height: 8),
+  //                     Text("Ideas"),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+
+
+
+
+Widget _category_part() {
+  final themeProvider = Provider.of<ThemeProvider>(context);
+
+  return Padding(
+    padding: const EdgeInsets.all(24),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "🔖CATEGORY",
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
-        ],
-      ),
-    );
-  }
+        ),
+
+        const SizedBox(height: 16),
+
+        // ---------- First Row ----------
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.green[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.person,
+                      color: Colors.black54,
+                      size: 32,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Personal",
+                      style: TextStyle(
+                        color: themeProvider.isDarkMode
+                            ? Colors.black
+                            : Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.blue[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.work,
+                      color: Colors.black54,
+                      size: 32,
+                    ),
+                    const SizedBox(height: 8),
+                    Text("Work",   style: TextStyle(
+                        color: themeProvider.isDarkMode
+                            ? Colors.black
+                            : Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        // ---------- Second Row ----------
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.orange[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.school,
+                      color: Colors.black54,
+                      size: 32,
+                    ),
+                    const SizedBox(height: 8),
+                    Text("Study", 
+                    style: TextStyle(
+                      color: themeProvider.isDarkMode
+                            ? Colors.black
+                            : Colors.black,
+                        fontWeight: FontWeight.w500,
+                    ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.purple[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.lightbulb,
+                      color: Colors.black54,
+                      size: 32,
+                    ),
+                    const SizedBox(height: 8),
+                    Text("Ideas",
+                    style: TextStyle(color: themeProvider.isDarkMode
+                            ? Colors.black
+                            : Colors.black,
+                        fontWeight: FontWeight.w500,
+                    ),
+                    ),
+                     
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   //   int selectedIndex = 0; // 0 = New, 1 = Oldest, 2 = Latest
 

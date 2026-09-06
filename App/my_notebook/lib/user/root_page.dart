@@ -3,6 +3,7 @@ import 'package:my_notebook/user/components/bottom_nav.dart';
 import 'package:my_notebook/user/components/drawerbar.dart';
 import 'package:my_notebook/user/components/header.dart';
 import 'package:my_notebook/user/pages/home.dart';
+import 'package:my_notebook/user/pages/login/login.dart';
 
 class RootPage extends StatefulWidget {
   const RootPage({super.key});
@@ -16,6 +17,7 @@ class _RootPageState extends State<RootPage> {
 
   final List<Widget> _pages = [
     Home(),
+    LoginPage(),
   ];
 
   @override
