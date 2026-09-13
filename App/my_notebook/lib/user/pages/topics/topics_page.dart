@@ -126,8 +126,10 @@
 // }
 
 
+
 import 'package:flutter/material.dart';
 import 'package:my_notebook/theme/theme_provider.dart';
+import 'package:my_notebook/user/pages/topics/topic_form.dart';
 import 'package:provider/provider.dart';
 
 import 'package:my_notebook/services/api_services.dart';
@@ -177,13 +179,8 @@ class _TopicsPageState extends State<TopicsPage> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDark = themeProvider.isDarkMode;
 
-    // final backgroundColor = isDark
-    //     ? const Color(0xFF0F172A)
-    //     : const Color(0xFFF5F7FA);
-
     final cardColor = isDark
-        // ? const Color(0xFF172554)
-          ? Colors.grey.shade900
+        ? Colors.grey.shade900
         : Colors.white;
 
     final titleColor = isDark
@@ -195,8 +192,6 @@ class _TopicsPageState extends State<TopicsPage> {
         : Colors.black54;
 
     return Scaffold(
-      // backgroundColor: backgroundColor,
-
       appBar: Header(),
 
       drawer: Drawerbar(),
@@ -230,159 +225,208 @@ class _TopicsPageState extends State<TopicsPage> {
                         ),
                       ),
                     )
-                  : ListView.builder(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: topics.length,
-                      itemBuilder: (context, index) {
-                        final topic = topics[index];
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
 
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 16),
-
-                          decoration: BoxDecoration(
-                            color: cardColor,
-
-                            borderRadius: BorderRadius.circular(16),
-
-                            boxShadow: [
-                              BoxShadow(
-                                color: isDark
-                                    ? Colors.black26
-                                    : Colors.black12,
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
+                        // TOP TEXT
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Text(
+                            "My Topics",
+                            style: TextStyle(
+                              color: titleColor,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
+                        ),
 
-                          child: Padding(
-                            padding: const EdgeInsets.all(14),
+                        // TOPIC LIST
+                        Expanded(
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                            ),
+                            itemCount: topics.length,
+                            itemBuilder: (context, index) {
+                              final topic = topics[index];
 
-                            child: Row(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: 16),
 
-                              children: [
-                                // IMAGE
-                                Expanded(
-                                  flex: 3,
-                                  child: ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.circular(12),
+                                decoration: BoxDecoration(
+                                  color: cardColor,
+                                  borderRadius: BorderRadius.circular(16),
 
-                                    child: topic['coverimage'] != null
-                                        ? Image.network(
-                                            topic['coverimage'].toString(),
-                                            height: 110,
-                                            fit: BoxFit.cover,
-
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              return Container(
-                                                height: 110,
-                                                color: isDark
-                                                    ? Colors.blueGrey[900]
-                                                    : Colors.grey[200],
-                                                child: Icon(
-                                                  Icons.image_not_supported,
-                                                  color: isDark
-                                                      ? Colors.white54
-                                                      : Colors.grey,
-                                                  size: 35,
-                                                ),
-                                              );
-                                            },
-                                          )
-                                        : Container(
-                                            height: 110,
-                                            color: isDark
-                                                ? Colors.blueGrey[900]
-                                                : Colors.grey[200],
-                                            child: const Icon(
-                                              Icons.image,
-                                              size: 35,
-                                            ),
-                                          ),
-                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: isDark
+                                          ? Colors.black26
+                                          : Colors.black12,
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
                                 ),
 
-                                const SizedBox(width: 14),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(14),
 
-                                // RIGHT SIDE
-                                Expanded(
-                                  flex: 7,
-                                  child: Column(
+                                  child: Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
+
                                     children: [
-                                      // TITLE
-                                      Text(
-                                        topic['name'].toString(),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
 
-                                        style: TextStyle(
-                                          color: titleColor,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
+                                      // IMAGE
+                                      Expanded(
+                                        flex: 3,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+
+                                          child: topic['coverimage'] != null
+                                              ? Image.network(
+                                                  topic['coverimage'].toString(),
+                                                  height: 110,
+                                                  fit: BoxFit.cover,
+
+                                                  errorBuilder:
+                                                      (context, error, stackTrace) {
+                                                    return Container(
+                                                      height: 110,
+                                                      color: isDark
+                                                          ? Colors.blueGrey[900]
+                                                          : Colors.grey[200],
+
+                                                      child: Icon(
+                                                        Icons.image_not_supported,
+                                                        color: isDark
+                                                            ? Colors.white54
+                                                            : Colors.grey,
+                                                        size: 35,
+                                                      ),
+                                                    );
+                                                  },
+                                                )
+                                              : Container(
+                                                  height: 110,
+                                                  color: isDark
+                                                      ? Colors.blueGrey[900]
+                                                      : Colors.grey[200],
+
+                                                  child: const Icon(
+                                                    Icons.image,
+                                                    size: 35,
+                                                  ),
+                                                ),
                                         ),
                                       ),
 
-                                      const SizedBox(height: 6),
+                                      const SizedBox(width: 14),
 
-                                      // DESCRIPTION
-                                      Text(
-                                        topic['description'].toString(),
-                                        maxLines: 3,
-                                        overflow: TextOverflow.ellipsis,
+                                      // RIGHT SIDE
+                                      Expanded(
+                                        flex: 7,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
 
-                                        style: TextStyle(
-                                          color: descriptionColor,
-                                          fontSize: 14,
-                                          height: 1.4,
+                                          children: [
+
+                                            // TITLE
+                                            Text(
+                                              topic['name'].toString(),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+
+                                              style: TextStyle(
+                                                color: titleColor,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+
+                                            const SizedBox(height: 6),
+
+                                            // DESCRIPTION
+                                            Text(
+                                              topic['description'].toString(),
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
+
+                                              style: TextStyle(
+                                                color: descriptionColor,
+                                                fontSize: 14,
+                                                height: 1.4,
+                                              ),
+                                            ),
+
+                                            const SizedBox(height: 12),
+
+                                            // BUTTONS
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+
+                                              children: [
+
+                                                // EDIT
+                                                IconButton(
+                                                  tooltip: "Edit",
+
+                                                  onPressed: () {},
+
+                                                  icon: Icon(
+                                                    Icons.edit_outlined,
+                                                    color: isDark
+                                                        ? Colors.lightBlue[200]
+                                                        : Colors.blue,
+                                                  ),
+                                                ),
+
+                                                // DELETE
+                                                IconButton(
+                                                  tooltip: "Delete",
+
+                                                  onPressed: () {},
+
+                                                  icon: Icon(
+                                                    Icons.delete_outline,
+                                                    color: isDark
+                                                        ? Colors.red[300]
+                                                        : Colors.red,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
-                                      ),
-
-                                      const SizedBox(height: 12),
-
-                                      // BUTTONS
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-
-                                        children: [
-                                          IconButton(
-                                            tooltip: "Edit",
-                                            onPressed: () {},
-                                            icon: Icon(
-                                              Icons.edit_outlined,
-                                              color: isDark
-                                                  ? Colors.lightBlue[200]
-                                                  : Colors.blue,
-                                            ),
-                                          ),
-
-                                          IconButton(
-                                            tooltip: "Delete",
-                                            onPressed: () {},
-                                            icon: Icon(
-                                              Icons.delete_outline,
-                                              color: isDark
-                                                  ? Colors.red[300]
-                                                  : Colors.red,
-                                            ),
-                                          ),
-                                        ],
                                       ),
                                     ],
                                   ),
                                 ),
-                              ],
-                            ),
+                              );
+                            },
                           ),
-                        );
-                      },
+                        ),
+                      ],
                     ),
+
+      // FLOATING ACTION BUTTON
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const TopicsForm(),
+            ),
+          );
+        },
+
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
