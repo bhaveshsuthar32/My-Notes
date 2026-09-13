@@ -1,6 +1,8 @@
 import pool from "../config/db.js";
 
 const client = await pool.connect();
+
+
 export const createTopicService = async (data) => {
 
   try {
@@ -8,9 +10,9 @@ export const createTopicService = async (data) => {
 
     const result = await client.query(
       `INSERT INTO topics 
-      (name, description, coverImage, status)
-      VALUES ($1,$2,$3,$4)
-      RETURNING *`,
+  (name, description, "coverImage", status)
+  VALUES ($1, $2, $3, $4)
+  RETURNING *`,
       [
         name,
         description,
@@ -29,25 +31,25 @@ export const createTopicService = async (data) => {
   }
 };
 
-export const getTopic = async () =>{
+export const getTopic = async () => {
   try {
     const result = await client.query("select * from topics");
 
     return result.rows;
   } catch (error) {
-     throw error;
+    throw error;
   }
 }
 
 
 // get topic by id
 
-export const getTopicBYId = async(topicId) =>{
+export const getTopicBYId = async (topicId) => {
   try {
     const result = await pool.query(
       `select * from topics where id = $1 and status = 'active' `, [topicId]
     );
-    
+
     return result.rows[0]
   } catch (error) {
     throw error;
@@ -55,13 +57,13 @@ export const getTopicBYId = async(topicId) =>{
 }
 
 
-export const deleteTopic = async(topicId) =>{
+export const deleteTopic = async (topicId) => {
   try {
     const result = await pool.query(
       `delete from topics where id = $1 `, [topicId]
     );
 
-    return result.row ;
+    return result.row;
   } catch (error) {
     throw error;
   }
