@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 class ApiServices {
   final String baseURL = 'https://my-notes-psi-snowy.vercel.app/api';
 
+  // get notes
+
   Future<List<dynamic>> getNotesData() async {
     try {
       final res = await http.get(Uri.parse('$baseURL/getNotes'));
@@ -75,19 +77,53 @@ class ApiServices {
       throw Exception('Register error: $e');
     }
   }
+// Add Topic
+Future<Map<String, dynamic>> addTopicAPI(
+  String name,
+  String description,
+  String coverImage,
+  String status,
+) async {
+  try {
+    final res = await http.post(
+      Uri.parse('$baseURL/topics'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'name': name,
+        'description': description,
+        'coverImage': coverImage,
+        'status': status,
+      }),
+    );
 
+    print("Topic Status: ${res.statusCode}");
+    print("Topic Response: ${res.body}");
+
+    if (res.statusCode == 200 || res.statusCode == 201) {
+      final decoded = jsonDecode(res.body);
+
+      return decoded;
+    } else {
+      throw Exception(
+        'Topic add failed: ${res.statusCode}\n${res.body}',
+      );
+    }
+  } catch (e) {
+    throw Exception("Error: $e");
+  }
+}
   // getTopic
 
   Future<List<dynamic>> getTopicsAPI() async {
     try {
-      final res = await http.get(
-        Uri.parse('$baseURL/getTopic')
-      );
+      final res = await http.get(Uri.parse('$baseURL/getTopic'));
 
-      if(res.statusCode == 200){
+      if (res.statusCode == 200) {
         final decoded = jsonDecode(res.body);
         return decoded["data"];
-      }else {
+      } else {
         throw Exception("Failed to load Topics data: ${res.statusCode}");
       }
     } catch (e) {
@@ -95,23 +131,20 @@ class ApiServices {
     }
   }
 
-    Future<List<dynamic>> getUserAPI() async {
-    try {
-      final res = await http.get(
-        Uri.parse('$baseURL/user')
-      );
+  // get User
 
-      if(res.statusCode == 200){
+  Future<List<dynamic>> getUserAPI() async {
+    try {
+      final res = await http.get(Uri.parse('$baseURL/user'));
+
+      if (res.statusCode == 200) {
         final decoded = jsonDecode(res.body);
         return decoded["data"];
-      }else {
+      } else {
         throw Exception("Failed to load Usre data: ${res.statusCode}");
       }
     } catch (e) {
       throw Exception("Error: $e");
     }
   }
-
-
-
 }
