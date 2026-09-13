@@ -23,16 +23,19 @@ import { createTopicService, deleteTopic, getTopic, getTopicBYId } from "../serv
 //   }
 // };
 
-
 import { uploadFile } from "../utils/cloudinary.js";
+import { createTopicService } from "../services/topics.service.js";
 
 export const createTopic = async (req, res) => {
-
   try {
+    const {
+      name,
+      description,
+      coverImageUrl,
+      status,
+    } = req.body;
 
-    const { name, description, status } = req.body;
-
-    let coverImage = null;
+    let coverImage = coverImageUrl || null;
 
     if (req.file) {
       coverImage = await uploadFile(req.file);
@@ -42,26 +45,22 @@ export const createTopic = async (req, res) => {
       name,
       description,
       coverImage,
-      status
+      status,
     });
 
     res.json({
       success: true,
-      data: topic
+      data: topic,
     });
-
   } catch (error) {
-
     console.log(error);
 
     res.status(500).json({
-      success: false
+      success: false,
+      message: error.message,
     });
-
   }
 };
-
-
 export const getTopicList = async (req, res) => {
 
   try {
