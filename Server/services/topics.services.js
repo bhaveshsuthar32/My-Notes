@@ -1,35 +1,30 @@
 import pool from "../config/db.js";
 
 const client = await pool.connect();
-
-
 export const createTopicService = async (data) => {
-
   try {
     const { name, description, coverImage, status } = data;
 
     const result = await client.query(
       `INSERT INTO topics 
-  (name, description, "coverImage", status)
-  VALUES ($1, $2, $3, $4)
-  RETURNING *`,
+       (name, description, "coverImage", status)
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
       [
         name,
         description,
         coverImage,
-        status || "active"
+        status || "active",
       ]
     );
 
     return result.rows[0];
-
   } catch (error) {
     throw error;
-
-  } finally {
-    client.release();
   }
 };
+
+
 
 export const getTopic = async () => {
   try {
