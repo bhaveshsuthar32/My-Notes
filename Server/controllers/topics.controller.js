@@ -24,7 +24,7 @@ import { createTopicService, deleteTopic, getTopic, getTopicBYId } from "../serv
 // };
 
 import { uploadFile } from "../utils/cloudinary.js";
-import { createTopicService } from "../services/topics.service.js";
+// import { createTopicService } from "../services/topics.service.js";
 
 // export const createTopic = async (req, res) => {
 //   try {
@@ -63,49 +63,48 @@ import { createTopicService } from "../services/topics.service.js";
 //   }
 // };
 
-
-
 export const createTopic = async (req, res) => {
   try {
     const {
       name,
       description,
+      coverImage,
       coverImageUrl,
       status,
     } = req.body;
 
-    // Status ko lowercase mein convert karna
-    const normalizedStatus = status?.toLowerCase() || "active";
+    const normalizedStatus =
+      status?.toLowerCase() || "active";
 
-    // URL option: URL ko directly save karna
-    let coverImage = coverImageUrl || null;
+    // coverImageUrl ya coverImage, dono me se jo milega use karega
+    let finalCoverImage =
+      coverImageUrl || coverImage || null;
 
-    // Gallery option: Image ko Cloudinary par upload karna
+    // Agar gallery se file aayi hai, to Cloudinary upload hoga
     if (req.file) {
-      coverImage = await uploadFile(req.file);
+      finalCoverImage = await uploadFile(req.file);
     }
 
     const topic = await createTopicService({
       name,
       description,
-      coverImage,
-      status: normalizedStatus, // ✅ Correct
+      coverImage: finalCoverImage,
+      status: normalizedStatus,
     });
 
-    res.json({
+    return res.status(201).json({
       success: true,
       data: topic,
     });
   } catch (error) {
-    console.log(error);
+    console.error("CREATE TOPIC ERROR:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: error.message,
+      message: error.message || "Failed to create topic",
     });
   }
 };
-
 
 export const getTopicList = async (req, res) => {
 
