@@ -26,6 +26,45 @@ import { createTopicService, deleteTopic, getTopic, getTopicBYId } from "../serv
 import { uploadFile } from "../utils/cloudinary.js";
 import { createTopicService } from "../services/topics.service.js";
 
+// export const createTopic = async (req, res) => {
+//   try {
+//  const {
+//   name,
+//   description,
+//   coverImageUrl,
+//   status,
+// } = req.body;
+
+// const normalizedStatus = status?.toLowerCase() || "active";
+
+// let coverImage = coverImageUrl || null;
+
+// if (req.file) {
+//   coverImage = await uploadFile(req.file);
+// }
+//     const topic = await createTopicService({
+//       name,
+//       description,
+//       coverImage,
+//       status,
+//     });
+
+//     res.json({
+//       success: true,
+//       data: topic,
+//     });
+//   } catch (error) {
+//     console.log(error);
+
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+
+
 export const createTopic = async (req, res) => {
   try {
     const {
@@ -35,8 +74,13 @@ export const createTopic = async (req, res) => {
       status,
     } = req.body;
 
+    // Status ko lowercase mein convert karna
+    const normalizedStatus = status?.toLowerCase() || "active";
+
+    // URL option: URL ko directly save karna
     let coverImage = coverImageUrl || null;
 
+    // Gallery option: Image ko Cloudinary par upload karna
     if (req.file) {
       coverImage = await uploadFile(req.file);
     }
@@ -45,7 +89,7 @@ export const createTopic = async (req, res) => {
       name,
       description,
       coverImage,
-      status,
+      status: normalizedStatus, // ✅ Correct
     });
 
     res.json({
@@ -61,6 +105,8 @@ export const createTopic = async (req, res) => {
     });
   }
 };
+
+
 export const getTopicList = async (req, res) => {
 
   try {

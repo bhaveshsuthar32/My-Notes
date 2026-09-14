@@ -286,9 +286,9 @@ class _TopicsPageState extends State<TopicsPage> {
                                           borderRadius:
                                               BorderRadius.circular(12),
 
-                                          child: topic['coverimage'] != null
+                                          child: topic['coverImage'] != null
                                               ? Image.network(
-                                                  topic['coverimage'].toString(),
+                                                  topic['coverImage'].toString(),
                                                   height: 110,
                                                   fit: BoxFit.cover,
 
@@ -430,3 +430,6 @@ class _TopicsPageState extends State<TopicsPage> {
     );
   }
 }
+
+
+// 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class ApiServices {
@@ -77,42 +78,98 @@ class ApiServices {
       throw Exception('Register error: $e');
     }
   }
-// Add Topic
-Future<Map<String, dynamic>> addTopicAPI(
-  String name,
-  String description,
-  String coverImage,
-  String status,
-) async {
-  try {
-    final res = await http.post(
-      Uri.parse('$baseURL/topics'),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'name': name,
-        'description': description,
-        'coverImage': coverImage,
-        'status': status,
-      }),
-    );
+// // Add Topic
+// Future<Map<String, dynamic>> addTopicAPI(
+//   String name,
+//   String description,
+//   String coverImage,
+//   String status,
+// ) async {
+//   try {
+//     final res = await http.post(
+//       Uri.parse('$baseURL/topics'),
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: jsonEncode({
+//         'name': name,
+//         'description': description,
+//         'coverImage': coverImage,
+//         'status': status,
+//       }),
+//     );
 
-    print("Topic Status: ${res.statusCode}");
-    print("Topic Response: ${res.body}");
+//     print("Topic Status: ${res.statusCode}");
+//     print("Topic Response: ${res.body}");
 
-    if (res.statusCode == 200 || res.statusCode == 201) {
-      final decoded = jsonDecode(res.body);
+//     if (res.statusCode == 200 || res.statusCode == 201) {
+//       final decoded = jsonDecode(res.body);
 
-      return decoded;
-    } else {
-      throw Exception(
-        'Topic add failed: ${res.statusCode}\n${res.body}',
-      );
-    }
-  } catch (e) {
-    throw Exception("Error: $e");
+//       return decoded;
+//     } else {
+//       throw Exception(
+//         'Topic add failed: ${res.statusCode}\n${res.body}',
+//       );
+//     }
+//   } catch (e) {
+//     throw Exception("Error: $e");
+//   }
+// }
+
+
+
+
+Future<Map<String, dynamic>> addTopicAPI({
+  required String name,
+  required String description,
+  required String status,
+  String? imageUrl,
+  File? imageFile,
+}) async {
+  final uri = Uri.parse("$baseURL/topics");
+
+  final request = http.MultipartRequest(
+    "POST",
+    uri,
+  );
+
+  request.fields["name"] = name;
+  request.fields["description"] = description;
+  request.fields["status"] = status;
+
+  // URL option
+  if (imageFile == null &&
+      imageUrl != null &&
+      imageUrl.trim().isNotEmpty) {
+    request.fields["coverImageUrl"] = imageUrl.trim();
   }
+
+  // Gallery file option
+  if (imageFile != null) {
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        "coverImage",
+        imageFile.path,
+      ),
+    );
+  }
+
+  final streamedResponse = await request.send();
+
+  final response = await http.Response.fromStream(
+    streamedResponse,
+  );
+
+  final data = jsonDecode(response.body);
+
+  if (response.statusCode >= 200 &&
+      response.statusCode < 300) {
+    return data;
+  }
+
+  throw Exception(
+    data["message"] ?? "Failed to add topic",
+  );
 }
   // getTopic
 

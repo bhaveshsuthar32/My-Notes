@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_notebook/user/admin/admin.dart';
 import 'package:my_notebook/user/pages/notes/new_notes_form.dart';
 import 'package:my_notebook/user/pages/notes/notes_page.dart';
 import 'package:my_notebook/user/pages/topics/topics_page.dart';
@@ -58,7 +59,7 @@ class Drawerbar extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => const Home(),
+                  builder: (_) => const Admin(),
                 ),
               );
             },

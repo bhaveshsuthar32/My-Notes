@@ -1,6 +1,7 @@
 import pool from "../config/db.js";
 
 const client = await pool.connect();
+
 export const createTopicService = async (data) => {
   try {
     const { name, description, coverImage, status } = data;
