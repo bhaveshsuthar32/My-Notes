@@ -1,28 +1,86 @@
 import { createNotesService, deleteNotes, getNotes, getNotesById, getNotesByTopicId } from "../services/notes.service.js";
 
 
+// export const createNotes = async (req, res) => {
+
+//   try {
+
+//     const note = await createNotesService(req.body);
+
+//     return res.status(201).json({
+//       success: true,
+//       data: note
+//     });
+
+//   } catch (error) {
+
+//     console.log(error);
+
+//     return res.status(500).json({
+//       success: false,
+//       message: "Failed to create note"
+//     });
+//   }
+// };
+
+
+
+
 export const createNotes = async (req, res) => {
-
   try {
+    console.log("CREATE NOTES API STARTED");
 
-    const note = await createNotesService(req.body);
+    console.log("BODY:", req.body);
+    console.log("FILES:", req.files);
+
+    const {
+      title,
+      subtitle,
+      content,
+      topicId,
+      status,
+    } = req.body;
+
+    if (!title || !content || !topicId) {
+      return res.status(400).json({
+        success: false,
+        message: "Title, content and topicId are required",
+      });
+    }
+
+    let imageUrls = [];
+
+    // Multiple images upload
+    if (req.files && req.files.length > 0) {
+      imageUrls = await Promise.all(
+        req.files.map(async (file) => {
+          return await uploadFile(file);
+        })
+      );
+    }
+
+    const note = await createNotesService({
+      title,
+      subtitle,
+      content,
+      images: imageUrls,
+      topicId: Number(topicId),
+      status: status?.toLowerCase() || "active",
+    });
 
     return res.status(201).json({
       success: true,
-      data: note
+      data: note,
     });
-
   } catch (error) {
-
-    console.log(error);
+    console.error("CREATE NOTES ERROR:", error);
 
     return res.status(500).json({
       success: false,
-      message: "Failed to create note"
+      message: error.message || "Failed to create note",
     });
   }
 };
-
 
 // get notes
 
