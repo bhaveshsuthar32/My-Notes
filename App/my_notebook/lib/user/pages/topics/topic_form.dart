@@ -539,6 +539,665 @@
 
 
 
+
+
+
+
+
+
+
+
+
+// import 'dart:io';
+
+// import 'package:flutter/material.dart';
+// import 'package:image_picker/image_picker.dart';
+// import 'package:my_notebook/services/api_services.dart';
+// import 'package:my_notebook/user/components/drawerbar.dart';
+// import 'package:my_notebook/user/components/header.dart';
+
+// class TopicsForm extends StatefulWidget {
+//   const TopicsForm({super.key});
+
+//   @override
+//   State<TopicsForm> createState() => _TopicsFormState();
+// }
+
+// class _TopicsFormState extends State<TopicsForm> {
+//   final formKey = GlobalKey<FormState>();
+
+//   final topicController = TextEditingController();
+//   final descriptionController = TextEditingController();
+//   final imageController = TextEditingController();
+
+//   final ImagePicker imagePicker = ImagePicker();
+
+//   String status = "Active";
+
+//   File? selectedImage;
+
+//   bool isSaving = false;
+
+//   @override
+//   void dispose() {
+//     topicController.dispose();
+//     descriptionController.dispose();
+//     imageController.dispose();
+
+//     super.dispose();
+//   }
+
+//   // Image options show karna
+//   void showImageOptions() {
+//     showModalBottomSheet(
+//       context: context,
+//       builder: (context) {
+//         return SafeArea(
+//           child: Wrap(
+//             children: [
+//               ListTile(
+//                 leading: const Icon(Icons.link),
+//                 title: const Text("Add Image URL"),
+//                 onTap: () {
+//                   Navigator.pop(context);
+//                   showUrlDialog();
+//                 },
+//               ),
+//               ListTile(
+//                 leading: const Icon(Icons.photo_library),
+//                 title: const Text("Select Image from Gallery"),
+//                 onTap: () {
+//                   Navigator.pop(context);
+//                   pickImage();
+//                 },
+//               ),
+//               if (selectedImage != null ||
+//                   imageController.text.trim().isNotEmpty)
+//                 ListTile(
+//                   leading: const Icon(Icons.delete, color: Colors.red),
+//                   title: const Text("Remove Image"),
+//                   onTap: () {
+//                     Navigator.pop(context);
+
+//                     setState(() {
+//                       selectedImage = null;
+//                       imageController.clear();
+//                     });
+//                   },
+//                 ),
+//             ],
+//           ),
+//         );
+//       },
+//     );
+//   }
+
+//   // URL enter karne ka dialog
+//   void showUrlDialog() {
+//     final urlController = TextEditingController(
+//       text: imageController.text,
+//     );
+
+//     showDialog(
+//       context: context,
+//       builder: (context) {
+//         return AlertDialog(
+//           title: const Text("Add Image URL"),
+//           content: TextField(
+//             controller: urlController,
+//             keyboardType: TextInputType.url,
+//             decoration: const InputDecoration(
+//               hintText: "https://example.com/image.jpg",
+//               border: OutlineInputBorder(),
+//             ),
+//           ),
+//           actions: [
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.pop(context);
+//               },
+//               child: const Text("Cancel"),
+//             ),
+//             ElevatedButton(
+//               onPressed: () {
+//                 final url = urlController.text.trim();
+
+//                 if (url.isEmpty) {
+//                   return;
+//                 }
+
+//                 setState(() {
+//                   selectedImage = null;
+//                   imageController.text = url;
+//                 });
+
+//                 Navigator.pop(context);
+//               },
+//               child: const Text("Add"),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
+
+//   // Gallery se image select karna
+//   Future<void> pickImage() async {
+//     try {
+//       final XFile? image = await imagePicker.pickImage(
+//         source: ImageSource.gallery,
+//       );
+
+//       if (image == null) {
+//         return;
+//       }
+
+//       setState(() {
+//         selectedImage = File(image.path);
+
+//         // URL clear karna, kyunki ab file select hui hai
+//         imageController.clear();
+//       });
+//     } catch (e) {
+//       if (!mounted) return;
+
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text("Image select error: $e"),
+//         ),
+//       );
+//     }
+//   }
+
+//   // Topic save karna
+//   Future<void> addTopic() async {
+//     if (!formKey.currentState!.validate()) {
+//       return;
+//     }
+
+//     if (selectedImage == null &&
+//         imageController.text.trim().isEmpty) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         const SnackBar(
+//           content: Text("Please select an image or add image URL"),
+//         ),
+//       );
+
+//       return;
+//     }
+
+//     setState(() {
+//       isSaving = true;
+//     });
+
+//     try {
+//       final response = await ApiServices().addTopicAPI(
+//         name: topicController.text.trim(),
+//         description: descriptionController.text.trim(),
+//         status: status,
+//         imageUrl: imageController.text.trim(),
+//         imageFile: selectedImage,
+//       );
+
+//       print(response);
+
+//       if (!mounted) return;
+
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         const SnackBar(
+//           content: Text("Topic added successfully"),
+//         ),
+//       );
+
+//       Navigator.pop(context);
+//     } catch (e) {
+//       print(e);
+
+//       if (!mounted) return;
+
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text("Error: $e"),
+//         ),
+//       );
+//     } finally {
+//       if (mounted) {
+//         setState(() {
+//           isSaving = false;
+//         });
+//       }
+//     }
+//   }
+
+//   // Image preview
+//   Widget imagePreview(bool isDark, Color inputColor) {
+//     if (selectedImage != null) {
+//       return Image.file(
+//         selectedImage!,
+//         width: double.infinity,
+//         height: 180,
+//         fit: BoxFit.cover,
+//       );
+//     }
+
+//     if (imageController.text.trim().isNotEmpty) {
+//       return Image.network(
+//         imageController.text.trim(),
+//         width: double.infinity,
+//         height: 180,
+//         fit: BoxFit.cover,
+//         loadingBuilder: (context, child, loadingProgress) {
+//           if (loadingProgress == null) {
+//             return child;
+//           }
+
+//           return const Center(
+//             child: CircularProgressIndicator(),
+//           );
+//         },
+//         errorBuilder: (context, error, stackTrace) {
+//           return const Center(
+//             child: Icon(
+//               Icons.broken_image,
+//               size: 50,
+//             ),
+//           );
+//         },
+//       );
+//     }
+
+//     return const Center(
+//       child: Icon(
+//         Icons.image_outlined,
+//         size: 50,
+//       ),
+//     );
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+//     final backgroundColor = isDark
+//         ? const Color(0xFF0F172A)
+//         : const Color(0xFFF5F7FA);
+
+//     final cardColor = isDark
+//         ? const Color(0xFF172554)
+//         : Colors.white;
+
+//     final textColor = isDark
+//         ? Colors.white
+//         : Colors.black87;
+
+//     final secondaryColor = isDark
+//         ? Colors.white70
+//         : Colors.black54;
+
+//     final inputColor = isDark
+//         ? const Color(0xFF1E3A5F)
+//         : Colors.grey.shade100;
+
+//     return Scaffold(
+//       backgroundColor: backgroundColor,
+//       appBar: Header(),
+//       drawer: Drawerbar(),
+
+//       body: SingleChildScrollView(
+//         padding: const EdgeInsets.all(20),
+
+//         child: Center(
+//           child: ConstrainedBox(
+//             constraints: const BoxConstraints(
+//               maxWidth: 700,
+//             ),
+
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   "Create Topic",
+//                   style: TextStyle(
+//                     color: textColor,
+//                     fontSize: 28,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+
+//                 const SizedBox(height: 6),
+
+//                 Text(
+//                   "Add a new topic to your notebook",
+//                   style: TextStyle(
+//                     color: secondaryColor,
+//                     fontSize: 14,
+//                   ),
+//                 ),
+
+//                 const SizedBox(height: 25),
+
+//                 Container(
+//                   width: double.infinity,
+//                   padding: const EdgeInsets.all(24),
+
+//                   decoration: BoxDecoration(
+//                     color: cardColor,
+//                     borderRadius: BorderRadius.circular(8),
+//                     boxShadow: [
+//                       BoxShadow(
+//                         color: isDark
+//                             ? Colors.black26
+//                             : Colors.black12,
+//                         blurRadius: 12,
+//                         offset: const Offset(0, 5),
+//                       ),
+//                     ],
+//                   ),
+
+//                   child: Form(
+//                     key: formKey,
+
+//                     child: Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         // Topic name
+//                         Text(
+//                           "Topic Name",
+//                           style: TextStyle(
+//                             color: textColor,
+//                             fontWeight: FontWeight.w600,
+//                             fontSize: 15,
+//                           ),
+//                         ),
+
+//                         const SizedBox(height: 8),
+
+//                         TextFormField(
+//                           controller: topicController,
+//                           style: TextStyle(color: textColor),
+
+//                           decoration: InputDecoration(
+//                             hintText: "Enter topic name",
+//                             hintStyle: TextStyle(
+//                               color: secondaryColor,
+//                             ),
+//                             prefixIcon: Icon(
+//                               Icons.topic_outlined,
+//                               color: Colors.blue,
+//                             ),
+//                             filled: true,
+//                             fillColor: inputColor,
+//                             border: OutlineInputBorder(
+//                               borderRadius: BorderRadius.circular(8),
+//                               borderSide: BorderSide.none,
+//                             ),
+//                           ),
+
+//                           validator: (value) {
+//                             if (value == null ||
+//                                 value.trim().isEmpty) {
+//                               return "Please enter topic name";
+//                             }
+
+//                             return null;
+//                           },
+//                         ),
+
+//                         const SizedBox(height: 20),
+
+//                         // Description
+//                         Text(
+//                           "Description",
+//                           style: TextStyle(
+//                             color: textColor,
+//                             fontWeight: FontWeight.w600,
+//                             fontSize: 15,
+//                           ),
+//                         ),
+
+//                         const SizedBox(height: 8),
+
+//                         TextFormField(
+//                           controller: descriptionController,
+//                           maxLines: 5,
+//                           style: TextStyle(color: textColor),
+
+//                           decoration: InputDecoration(
+//                             hintText: "Enter topic description",
+//                             hintStyle: TextStyle(
+//                               color: secondaryColor,
+//                             ),
+//                             prefixIcon: const Padding(
+//                               padding: EdgeInsets.only(bottom: 75),
+//                               child: Icon(
+//                                 Icons.description_outlined,
+//                                 color: Colors.blue,
+//                               ),
+//                             ),
+//                             filled: true,
+//                             fillColor: inputColor,
+//                             border: OutlineInputBorder(
+//                               borderRadius: BorderRadius.circular(8),
+//                               borderSide: BorderSide.none,
+//                             ),
+//                           ),
+
+//                           validator: (value) {
+//                             if (value == null ||
+//                                 value.trim().isEmpty) {
+//                               return "Please enter description";
+//                             }
+
+//                             return null;
+//                           },
+//                         ),
+
+//                         const SizedBox(height: 20),
+
+//                         // Status
+//                         Text(
+//                           "Status",
+//                           style: TextStyle(
+//                             color: textColor,
+//                             fontWeight: FontWeight.w600,
+//                             fontSize: 15,
+//                           ),
+//                         ),
+
+//                         const SizedBox(height: 8),
+
+//                         DropdownButtonFormField<String>(
+//                           value: status,
+//                           style: TextStyle(color: textColor),
+//                           dropdownColor: cardColor,
+
+//                           decoration: InputDecoration(
+//                             prefixIcon: const Icon(
+//                               Icons.toggle_on_outlined,
+//                               color: Colors.blue,
+//                             ),
+//                             filled: true,
+//                             fillColor: inputColor,
+//                             border: OutlineInputBorder(
+//                               borderRadius: BorderRadius.circular(8),
+//                               borderSide: BorderSide.none,
+//                             ),
+//                           ),
+
+//                           items: const [
+//                             DropdownMenuItem(
+//                               value: "Active",
+//                               child: Text("Active"),
+//                             ),
+//                             DropdownMenuItem(
+//                               value: "Inactive",
+//                               child: Text("Inactive"),
+//                             ),
+//                           ],
+
+//                           onChanged: (value) {
+//                             setState(() {
+//                               status = value!;
+//                             });
+//                           },
+//                         ),
+
+//                         const SizedBox(height: 20),
+
+//                         // Cover image
+//                         Text(
+//                           "Cover Image",
+//                           style: TextStyle(
+//                             color: textColor,
+//                             fontWeight: FontWeight.w600,
+//                             fontSize: 15,
+//                           ),
+//                         ),
+
+//                         const SizedBox(height: 8),
+
+//                         GestureDetector(
+//                           onTap: showImageOptions,
+
+//                           child: Container(
+//                             height: 180,
+//                             width: double.infinity,
+//                             clipBehavior: Clip.antiAlias,
+
+//                             decoration: BoxDecoration(
+//                               color: inputColor,
+//                               borderRadius: BorderRadius.circular(8),
+//                               border: Border.all(
+//                                 color: Colors.blue,
+//                                 width: 1,
+//                               ),
+//                             ),
+
+//                             child: imagePreview(
+//                               isDark,
+//                               inputColor,
+//                             ),
+//                           ),
+//                         ),
+
+//                         const SizedBox(height: 10),
+
+//                         SizedBox(
+//                           width: double.infinity,
+
+//                           child: OutlinedButton.icon(
+//                             onPressed: showImageOptions,
+//                             icon: const Icon(Icons.add_photo_alternate),
+//                             label: const Text(
+//                               "Add Image URL or Select Gallery Image",
+//                             ),
+//                           ),
+//                         ),
+
+//                         const SizedBox(height: 30),
+
+//                         // Buttons
+//                         Row(
+//                           children: [
+//                             Expanded(
+//                               child: OutlinedButton(
+//                                 onPressed: isSaving
+//                                     ? null
+//                                     : () {
+//                                         Navigator.pop(context);
+//                                       },
+
+//                                 style: OutlinedButton.styleFrom(
+//                                   minimumSize: const Size(0, 50),
+//                                   side: const BorderSide(
+//                                     color: Colors.blue,
+//                                   ),
+//                                   shape: RoundedRectangleBorder(
+//                                     borderRadius:
+//                                         BorderRadius.circular(8),
+//                                   ),
+//                                 ),
+
+//                                 child: const Text(
+//                                   "Cancel",
+//                                   style: TextStyle(
+//                                     color: Colors.blue,
+//                                     fontWeight: FontWeight.w600,
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+
+//                             const SizedBox(width: 15),
+
+//                             Expanded(
+//                               child: ElevatedButton.icon(
+//                                 onPressed: isSaving
+//                                     ? null
+//                                     : addTopic,
+
+//                                 icon: isSaving
+//                                     ? const SizedBox(
+//                                         height: 18,
+//                                         width: 18,
+//                                         child:
+//                                             CircularProgressIndicator(
+//                                           strokeWidth: 2,
+//                                           color: Colors.white,
+//                                         ),
+//                                       )
+//                                     : const Icon(Icons.save_outlined),
+
+//                                 label: Text(
+//                                   isSaving
+//                                       ? "Saving..."
+//                                       : "Save Topic",
+//                                 ),
+
+//                                 style: ElevatedButton.styleFrom(
+//                                   backgroundColor: Colors.blue,
+//                                   foregroundColor: Colors.white,
+//                                   minimumSize: const Size(0, 50),
+//                                   shape: RoundedRectangleBorder(
+//                                     borderRadius:
+//                                         BorderRadius.circular(8),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+
+//                 const SizedBox(height: 25),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -555,11 +1214,16 @@ class TopicsForm extends StatefulWidget {
 }
 
 class _TopicsFormState extends State<TopicsForm> {
-  final formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  final topicController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final imageController = TextEditingController();
+  final TextEditingController topicController =
+      TextEditingController();
+
+  final TextEditingController descriptionController =
+      TextEditingController();
+
+  final TextEditingController imageController =
+      TextEditingController();
 
   final ImagePicker imagePicker = ImagePicker();
 
@@ -578,11 +1242,14 @@ class _TopicsFormState extends State<TopicsForm> {
     super.dispose();
   }
 
-  // Image options show karna
+  // --------------------------------------------------
+  // Show image options
+  // --------------------------------------------------
+
   void showImageOptions() {
     showModalBottomSheet(
       context: context,
-      builder: (context) {
+      builder: (bottomSheetContext) {
         return SafeArea(
           child: Wrap(
             children: [
@@ -590,25 +1257,30 @@ class _TopicsFormState extends State<TopicsForm> {
                 leading: const Icon(Icons.link),
                 title: const Text("Add Image URL"),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.pop(bottomSheetContext);
                   showUrlDialog();
                 },
               ),
+
               ListTile(
                 leading: const Icon(Icons.photo_library),
                 title: const Text("Select Image from Gallery"),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.pop(bottomSheetContext);
                   pickImage();
                 },
               ),
+
               if (selectedImage != null ||
                   imageController.text.trim().isNotEmpty)
                 ListTile(
-                  leading: const Icon(Icons.delete, color: Colors.red),
+                  leading: const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
                   title: const Text("Remove Image"),
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.pop(bottomSheetContext);
 
                     setState(() {
                       selectedImage = null;
@@ -623,17 +1295,22 @@ class _TopicsFormState extends State<TopicsForm> {
     );
   }
 
-  // URL enter karne ka dialog
+  // --------------------------------------------------
+  // Add image URL dialog
+  // --------------------------------------------------
+
   void showUrlDialog() {
-    final urlController = TextEditingController(
+    final TextEditingController urlController =
+        TextEditingController(
       text: imageController.text,
     );
 
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
         return AlertDialog(
           title: const Text("Add Image URL"),
+
           content: TextField(
             controller: urlController,
             keyboardType: TextInputType.url,
@@ -642,27 +1319,37 @@ class _TopicsFormState extends State<TopicsForm> {
               border: OutlineInputBorder(),
             ),
           ),
+
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
               },
               child: const Text("Cancel"),
             ),
+
             ElevatedButton(
               onPressed: () {
-                final url = urlController.text.trim();
+                final String url = urlController.text.trim();
 
                 if (url.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Please enter image URL"),
+                    ),
+                  );
+
                   return;
                 }
 
                 setState(() {
+                  // URL select hone par gallery file remove hogi
                   selectedImage = null;
+
                   imageController.text = url;
                 });
 
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
               },
               child: const Text("Add"),
             ),
@@ -672,7 +1359,10 @@ class _TopicsFormState extends State<TopicsForm> {
     );
   }
 
-  // Gallery se image select karna
+  // --------------------------------------------------
+  // Pick image from gallery
+  // --------------------------------------------------
+
   Future<void> pickImage() async {
     try {
       final XFile? image = await imagePicker.pickImage(
@@ -683,34 +1373,47 @@ class _TopicsFormState extends State<TopicsForm> {
         return;
       }
 
+      if (!mounted) {
+        return;
+      }
+
       setState(() {
+        // Gallery image select hone par URL clear hoga
         selectedImage = File(image.path);
 
-        // URL clear karna, kyunki ab file select hui hai
         imageController.clear();
       });
-    } catch (e) {
-      if (!mounted) return;
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Image select error: $e"),
+          content: Text("Image select error: $error"),
         ),
       );
     }
   }
 
-  // Topic save karna
+  // --------------------------------------------------
+  // Add topic API call
+  // --------------------------------------------------
+
   Future<void> addTopic() async {
     if (!formKey.currentState!.validate()) {
       return;
     }
 
-    if (selectedImage == null &&
-        imageController.text.trim().isEmpty) {
+    final String imageUrl = imageController.text.trim();
+
+    // Image URL ya gallery image me se koi ek required hai
+    if (selectedImage == null && imageUrl.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Please select an image or add image URL"),
+          content: Text(
+            "Please select an image or add image URL",
+          ),
         ),
       );
 
@@ -722,17 +1425,20 @@ class _TopicsFormState extends State<TopicsForm> {
     });
 
     try {
-      final response = await ApiServices().addTopicAPI(
+      final Map<String, dynamic> response =
+          await ApiServices().addTopicAPI(
         name: topicController.text.trim(),
         description: descriptionController.text.trim(),
         status: status,
-        imageUrl: imageController.text.trim(),
+        imageUrl: imageUrl.isEmpty ? null : imageUrl,
         imageFile: selectedImage,
       );
 
-      print(response);
+      debugPrint("Add Topic Response: $response");
 
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -741,14 +1447,16 @@ class _TopicsFormState extends State<TopicsForm> {
       );
 
       Navigator.pop(context);
-    } catch (e) {
-      print(e);
+    } catch (error) {
+      debugPrint("Add Topic Error: $error");
 
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Error: $e"),
+          content: Text("Error: $error"),
         ),
       );
     } finally {
@@ -760,8 +1468,12 @@ class _TopicsFormState extends State<TopicsForm> {
     }
   }
 
+  // --------------------------------------------------
   // Image preview
-  Widget imagePreview(bool isDark, Color inputColor) {
+  // --------------------------------------------------
+
+  Widget imagePreview() {
+    // Gallery image preview
     if (selectedImage != null) {
       return Image.file(
         selectedImage!,
@@ -771,13 +1483,18 @@ class _TopicsFormState extends State<TopicsForm> {
       );
     }
 
+    // URL image preview
     if (imageController.text.trim().isNotEmpty) {
       return Image.network(
         imageController.text.trim(),
         width: double.infinity,
         height: 180,
         fit: BoxFit.cover,
-        loadingBuilder: (context, child, loadingProgress) {
+        loadingBuilder: (
+          BuildContext context,
+          Widget child,
+          ImageChunkEvent? loadingProgress,
+        ) {
           if (loadingProgress == null) {
             return child;
           }
@@ -786,7 +1503,11 @@ class _TopicsFormState extends State<TopicsForm> {
             child: CircularProgressIndicator(),
           );
         },
-        errorBuilder: (context, error, stackTrace) {
+        errorBuilder: (
+          BuildContext context,
+          Object error,
+          StackTrace? stackTrace,
+        ) {
           return const Center(
             child: Icon(
               Icons.broken_image,
@@ -797,6 +1518,7 @@ class _TopicsFormState extends State<TopicsForm> {
       );
     }
 
+    // Default preview
     return const Center(
       child: Icon(
         Icons.image_outlined,
@@ -805,33 +1527,40 @@ class _TopicsFormState extends State<TopicsForm> {
     );
   }
 
+  // --------------------------------------------------
+  // Build UI
+  // --------------------------------------------------
+
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bool isDark =
+        Theme.of(context).brightness == Brightness.dark;
 
-    final backgroundColor = isDark
+    final Color backgroundColor = isDark
         ? const Color(0xFF0F172A)
         : const Color(0xFFF5F7FA);
 
-    final cardColor = isDark
+    final Color cardColor = isDark
         ? const Color(0xFF172554)
         : Colors.white;
 
-    final textColor = isDark
+    final Color textColor = isDark
         ? Colors.white
         : Colors.black87;
 
-    final secondaryColor = isDark
+    final Color secondaryColor = isDark
         ? Colors.white70
         : Colors.black54;
 
-    final inputColor = isDark
+    final Color inputColor = isDark
         ? const Color(0xFF1E3A5F)
         : Colors.grey.shade100;
 
     return Scaffold(
       backgroundColor: backgroundColor,
+
       appBar: Header(),
+
       drawer: Drawerbar(),
 
       body: SingleChildScrollView(
@@ -891,7 +1620,10 @@ class _TopicsFormState extends State<TopicsForm> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // --------------------------------------------------
                         // Topic name
+                        // --------------------------------------------------
+
                         Text(
                           "Topic Name",
                           style: TextStyle(
@@ -905,21 +1637,24 @@ class _TopicsFormState extends State<TopicsForm> {
 
                         TextFormField(
                           controller: topicController,
-                          style: TextStyle(color: textColor),
+                          style: TextStyle(
+                            color: textColor,
+                          ),
 
                           decoration: InputDecoration(
                             hintText: "Enter topic name",
                             hintStyle: TextStyle(
                               color: secondaryColor,
                             ),
-                            prefixIcon: Icon(
+                            prefixIcon: const Icon(
                               Icons.topic_outlined,
                               color: Colors.blue,
                             ),
                             filled: true,
                             fillColor: inputColor,
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius:
+                                  BorderRadius.circular(8),
                               borderSide: BorderSide.none,
                             ),
                           ),
@@ -936,7 +1671,10 @@ class _TopicsFormState extends State<TopicsForm> {
 
                         const SizedBox(height: 20),
 
+                        // --------------------------------------------------
                         // Description
+                        // --------------------------------------------------
+
                         Text(
                           "Description",
                           style: TextStyle(
@@ -951,7 +1689,9 @@ class _TopicsFormState extends State<TopicsForm> {
                         TextFormField(
                           controller: descriptionController,
                           maxLines: 5,
-                          style: TextStyle(color: textColor),
+                          style: TextStyle(
+                            color: textColor,
+                          ),
 
                           decoration: InputDecoration(
                             hintText: "Enter topic description",
@@ -959,7 +1699,9 @@ class _TopicsFormState extends State<TopicsForm> {
                               color: secondaryColor,
                             ),
                             prefixIcon: const Padding(
-                              padding: EdgeInsets.only(bottom: 75),
+                              padding: EdgeInsets.only(
+                                bottom: 75,
+                              ),
                               child: Icon(
                                 Icons.description_outlined,
                                 color: Colors.blue,
@@ -968,7 +1710,8 @@ class _TopicsFormState extends State<TopicsForm> {
                             filled: true,
                             fillColor: inputColor,
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius:
+                                  BorderRadius.circular(8),
                               borderSide: BorderSide.none,
                             ),
                           ),
@@ -985,7 +1728,10 @@ class _TopicsFormState extends State<TopicsForm> {
 
                         const SizedBox(height: 20),
 
+                        // --------------------------------------------------
                         // Status
+                        // --------------------------------------------------
+
                         Text(
                           "Status",
                           style: TextStyle(
@@ -999,7 +1745,9 @@ class _TopicsFormState extends State<TopicsForm> {
 
                         DropdownButtonFormField<String>(
                           value: status,
-                          style: TextStyle(color: textColor),
+                          style: TextStyle(
+                            color: textColor,
+                          ),
                           dropdownColor: cardColor,
 
                           decoration: InputDecoration(
@@ -1010,32 +1758,42 @@ class _TopicsFormState extends State<TopicsForm> {
                             filled: true,
                             fillColor: inputColor,
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius:
+                                  BorderRadius.circular(8),
                               borderSide: BorderSide.none,
                             ),
                           ),
 
                           items: const [
                             DropdownMenuItem(
-                              value: "active",
+                              value: "Active",
                               child: Text("Active"),
                             ),
                             DropdownMenuItem(
-                              value: "inactive",
+                              value: "Inactive",
                               child: Text("Inactive"),
                             ),
                           ],
 
-                          onChanged: (value) {
-                            setState(() {
-                              status = value!;
-                            });
-                          },
+                          onChanged: isSaving
+                              ? null
+                              : (value) {
+                                  if (value == null) {
+                                    return;
+                                  }
+
+                                  setState(() {
+                                    status = value;
+                                  });
+                                },
                         ),
 
                         const SizedBox(height: 20),
 
+                        // --------------------------------------------------
                         // Cover image
+                        // --------------------------------------------------
+
                         Text(
                           "Cover Image",
                           style: TextStyle(
@@ -1048,7 +1806,9 @@ class _TopicsFormState extends State<TopicsForm> {
                         const SizedBox(height: 8),
 
                         GestureDetector(
-                          onTap: showImageOptions,
+                          onTap: isSaving
+                              ? null
+                              : showImageOptions,
 
                           child: Container(
                             height: 180,
@@ -1057,17 +1817,15 @@ class _TopicsFormState extends State<TopicsForm> {
 
                             decoration: BoxDecoration(
                               color: inputColor,
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius:
+                                  BorderRadius.circular(8),
                               border: Border.all(
                                 color: Colors.blue,
                                 width: 1,
                               ),
                             ),
 
-                            child: imagePreview(
-                              isDark,
-                              inputColor,
-                            ),
+                            child: imagePreview(),
                           ),
                         ),
 
@@ -1077,8 +1835,14 @@ class _TopicsFormState extends State<TopicsForm> {
                           width: double.infinity,
 
                           child: OutlinedButton.icon(
-                            onPressed: showImageOptions,
-                            icon: const Icon(Icons.add_photo_alternate),
+                            onPressed: isSaving
+                                ? null
+                                : showImageOptions,
+
+                            icon: const Icon(
+                              Icons.add_photo_alternate,
+                            ),
+
                             label: const Text(
                               "Add Image URL or Select Gallery Image",
                             ),
@@ -1087,7 +1851,10 @@ class _TopicsFormState extends State<TopicsForm> {
 
                         const SizedBox(height: 30),
 
-                        // Buttons
+                        // --------------------------------------------------
+                        // Action buttons
+                        // --------------------------------------------------
+
                         Row(
                           children: [
                             Expanded(
@@ -1137,7 +1904,9 @@ class _TopicsFormState extends State<TopicsForm> {
                                           color: Colors.white,
                                         ),
                                       )
-                                    : const Icon(Icons.save_outlined),
+                                    : const Icon(
+                                        Icons.save_outlined,
+                                      ),
 
                                 label: Text(
                                   isSaving

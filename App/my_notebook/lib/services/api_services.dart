@@ -119,6 +119,65 @@ class ApiServices {
 
 
 
+// Future<Map<String, dynamic>> addTopicAPI({
+//   required String name,
+//   required String description,
+//   required String status,
+//   String? imageUrl,
+//   File? imageFile,
+// }) async {
+//   final uri = Uri.parse("$baseURL/topics");
+
+//   final request = http.MultipartRequest(
+//     "POST",
+//     uri,
+//   );
+
+//   request.fields["name"] = name;
+//   request.fields["description"] = description;
+//   request.fields["status"] = status;
+
+//   // URL option
+//   if (imageFile == null &&
+//       imageUrl != null &&
+//       imageUrl.trim().isNotEmpty) {
+//     request.fields["coverImageUrl"] = imageUrl.trim();
+//   }
+
+//   // Gallery file option
+//   if (imageFile != null) {
+//     request.files.add(
+//       await http.MultipartFile.fromPath(
+//         "coverImage",
+//         imageFile.path,
+//       ),
+//     );
+//   }
+
+//   final streamedResponse = await request.send();
+
+//   final response = await http.Response.fromStream(
+//     streamedResponse,
+//   );
+
+//   final data = jsonDecode(response.body);
+
+//   if (response.statusCode >= 200 &&
+//       response.statusCode < 300) {
+//     return data;
+//   }
+
+//   throw Exception(
+//     data["message"] ?? "Failed to add topic",
+//   );
+// }
+
+
+
+
+
+
+
 Future<Map<String, dynamic>> addTopicAPI({
   required String name,
   required String description,
@@ -135,7 +194,7 @@ Future<Map<String, dynamic>> addTopicAPI({
 
   request.fields["name"] = name;
   request.fields["description"] = description;
-  request.fields["status"] = status;
+  request.fields["status"] = status.toLowerCase();
 
   // URL option
   if (imageFile == null &&
@@ -160,17 +219,48 @@ Future<Map<String, dynamic>> addTopicAPI({
     streamedResponse,
   );
 
-  final data = jsonDecode(response.body);
+  // Debugging
+  print("STATUS CODE: ${response.statusCode}");
+  print("RESPONSE BODY: ${response.body}");
 
+  // Success response
   if (response.statusCode >= 200 &&
       response.statusCode < 300) {
-    return data;
+    try {
+      final data = jsonDecode(response.body);
+
+      return Map<String, dynamic>.from(data);
+    } catch (e) {
+      throw Exception(
+        "Invalid JSON response: ${response.body}",
+      );
+    }
+  }
+
+  // Error response
+  String errorMessage;
+
+  try {
+    final errorData = jsonDecode(response.body);
+
+    errorMessage = errorData["message"]?.toString() ??
+        "Failed to add topic";
+  } catch (e) {
+    errorMessage = response.body.isNotEmpty
+        ? response.body
+        : "Server error occurred";
   }
 
   throw Exception(
-    data["message"] ?? "Failed to add topic",
+    "Error ${response.statusCode}: $errorMessage",
   );
 }
+
+
+
+
+
+
   // getTopic
 
   Future<List<dynamic>> getTopicsAPI() async {
