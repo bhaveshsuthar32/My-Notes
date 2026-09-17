@@ -41,7 +41,7 @@ export const createNotes = async (req, res) => {
       status,
     } = req.body;
 
-    if (!title || !content || !topicId) {
+    if (!title || !content || !topicid) {
       return res.status(400).json({
         success: false,
         message: "Title, content and topicid are required",
