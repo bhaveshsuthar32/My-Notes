@@ -41,13 +41,13 @@ export const createNotesService = async (data) => {
       subtitle,
       content,
       images,
-      topicId,
+      topicid,
       status,
     } = data;
 
     const result = await client.query(
       `INSERT INTO notes
-      (title, subtitle, content, images, "topicId", status)
+      (title, subtitle, content, images, "topicid", status)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *`,
       [
@@ -55,7 +55,7 @@ export const createNotesService = async (data) => {
         subtitle,
         content,
         images,
-        topicId,
+        topicid,
         status || "active",
       ]
     );

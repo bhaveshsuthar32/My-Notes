@@ -37,14 +37,14 @@ export const createNotes = async (req, res) => {
       title,
       subtitle,
       content,
-      topicId,
+      topicid,
       status,
     } = req.body;
 
     if (!title || !content || !topicId) {
       return res.status(400).json({
         success: false,
-        message: "Title, content and topicId are required",
+        message: "Title, content and topicid are required",
       });
     }
 
@@ -64,7 +64,7 @@ export const createNotes = async (req, res) => {
       subtitle,
       content,
       images: imageUrls,
-      topicId: Number(topicId),
+      topicid: Number(topicid),
       status: status?.toLowerCase() || "active",
     });
 
