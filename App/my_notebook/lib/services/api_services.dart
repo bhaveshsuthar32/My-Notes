@@ -119,63 +119,6 @@ class ApiServices {
 
 
 
-// Future<Map<String, dynamic>> addTopicAPI({
-//   required String name,
-//   required String description,
-//   required String status,
-//   String? imageUrl,
-//   File? imageFile,
-// }) async {
-//   final uri = Uri.parse("$baseURL/topics");
-
-//   final request = http.MultipartRequest(
-//     "POST",
-//     uri,
-//   );
-
-//   request.fields["name"] = name;
-//   request.fields["description"] = description;
-//   request.fields["status"] = status;
-
-//   // URL option
-//   if (imageFile == null &&
-//       imageUrl != null &&
-//       imageUrl.trim().isNotEmpty) {
-//     request.fields["coverImageUrl"] = imageUrl.trim();
-//   }
-
-//   // Gallery file option
-//   if (imageFile != null) {
-//     request.files.add(
-//       await http.MultipartFile.fromPath(
-//         "coverImage",
-//         imageFile.path,
-//       ),
-//     );
-//   }
-
-//   final streamedResponse = await request.send();
-
-//   final response = await http.Response.fromStream(
-//     streamedResponse,
-//   );
-
-//   final data = jsonDecode(response.body);
-
-//   if (response.statusCode >= 200 &&
-//       response.statusCode < 300) {
-//     return data;
-//   }
-
-//   throw Exception(
-//     data["message"] ?? "Failed to add topic",
-//   );
-// }
-
-
-
-
-
 
 
 Future<Map<String, dynamic>> addTopicAPI({
@@ -294,4 +237,306 @@ Future<Map<String, dynamic>> addTopicAPI({
       throw Exception("Error: $e");
     }
   }
+
+
+
+
+  // add notes
+
+
+
+  // // Add Notes API
+  // Future<Map<String, dynamic>> addNotesAPI({
+  //   required String title,
+  //   required String subtitle,
+  //   required String content,
+  //   required int topicId,
+  //   required String status,
+  //   List<File> images = const [],
+  // }) async {
+  //   final Uri uri = Uri.parse("$baseURL/notes");
+
+  //   final http.MultipartRequest request =
+  //       http.MultipartRequest(
+  //     "POST",
+  //     uri,
+  //   );
+
+  //   // Text fields
+  //   request.fields["title"] = title;
+  //   request.fields["subtitle"] = subtitle;
+  //   request.fields["content"] = content;
+  //   request.fields["topicId"] = topicId.toString();
+  //   request.fields["status"] = status.toLowerCase();
+
+  //   // Multiple images
+  //   for (final File image in images) {
+  //     request.files.add(
+  //       await http.MultipartFile.fromPath(
+  //         "images",
+  //         image.path,
+  //       ),
+  //     );
+  //   }
+
+  //   final streamedResponse = await request.send();
+
+  //   final http.Response response =
+  //       await http.Response.fromStream(
+  //     streamedResponse,
+  //   );
+
+  //   print("STATUS CODE: ${response.statusCode}");
+  //   print("RESPONSE BODY: ${response.body}");
+
+  //   if (response.statusCode >= 200 &&
+  //       response.statusCode < 300) {
+  //     try {
+  //       final dynamic decodedData =
+  //           jsonDecode(response.body);
+
+  //       return Map<String, dynamic>.from(decodedData);
+  //     } catch (error) {
+  //       throw Exception(
+  //         "Invalid JSON response: ${response.body}",
+  //       );
+  //     }
+  //   }
+
+  //   String errorMessage;
+
+  //   try {
+  //     final dynamic decodedError =
+  //         jsonDecode(response.body);
+
+  //     errorMessage =
+  //         decodedError["message"]?.toString() ??
+  //             "Failed to create note";
+  //   } catch (error) {
+  //     errorMessage = response.body.isNotEmpty
+  //         ? response.body
+  //         : "Server error occurred";
+  //   }
+
+  //   throw Exception(
+  //     "Error ${response.statusCode}: $errorMessage",
+  //   );
+  // }
+
+
+
+// // Add Notes API
+// Future<Map<String, dynamic>> addNotesAPI({
+//   required String title,
+//   required String subtitle,
+//   required String content,
+//   required int topicid,
+//   required String status,
+//   List<File> images = const [],
+//   List<String> imageUrls = const []
+//   ,
+// }) async {
+//   final Uri uri = Uri.parse("$baseURL/notes");
+
+//   final http.MultipartRequest request = http.MultipartRequest(
+//     "POST",
+//     uri,
+//   );
+
+//   // Text fields
+//   request.fields["title"] = title;
+//   request.fields["subtitle"] = subtitle;
+//   request.fields["content"] = content;
+//   request.fields["topicid"] = topicid.toString();
+//   request.fields["status"] = status.toLowerCase();
+
+//   // Image URLs send as JSON string
+//   if (imageUrls.isNotEmpty) {
+//     request.fields["imageUrls"] = jsonEncode(imageUrls);
+//   }
+
+//   // Multiple gallery images
+//   for (final File image in images) {
+//     request.files.add(
+//       await http.MultipartFile.fromPath(
+//         "images",
+//         image.path,
+//       ),
+//     );
+//   }
+
+//   final streamedResponse = await request.send();
+
+//   final http.Response response = await http.Response.fromStream(
+//     streamedResponse,
+//   );
+
+//   print("STATUS CODE: ${response.statusCode}");
+//   print("RESPONSE BODY: ${response.body}");
+
+//   if (response.statusCode >= 200 &&
+//       response.statusCode < 300) {
+//     try {
+//       final dynamic decodedData = jsonDecode(response.body);
+
+//       return Map<String, dynamic>.from(decodedData);
+//     } catch (error) {
+//       throw Exception(
+//         "Invalid JSON response: ${response.body}",
+//       );
+//     }
+//   }
+
+//   String errorMessage;
+
+//   try {
+//     final dynamic decodedError = jsonDecode(response.body);
+
+//     errorMessage = decodedError["message"]?.toString() ??
+//         "Failed to create note";
+//   } catch (error) {
+//     errorMessage = response.body.isNotEmpty
+//         ? response.body
+//         : "Server error occurred";
+//   }
+
+//   throw Exception(
+//     "Error ${response.statusCode}: $errorMessage",
+//   );
+// }
+
+
+// create notes
+
+// Add Notes API
+Future<Map<String, dynamic>> addNotesAPI({
+  required String title,
+  required int topicid,
+  required String status,
+
+  required List<Map<String, dynamic>> subtitles,
+  required List<Map<String, dynamic>> contents,
+  required List<Map<String, dynamic>> images,
+  required List<Map<String, dynamic>> contentOrder,
+
+  List<File> imageFiles = const [],
+}) async {
+  final Uri uri = Uri.parse("$baseURL/notes");
+
+  final http.MultipartRequest request =
+      http.MultipartRequest(
+    "POST",
+    uri,
+  );
+
+  // ============================================================
+  // FIXED FIELDS
+  // ============================================================
+
+  request.fields["title"] = title;
+  request.fields["topicid"] = topicid.toString();
+  request.fields["status"] = status.toLowerCase();
+
+  // ============================================================
+  // DYNAMIC CONTENT
+  // ============================================================
+
+  request.fields["subtitle"] =
+      jsonEncode(subtitles);
+
+  request.fields["content"] =
+      jsonEncode(contents);
+
+  request.fields["images"] =
+      jsonEncode(
+    images,
+  );
+
+  request.fields["contentOrder"] =
+      jsonEncode(
+    contentOrder,
+  );
+
+  // ============================================================
+  // IMAGE FILES
+  // ============================================================
+
+  for (final File image in imageFiles) {
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        "images",
+        image.path,
+      ),
+    );
+  }
+
+  // ============================================================
+  // SEND REQUEST
+  // ============================================================
+
+  final streamedResponse =
+      await request.send();
+
+  final http.Response response =
+      await http.Response.fromStream(
+    streamedResponse,
+  );
+
+  print(
+    "STATUS CODE: ${response.statusCode}",
+  );
+
+  print(
+    "RESPONSE BODY: ${response.body}",
+  );
+
+  // ============================================================
+  // SUCCESS
+  // ============================================================
+
+  if (response.statusCode >= 200 &&
+      response.statusCode < 300) {
+    try {
+      final dynamic decodedData =
+          jsonDecode(
+        response.body,
+      );
+
+      return Map<String, dynamic>.from(
+        decodedData,
+      );
+    } catch (error) {
+      throw Exception(
+        "Invalid JSON response: ${response.body}",
+      );
+    }
+  }
+
+  // ============================================================
+  // ERROR
+  // ============================================================
+
+  String errorMessage;
+
+  try {
+    final dynamic decodedError =
+        jsonDecode(
+      response.body,
+    );
+
+    errorMessage =
+        decodedError["message"]?.toString() ??
+            "Failed to create note";
+  } catch (error) {
+    errorMessage =
+        response.body.isNotEmpty
+            ? response.body
+            : "Server error occurred";
+  }
+
+  throw Exception(
+    "Error ${response.statusCode}: $errorMessage",
+  );
+}
+
 }

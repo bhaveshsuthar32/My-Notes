@@ -109,6 +109,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:my_notebook/theme/theme_provider.dart';
+import 'package:my_notebook/user/pages/notes/new_notes_form.dart';
 import 'package:provider/provider.dart';
 import 'package:my_notebook/services/api_services.dart';
 import 'package:my_notebook/user/components/drawerbar.dart';
@@ -436,6 +437,21 @@ class _NotesPageState extends State<NotesPage> {
                         );
                       },
                     ),
+
+
+                          // FLOATING ACTION BUTTON
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const NewNotes(),
+            ),
+          );
+        },
+
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
