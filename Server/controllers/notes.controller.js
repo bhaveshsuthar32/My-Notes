@@ -35,43 +35,133 @@ export const createNotes = async (req, res) => {
 
     const {
       title,
-      subtitle,
-      content,
       topicid,
       status,
+      subtitle,
+      content,
+      contentOrder,
     } = req.body;
 
-    if (!title || !content || !topicid) {
+    // -----------------------------
+    // Required fields
+    // -----------------------------
+    if (!title || !topicid) {
       return res.status(400).json({
         success: false,
-        message: "Title, content and topicid are required",
+        message: "Title and topicid are required",
       });
     }
 
-    let imageUrls = [];
+    // -----------------------------
+    // Parse arrays
+    // -----------------------------
+    let subtitles = [];
+    let contents = [];
+    let order = [];
 
-    // Multiple images upload
+    try {
+      subtitles = subtitle
+        ? typeof subtitle === "string"
+          ? JSON.parse(subtitle)
+          : subtitle
+        : [];
+
+      contents = content
+        ? typeof content === "string"
+          ? JSON.parse(content)
+          : content
+        : [];
+
+      order = contentOrder
+        ? typeof contentOrder === "string"
+          ? JSON.parse(contentOrder)
+          : contentOrder
+        : [];
+    } catch (error) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid JSON format in subtitle, content or contentOrder",
+      });
+    }
+
+    // -----------------------------
+    // Validate arrays
+    // -----------------------------
+    if (!Array.isArray(subtitles)) {
+      return res.status(400).json({
+        success: false,
+        message: "subtitle must be an array",
+      });
+    }
+
+    if (!Array.isArray(contents)) {
+      return res.status(400).json({
+        success: false,
+        message: "content must be an array",
+      });
+    }
+
+    if (!Array.isArray(order)) {
+      return res.status(400).json({
+        success: false,
+        message: "contentOrder must be an array",
+      });
+    }
+
+    // -----------------------------
+    // Upload images
+    // -----------------------------
+    let images = [];
+
     if (req.files && req.files.length > 0) {
-      imageUrls = await Promise.all(
+      images = await Promise.all(
         req.files.map(async (file) => {
-          return await uploadFile(file);
+          const imageUrl = await uploadFile(file);
+
+          return imageUrl;
         })
       );
     }
 
+    // -----------------------------
+    // Create image objects
+    // -----------------------------
+    const imageData = images.map((imageUrl, index) => {
+      return {
+        id: `img_${Date.now()}_${index}`,
+        value: imageUrl,
+      };
+    });
+
+    // -----------------------------
+    // Add image IDs into order
+    // -----------------------------
+    const finalOrder = order.map((item) => {
+      return {
+        id: item.id,
+        type: item.type,
+      };
+    });
+
+    // -----------------------------
+    // Create note
+    // -----------------------------
     const note = await createNotesService({
       title,
-      subtitle,
-      content,
-      images: imageUrls,
+      subtitle: subtitles,
+      content: contents,
+      images: imageData,
+      contentOrder: finalOrder,
       topicid: Number(topicid),
       status: status?.toLowerCase() || "active",
     });
 
     return res.status(201).json({
       success: true,
+      message: "Note created successfully",
       data: note,
     });
+
   } catch (error) {
     console.error("CREATE NOTES ERROR:", error);
 
@@ -81,6 +171,63 @@ export const createNotes = async (req, res) => {
     });
   }
 };
+
+
+// export const createNotes = async (req, res) => {
+//   try {
+//     console.log("CREATE NOTES API STARTED");
+
+//     console.log("BODY:", req.body);
+//     console.log("FILES:", req.files);
+
+//     const {
+//       title,
+//       subtitle,
+//       content,
+//       topicid,
+//       status,
+//     } = req.body;
+
+//     if (!title || !content || !topicid) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Title, content and topicid are required",
+//       });
+//     }
+
+//     let imageUrls = [];
+
+//     // Multiple images upload
+//     if (req.files && req.files.length > 0) {
+//       imageUrls = await Promise.all(
+//         req.files.map(async (file) => {
+//           return await uploadFile(file);
+//         })
+//       );
+//     }
+
+//     const note = await createNotesService({
+//       title,
+//       subtitle,
+//       content,
+//       images: imageUrls,
+//       topicid: Number(topicid),
+//       status: status?.toLowerCase() || "active",
+//     });
+
+//     return res.status(201).json({
+//       success: true,
+//       data: note,
+//     });
+//   } catch (error) {
+//     console.error("CREATE NOTES ERROR:", error);
+
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message || "Failed to create note",
+//     });
+//   }
+// };
 
 // get notes
 

@@ -34,6 +34,7 @@ const client = await pool.connect();
 // };
 
 
+
 export const createNotesService = async (data) => {
   try {
     const {
@@ -41,30 +42,73 @@ export const createNotesService = async (data) => {
       subtitle,
       content,
       images,
+      contentOrder,
       topicid,
       status,
     } = data;
 
     const result = await client.query(
       `INSERT INTO notes
-      (title, subtitle, content, images, "topicid", status)
-      VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING *`,
-      [
+      (
         title,
         subtitle,
         content,
         images,
+        "contentOrder",
+        "topicid",
+        status
+      )
+      VALUES ($1::text, $2::jsonb, $3::jsonb, $4::jsonb, $5::jsonb, $6, $7)
+      RETURNING *`,
+      [
+        title,
+        JSON.stringify(subtitle || []),
+        JSON.stringify(content || []),
+        JSON.stringify(images || []),
+        JSON.stringify(contentOrder || []),
         topicid,
         status || "active",
       ]
     );
 
     return result.rows[0];
+
   } catch (error) {
     throw error;
   }
 };
+
+// export const createNotesService = async (data) => {
+//   try {
+//     const {
+//       title,
+//       subtitle,
+//       content,
+//       images,
+//       topicid,
+//       status,
+//     } = data;
+
+//     const result = await client.query(
+//       `INSERT INTO notes
+//       (title, subtitle, content, images, "topicid", status)
+//       VALUES ($1, $2, $3, $4, $5, $6)
+//       RETURNING *`,
+//       [
+//         title,
+//         subtitle,
+//         content,
+//         images,
+//         topicid,
+//         status || "active",
+//       ]
+//     );
+
+//     return result.rows[0];
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 
 
 
