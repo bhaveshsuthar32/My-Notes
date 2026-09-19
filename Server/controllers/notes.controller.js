@@ -23,9 +23,6 @@ import { createNotesService, deleteNotes, getNotes, getNotesById, getNotesByTopi
 //   }
 // };
 
-
-
-
 export const createNotes = async (req, res) => {
   try {
     console.log("CREATE NOTES API STARTED");
@@ -39,12 +36,11 @@ export const createNotes = async (req, res) => {
       status,
       subtitle,
       content,
+      images,
       contentOrder,
     } = req.body;
 
-    // -----------------------------
     // Required fields
-    // -----------------------------
     if (!title || !topicid) {
       return res.status(400).json({
         success: false,
@@ -52,11 +48,10 @@ export const createNotes = async (req, res) => {
       });
     }
 
-    // -----------------------------
     // Parse arrays
-    // -----------------------------
     let subtitles = [];
     let contents = [];
+    let imageList = [];
     let order = [];
 
     try {
@@ -72,6 +67,12 @@ export const createNotes = async (req, res) => {
           : content
         : [];
 
+      imageList = images
+        ? typeof images === "string"
+          ? JSON.parse(images)
+          : images
+        : [];
+
       order = contentOrder
         ? typeof contentOrder === "string"
           ? JSON.parse(contentOrder)
@@ -80,13 +81,12 @@ export const createNotes = async (req, res) => {
     } catch (error) {
       return res.status(400).json({
         success: false,
-        message: "Invalid JSON format in subtitle, content or contentOrder",
+        message:
+          "Invalid JSON format in subtitle, content, images or contentOrder",
       });
     }
 
-    // -----------------------------
     // Validate arrays
-    // -----------------------------
     if (!Array.isArray(subtitles)) {
       return res.status(400).json({
         success: false,
@@ -101,6 +101,13 @@ export const createNotes = async (req, res) => {
       });
     }
 
+    if (!Array.isArray(imageList)) {
+      return res.status(400).json({
+        success: false,
+        message: "images must be an array",
+      });
+    }
+
     if (!Array.isArray(order)) {
       return res.status(400).json({
         success: false,
@@ -108,44 +115,32 @@ export const createNotes = async (req, res) => {
       });
     }
 
-    // -----------------------------
-    // Upload images
-    // -----------------------------
-    let images = [];
+    // Upload local images
+    let fileIndex = 0;
 
-    if (req.files && req.files.length > 0) {
-      images = await Promise.all(
-        req.files.map(async (file) => {
-          const imageUrl = await uploadFile(file);
+    for (const image of imageList) {
+      if (!image.value && req.files && req.files[fileIndex]) {
+        const uploadedUrl = await uploadFile(req.files[fileIndex]);
 
-          return imageUrl;
-        })
-      );
+        image.value = uploadedUrl;
+
+        fileIndex++;
+      }
     }
 
-    // -----------------------------
-    // Create image objects
-    // -----------------------------
-    const imageData = images.map((imageUrl, index) => {
-      return {
-        id: `img_${Date.now()}_${index}`,
-        value: imageUrl,
-      };
-    });
+    // Final image data
+    const imageData = imageList.map((image) => ({
+      id: image.id,
+      value: image.value,
+    }));
 
-    // -----------------------------
-    // Add image IDs into order
-    // -----------------------------
-    const finalOrder = order.map((item) => {
-      return {
-        id: item.id,
-        type: item.type,
-      };
-    });
+    // Final content order
+    const finalOrder = order.map((item) => ({
+      id: item.id,
+      type: item.type,
+    }));
 
-    // -----------------------------
     // Create note
-    // -----------------------------
     const note = await createNotesService({
       title,
       subtitle: subtitles,
@@ -161,7 +156,6 @@ export const createNotes = async (req, res) => {
       message: "Note created successfully",
       data: note,
     });
-
   } catch (error) {
     console.error("CREATE NOTES ERROR:", error);
 
@@ -171,7 +165,6 @@ export const createNotes = async (req, res) => {
     });
   }
 };
-
 
 // export const createNotes = async (req, res) => {
 //   try {
