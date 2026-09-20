@@ -294,3 +294,67 @@ export const deleteNotesById = async(req, res) =>{
     });
   }
 }
+
+
+// Update Notes Layout
+export const updateNotesLayoutById = async (req, res) => {
+  try {
+    const { notesId } = req.params;
+    const { layout } = req.body;
+
+    console.log("UPDATE NOTES LAYOUT API STARTED");
+    console.log("NOTE ID:", notesId);
+    console.log("LAYOUT:", layout);
+
+    // Check note ID
+    if (!notesId) {
+      return res.status(400).json({
+        success: false,
+        message: "notesId is required",
+      });
+    }
+
+    // Check layout
+    if (!layout) {
+      return res.status(400).json({
+        success: false,
+        message: "layout is required",
+      });
+    }
+
+    // Layout must be object
+    if (typeof layout !== "object" || Array.isArray(layout)) {
+      return res.status(400).json({
+        success: false,
+        message: "layout must be a valid object",
+      });
+    }
+
+    // Update layout
+    const updatedNote = await updateNotesLayout(
+      notesId,
+      layout
+    );
+
+    if (!updatedNote) {
+      return res.status(404).json({
+        success: false,
+        message: "Note not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Note layout updated successfully",
+      data: updatedNote,
+    });
+
+  } catch (error) {
+    console.error("UPDATE NOTES LAYOUT ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to update note layout",
+    });
+  }
+};
