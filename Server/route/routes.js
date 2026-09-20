@@ -1,6 +1,6 @@
 import express from "express"
 import { getUser, login, registerUser } from "../controllers/admin.controller.js";
-import { createNotes, deleteNotesById, getNoteDetailsById, getNotesByTopic, getNotesList } from "../controllers/notes.controller.js";
+import { createNotes, deleteNotesById, getNoteDetailsById, getNotesByTopic, getNotesList, updateNotesLayoutById } from "../controllers/notes.controller.js";
 import { createTopic, deleteTopicById, getTopicList, getTopicListById } from "../controllers/topics.controller.js";
 import upload from "../middleware/upload.js";
 const router = express.Router();
@@ -18,5 +18,7 @@ router.get("/note-details/:notesId",getNoteDetailsById);
 router.get("/notesbytopic/:topicId", getNotesByTopic);
 router.delete("/delete-notes/:notesId", deleteNotesById);
 router.delete("/delete-topic/:topicId", deleteTopicById);
+
+router.put("/notes/:notesId/layout", updateNotesLayoutById);
 
 export default router;
