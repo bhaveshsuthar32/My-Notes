@@ -111,6 +111,27 @@ export const createNotesService = async (data) => {
 // };
 
 
+export const updateNotesLayout = async (notesId, layout) => {
+  try {
+    const result = await client.query(
+      `
+      UPDATE notes
+      SET layout = $1::jsonb
+      WHERE id = $2
+      RETURNING *
+      `,
+      [
+        JSON.stringify(layout),
+        notesId,
+      ]
+    );
+
+    return result.rows[0] || null;
+
+  } catch (error) {
+    throw error;
+  }
+};
 
 // get notes 
 
