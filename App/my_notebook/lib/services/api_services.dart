@@ -23,6 +23,66 @@ class ApiServices {
     }
   }
 
+
+// Update Notes Layout
+Future<Map<String, dynamic>> updateNotesLayoutAPI({
+  required int notesId,
+  required Map<String, dynamic> layout,
+}) async {
+  try {
+    final Uri uri = Uri.parse(
+      "$baseURL/notes/$notesId/layout",
+    );
+
+    final response = await http.put(
+      uri,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        "layout": layout,
+      }),
+    );
+
+    print("UPDATE LAYOUT STATUS: ${response.statusCode}");
+    print("UPDATE LAYOUT RESPONSE: ${response.body}");
+
+    if (response.statusCode >= 200 &&
+        response.statusCode < 300) {
+      final dynamic decodedData =
+          jsonDecode(response.body);
+
+      return Map<String, dynamic>.from(decodedData);
+    }
+
+    String errorMessage;
+
+    try {
+      final dynamic decodedError =
+          jsonDecode(response.body);
+
+      errorMessage =
+          decodedError["message"]?.toString() ??
+              "Failed to update note layout";
+    } catch (e) {
+      errorMessage = response.body.isNotEmpty
+          ? response.body
+          : "Server error occurred";
+    }
+
+    throw Exception(
+      "Error ${response.statusCode}: $errorMessage",
+    );
+  } catch (e) {
+    throw Exception(
+      "Update layout error: $e",
+    );
+  }
+}
+
+
+
+
   // login
   Future<Map<String, dynamic>> loginApi(String email, String password) async {
     try {

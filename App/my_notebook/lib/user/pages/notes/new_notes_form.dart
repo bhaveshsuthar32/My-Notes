@@ -1,1183 +1,3 @@
-// import 'package:flutter/material.dart';
-
-// class New_Notes extends StatefulWidget {
-//   const New_Notes({super.key});
-
-//   @override
-//   State<New_Notes> createState() => _New_NotesState();
-// }
-
-// class _New_NotesState extends State<New_Notes> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Column(
-//         children: [
-
-//           Text("new note"),
-//         ],
-//       ),
-//     ) ;
-//   }
-// }
-
-
-
-
-
-
-
-
-// import 'package:flutter/material.dart';
-
-// class NewNotes extends StatefulWidget {
-//   const NewNotes({super.key});
-
-//   @override
-//   State<NewNotes> createState() => _NewNotesState();
-// }
-
-// class _NewNotesState extends State<NewNotes> {
-//   final _formKey = GlobalKey<FormState>();
-
-//   final titleController = TextEditingController();
-//   final subtitleController = TextEditingController();
-//   final contentController = TextEditingController();
-
-//   String? selectedTopic;
-//   String status = "Active";
-
-//   final List<String> topics = [
-//     "Flutter",
-//     "Node.js",
-//     "Java",
-//     "English",
-//   ];
-
-//   final List<String> statusList = [
-//     "Active",
-//     "Inactive",
-//   ];
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final width = MediaQuery.of(context).size.width;
-
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text("Create New Note"),
-//         centerTitle: true,
-//       ),
-//       body: SafeArea(
-//         child: SingleChildScrollView(
-//           padding: const EdgeInsets.all(18),
-//           child: Form(
-//             key: _formKey,
-//             child: Column(
-//               children: [
-
-//                 /// Title
-                
-//                 TextFormField(
-//                   controller: titleController,
-//                   decoration: const InputDecoration(
-//                     labelText: "Title",
-//                     border: OutlineInputBorder(),
-//                     prefixIcon: Icon(Icons.title),
-//                   ),
-//                 ),
-
-//                 const SizedBox(height: 16),
-
-//                 /// Subtitle
-//                 TextFormField(
-//                   controller: subtitleController,
-//                   decoration: const InputDecoration(
-//                     labelText: "Subtitle",
-//                     border: OutlineInputBorder(),
-//                     prefixIcon: Icon(Icons.subtitles),
-//                   ),
-//                 ),
-
-//                 const SizedBox(height: 16),
-
-//                 /// Content
-//                 TextFormField(
-//                   controller: contentController,
-//                   maxLines: 8,
-//                   decoration: const InputDecoration(
-//                     labelText: "Content",
-//                     alignLabelWithHint: true,
-//                     border: OutlineInputBorder(),
-//                     prefixIcon: Icon(Icons.description),
-//                   ),
-//                 ),
-
-//                 const SizedBox(height: 16),
-
-//                 /// Topic Dropdown
-//                 DropdownButtonFormField<String>(
-//                   value: selectedTopic,
-//                   decoration: const InputDecoration(
-//                     border: OutlineInputBorder(),
-//                     labelText: "Topic",
-//                     prefixIcon: Icon(Icons.category),
-//                   ),
-//                   items: topics.map((topic) {
-//                     return DropdownMenuItem(
-//                       value: topic,
-//                       child: Text(topic),
-//                     );
-//                   }).toList(),
-//                   onChanged: (value) {
-//                     setState(() {
-//                       selectedTopic = value;
-//                     });
-//                   },
-//                 ),
-
-//                 const SizedBox(height: 16),
-
-//                 /// Status Dropdown
-//                 DropdownButtonFormField<String>(
-//                   value: status,
-//                   decoration: const InputDecoration(
-//                     border: OutlineInputBorder(),
-//                     labelText: "Status",
-//                     prefixIcon: Icon(Icons.toggle_on),
-//                   ),
-//                   items: statusList.map((value) {
-//                     return DropdownMenuItem(
-//                       value: value,
-//                       child: Text(value),
-//                     );
-//                   }).toList(),
-//                   onChanged: (value) {
-//                     setState(() {
-//                       status = value!;
-//                     });
-//                   },
-//                 ),
-
-//                 const SizedBox(height: 20),
-
-//                 /// Image Picker UI
-//                 Container(
-//                   width: double.infinity,
-//                   height: 140,
-//                   decoration: BoxDecoration(
-//                     borderRadius: BorderRadius.circular(12),
-//                     border: Border.all(color: Colors.grey.shade400),
-//                   ),
-//                   child: InkWell(
-//                     onTap: () {
-//                       // TODO: Pick Images
-//                     },
-//                     child: Column(
-//                       mainAxisAlignment: MainAxisAlignment.center,
-//                       children: const [
-//                         Icon(
-//                           Icons.add_a_photo,
-//                           size: 40,
-//                           color: Colors.grey,
-//                         ),
-//                         SizedBox(height: 8),
-//                         Text(
-//                           "Select Images",
-//                           style: TextStyle(fontSize: 16),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-
-//                 const SizedBox(height: 30),
-
-//                 SizedBox(
-//                   width: width,
-//                   height: 50,
-//                   child: ElevatedButton.icon(
-//                     onPressed: () {
-//                       // TODO Save API
-//                     },
-//                     icon: const Icon(Icons.save),
-//                     label: const Text(
-//                       "Save Note",
-//                       style: TextStyle(fontSize: 16),
-//                     ),
-//                   ),
-//                 ),
-
-//                 const SizedBox(height: 20),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
-
-// import 'dart:io';
-
-// import 'package:flutter/material.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:my_notebook/services/api_services.dart';
-
-// class NewNotes extends StatefulWidget {
-//   const NewNotes({super.key});
-
-//   @override
-//   State<NewNotes> createState() => _NewNotesState();
-// }
-
-// class _NewNotesState extends State<NewNotes> {
-//   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-//   final TextEditingController titleController =
-//       TextEditingController();
-
-//   final TextEditingController subtitleController =
-//       TextEditingController();
-
-//   final TextEditingController contentController =
-//       TextEditingController();
-
-//   final ImagePicker imagePicker = ImagePicker();
-
-//   // Dynamic topics from database
-//   List<Map<String, dynamic>> topics = [];
-
-//   int? selectedTopicId;
-
-//   String selectedStatus = "active";
-
-//   bool isLoadingTopics = true;
-//   bool isSaving = false;
-
-//   // Gallery images
-//   final List<File> selectedImages = [];
-
-//   // Image URLs
-//   final List<String> imageUrls = [];
-
-//   @override
-//   void initState() {
-//     super.initState();
-
-//     fetchTopics();
-//   }
-
-//   @override
-//   void dispose() {
-//     titleController.dispose();
-//     subtitleController.dispose();
-//     contentController.dispose();
-
-//     super.dispose();
-//   }
-
-//   // ============================================================
-//   // FETCH TOPICS
-//   // ============================================================
-
-//   Future<void> fetchTopics() async {
-//     try {
-//       final result = await ApiServices().getTopicsAPI();
-
-//       if (!mounted) return;
-
-//       setState(() {
-//         topics = List<Map<String, dynamic>>.from(result);
-//         isLoadingTopics = false;
-//       });
-//     } catch (error) {
-//       if (!mounted) return;
-
-//       setState(() {
-//         isLoadingTopics = false;
-//       });
-
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(
-//           content: Text(
-//             "Topics load nahi ho paaye: $error",
-//           ),
-//         ),
-//       );
-//     }
-//   }
-
-//   // ============================================================
-//   // GALLERY IMAGE
-//   // ============================================================
-
-//   Future<void> addGalleryImage() async {
-//     try {
-//       final XFile? pickedImage =
-//           await imagePicker.pickImage(
-//         source: ImageSource.gallery,
-//       );
-
-//       if (pickedImage == null) {
-//         return;
-//       }
-
-//       if (!mounted) return;
-
-//       setState(() {
-//         selectedImages.add(
-//           File(pickedImage.path),
-//         );
-//       });
-//     } catch (error) {
-//       if (!mounted) return;
-
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         const SnackBar(
-//           content: Text(
-//             "Gallery image select nahi ho payi",
-//           ),
-//         ),
-//       );
-//     }
-//   }
-
-//   // ============================================================
-//   // IMAGE URL
-//   // ============================================================
-
-//   Future<void> addImageUrl() async {
-//     final String? enteredUrl = await showDialog<String>(
-//       context: context,
-//       builder: (dialogContext) {
-//         return _ImageUrlDialog();
-//       },
-//     );
-
-//     if (enteredUrl == null ||
-//         enteredUrl.trim().isEmpty) {
-//       return;
-//     }
-
-//     if (!mounted) return;
-
-//     setState(() {
-//       imageUrls.add(
-//         enteredUrl.trim(),
-//       );
-//     });
-//   }
-
-//   // ============================================================
-//   // IMAGE OPTIONS
-//   // ============================================================
-
-//   void showImageOptions() {
-//     showModalBottomSheet(
-//       context: context,
-//       builder: (bottomSheetContext) {
-//         return SafeArea(
-//           child: Wrap(
-//             children: [
-//               ListTile(
-//                 leading: const Icon(
-//                   Icons.photo_library,
-//                 ),
-//                 title: const Text(
-//                   "Choose from Gallery",
-//                 ),
-//                 onTap: () {
-//                   Navigator.pop(
-//                     bottomSheetContext,
-//                   );
-
-//                   addGalleryImage();
-//                 },
-//               ),
-
-//               ListTile(
-//                 leading: const Icon(
-//                   Icons.link,
-//                 ),
-//                 title: const Text(
-//                   "Add Image URL",
-//                 ),
-//                 onTap: () {
-//                   Navigator.pop(
-//                     bottomSheetContext,
-//                   );
-
-//                   addImageUrl();
-//                 },
-//               ),
-//             ],
-//           ),
-//         );
-//       },
-//     );
-//   }
-
-//   // ============================================================
-//   // REMOVE GALLERY IMAGE
-//   // ============================================================
-
-//   void removeGalleryImage(int index) {
-//     if (index < 0 ||
-//         index >= selectedImages.length) {
-//       return;
-//     }
-
-//     setState(() {
-//       selectedImages.removeAt(index);
-//     });
-//   }
-
-//   // ============================================================
-//   // REMOVE URL IMAGE
-//   // ============================================================
-
-//   void removeImageUrl(int index) {
-//     if (index < 0 ||
-//         index >= imageUrls.length) {
-//       return;
-//     }
-
-//     setState(() {
-//       imageUrls.removeAt(index);
-//     });
-//   }
-
-//   // ============================================================
-//   // SAVE NOTE
-//   // ============================================================
-
-//   Future<void> saveNote() async {
-//     FocusScope.of(context).unfocus();
-
-//     if (!_formKey.currentState!.validate()) {
-//       return;
-//     }
-
-//     if (selectedTopicId == null) {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         const SnackBar(
-//           content: Text(
-//             "Please select a topic",
-//           ),
-//         ),
-//       );
-
-//       return;
-//     }
-
-//     if (!mounted) return;
-
-//     setState(() {
-//       isSaving = true;
-//     });
-
-//     try {
-//       await ApiServices().addNotesAPI(
-//         title: titleController.text.trim(),
-//         subtitle: subtitleController.text.trim(),
-//         content: contentController.text.trim(),
-
-//         // IMPORTANT:
-//         // Your service parameter should be topicId
-//         topicid: selectedTopicId!,
-
-//         status: selectedStatus,
-
-//         // Gallery images
-//         images: selectedImages,
-
-//         // URL images
-//         imageUrls: imageUrls,
-//       );
-
-//       if (!mounted) return;
-
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         const SnackBar(
-//           content: Text(
-//             "Note created successfully",
-//           ),
-//         ),
-//       );
-
-//       Navigator.pop(context);
-//     } catch (error) {
-//       if (!mounted) return;
-
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(
-//           content: Text(
-//             "Note save nahi ho payi: $error",
-//           ),
-//         ),
-//       );
-//     } finally {
-//       if (!mounted) return;
-
-//       setState(() {
-//         isSaving = false;
-//       });
-//     }
-//   }
-
-//   // ============================================================
-//   // TEXT FIELD
-//   // ============================================================
-
-//   Widget buildTextField({
-//     required TextEditingController controller,
-//     required String label,
-//     required String hint,
-//     int maxLines = 1,
-//     TextInputType keyboardType =
-//         TextInputType.text,
-//   }) {
-//     return TextFormField(
-//       controller: controller,
-//       maxLines: maxLines,
-//       keyboardType: keyboardType,
-
-//       decoration: InputDecoration(
-//         labelText: label,
-//         hintText: hint,
-
-//         border: OutlineInputBorder(
-//           borderRadius:
-//               BorderRadius.circular(12),
-//         ),
-//       ),
-
-//       validator: (value) {
-//         if (value == null ||
-//             value.trim().isEmpty) {
-//           return "$label is required";
-//         }
-
-//         return null;
-//       },
-//     );
-//   }
-
-//   // ============================================================
-//   // TOPIC DROPDOWN
-//   // ============================================================
-
-//   Widget buildTopicDropdown() {
-//     if (isLoadingTopics) {
-//       return const Center(
-//         child: Padding(
-//           padding: EdgeInsets.all(12),
-//           child: CircularProgressIndicator(),
-//         ),
-//       );
-//     }
-
-//     if (topics.isEmpty) {
-//       return const Text(
-//         "No topics available",
-//         style: TextStyle(
-//           color: Colors.red,
-//         ),
-//       );
-//     }
-
-//     return DropdownButtonFormField<int>(
-//       value: selectedTopicId,
-
-//       decoration: InputDecoration(
-//         labelText: "Select Topic",
-
-//         border: OutlineInputBorder(
-//           borderRadius:
-//               BorderRadius.circular(12),
-//         ),
-//       ),
-
-//       items: topics.map((topic) {
-//         return DropdownMenuItem<int>(
-//           value: topic["id"] is int
-//               ? topic["id"]
-//               : int.tryParse(
-//                   topic["id"].toString(),
-//                 ),
-
-//           child: Text(
-//             topic["name"].toString(),
-//           ),
-//         );
-//       }).toList(),
-
-//       onChanged: (value) {
-//         setState(() {
-//           selectedTopicId = value;
-//         });
-//       },
-
-//       validator: (value) {
-//         if (value == null) {
-//           return "Please select a topic";
-//         }
-
-//         return null;
-//       },
-//     );
-//   }
-
-//   // ============================================================
-//   // IMAGES SECTION
-//   // ============================================================
-
-//   Widget buildImagesSection() {
-//     return Column(
-//       crossAxisAlignment:
-//           CrossAxisAlignment.start,
-
-//       children: [
-//         const Text(
-//           "Images",
-//           style: TextStyle(
-//             fontSize: 16,
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-
-//         const SizedBox(height: 12),
-
-//         Wrap(
-//           spacing: 12,
-//           runSpacing: 12,
-
-//           children: [
-//             // ==================================================
-//             // GALLERY IMAGES
-//             // ==================================================
-
-//             ...selectedImages
-//                 .asMap()
-//                 .entries
-//                 .map((entry) {
-//               final int index =
-//                   entry.key;
-
-//               final File image =
-//                   entry.value;
-
-//               return Stack(
-//                 children: [
-//                   ClipRRect(
-//                     borderRadius:
-//                         BorderRadius.circular(
-//                       12,
-//                     ),
-
-//                     child: Image.file(
-//                       image,
-//                       width: 110,
-//                       height: 110,
-//                       fit: BoxFit.cover,
-//                     ),
-//                   ),
-
-//                   Positioned(
-//                     top: 4,
-//                     right: 4,
-
-//                     child: InkWell(
-//                       onTap: () {
-//                         removeGalleryImage(
-//                           index,
-//                         );
-//                       },
-
-//                       child: Container(
-//                         padding:
-//                             const EdgeInsets.all(
-//                           3,
-//                         ),
-
-//                         decoration:
-//                             const BoxDecoration(
-//                           color: Colors.red,
-//                           shape:
-//                               BoxShape.circle,
-//                         ),
-
-//                         child: const Icon(
-//                           Icons.close,
-//                           size: 18,
-//                           color:
-//                               Colors.white,
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               );
-//             }),
-
-//             // ==================================================
-//             // URL IMAGES
-//             // ==================================================
-
-//             ...imageUrls
-//                 .asMap()
-//                 .entries
-//                 .map((entry) {
-//               final int index =
-//                   entry.key;
-
-//               final String url =
-//                   entry.value;
-
-//               return Stack(
-//                 children: [
-//                   ClipRRect(
-//                     borderRadius:
-//                         BorderRadius.circular(
-//                       12,
-//                     ),
-
-//                     child: Image.network(
-//                       url,
-//                       width: 110,
-//                       height: 110,
-//                       fit: BoxFit.cover,
-
-//                       errorBuilder:
-//                           (
-//                         context,
-//                         error,
-//                         stackTrace,
-//                       ) {
-//                         return Container(
-//                           width: 110,
-//                           height: 110,
-
-//                           decoration:
-//                               BoxDecoration(
-//                             color: Colors
-//                                 .grey
-//                                 .shade300,
-
-//                             borderRadius:
-//                                 BorderRadius
-//                                     .circular(
-//                               12,
-//                             ),
-//                           ),
-
-//                           child:
-//                               const Icon(
-//                             Icons
-//                                 .broken_image,
-//                             size: 35,
-//                           ),
-//                         );
-//                       },
-//                     ),
-//                   ),
-
-//                   Positioned(
-//                     top: 4,
-//                     right: 4,
-
-//                     child: InkWell(
-//                       onTap: () {
-//                         removeImageUrl(
-//                           index,
-//                         );
-//                       },
-
-//                       child: Container(
-//                         padding:
-//                             const EdgeInsets.all(
-//                           3,
-//                         ),
-
-//                         decoration:
-//                             const BoxDecoration(
-//                           color: Colors.red,
-//                           shape:
-//                               BoxShape.circle,
-//                         ),
-
-//                         child: const Icon(
-//                           Icons.close,
-//                           size: 18,
-//                           color:
-//                               Colors.white,
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               );
-//             }),
-
-//             // ==================================================
-//             // ADD MORE BUTTON
-//             // ==================================================
-
-//             InkWell(
-//               onTap: showImageOptions,
-
-//               borderRadius:
-//                   BorderRadius.circular(12),
-
-//               child: Container(
-//                 width: 110,
-//                 height: 110,
-
-//                 decoration:
-//                     BoxDecoration(
-//                   border: Border.all(
-//                     color: Colors.grey,
-//                     width: 1.5,
-//                   ),
-
-//                   borderRadius:
-//                       BorderRadius.circular(
-//                     12,
-//                   ),
-//                 ),
-
-//                 child: const Column(
-//                   mainAxisAlignment:
-//                       MainAxisAlignment
-//                           .center,
-
-//                   children: [
-//                     Icon(
-//                       Icons.add,
-//                       size: 32,
-//                     ),
-
-//                     SizedBox(height: 5),
-
-//                     Text(
-//                       "Add More",
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ],
-//     );
-//   }
-
-//   // ============================================================
-//   // BUILD
-//   // ============================================================
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text(
-//           "New Note",
-//         ),
-//       ),
-
-//       body: Center(
-//         child: SingleChildScrollView(
-//           padding:
-//               const EdgeInsets.all(20),
-
-//           child: ConstrainedBox(
-//             constraints:
-//                 const BoxConstraints(
-//               maxWidth: 850,
-//             ),
-
-//             child: Form(
-//               key: _formKey,
-
-//               child: Column(
-//                 crossAxisAlignment:
-//                     CrossAxisAlignment
-//                         .stretch,
-
-//                 children: [
-//                   // ==================================================
-//                   // TITLE
-//                   // ==================================================
-
-//                   buildTextField(
-//                     controller:
-//                         titleController,
-
-//                     label: "Title",
-
-//                     hint:
-//                         "Enter note title",
-//                   ),
-
-//                   const SizedBox(
-//                     height: 16,
-//                   ),
-
-//                   // ==================================================
-//                   // SUBTITLE
-//                   // ==================================================
-
-//                   buildTextField(
-//                     controller:
-//                         subtitleController,
-
-//                     label: "Subtitle",
-
-//                     hint:
-//                         "Enter note subtitle",
-//                   ),
-
-//                   const SizedBox(
-//                     height: 16,
-//                   ),
-
-//                   // ==================================================
-//                   // CONTENT
-//                   // ==================================================
-
-//                   buildTextField(
-//                     controller:
-//                         contentController,
-
-//                     label: "Content",
-
-//                     hint:
-//                         "Enter note content",
-
-//                     maxLines: 8,
-//                   ),
-
-//                   const SizedBox(
-//                     height: 16,
-//                   ),
-
-//                   // ==================================================
-//                   // TOPIC
-//                   // ==================================================
-
-//                   buildTopicDropdown(),
-
-//                   const SizedBox(
-//                     height: 16,
-//                   ),
-
-//                   // ==================================================
-//                   // STATUS
-//                   // ==================================================
-
-//                   DropdownButtonFormField<
-//                       String>(
-//                     value:
-//                         selectedStatus,
-
-//                     decoration:
-//                         InputDecoration(
-//                       labelText:
-//                           "Status",
-
-//                       border:
-//                           OutlineInputBorder(
-//                         borderRadius:
-//                             BorderRadius
-//                                 .circular(
-//                           12,
-//                         ),
-//                       ),
-//                     ),
-
-//                     items: const [
-//                       DropdownMenuItem(
-//                         value: "active",
-//                         child:
-//                             Text("Active"),
-//                       ),
-
-//                       DropdownMenuItem(
-//                         value: "inactive",
-//                         child:
-//                             Text(
-//                           "Inactive",
-//                         ),
-//                       ),
-//                     ],
-
-//                     onChanged:
-//                         (value) {
-//                       if (value ==
-//                           null) {
-//                         return;
-//                       }
-
-//                       setState(() {
-//                         selectedStatus =
-//                             value;
-//                       });
-//                     },
-//                   ),
-
-//                   const SizedBox(
-//                     height: 20,
-//                   ),
-
-//                   // ==================================================
-//                   // IMAGES
-//                   // ==================================================
-
-//                   buildImagesSection(),
-
-//                   const SizedBox(
-//                     height: 28,
-//                   ),
-
-//                   // ==================================================
-//                   // SAVE BUTTON
-//                   // ==================================================
-
-//                   SizedBox(
-//                     height: 52,
-
-//                     child:
-//                         ElevatedButton(
-//                       onPressed:
-//                           isSaving
-//                               ? null
-//                               : saveNote,
-
-//                       child: isSaving
-//                           ? const SizedBox(
-//                               height: 24,
-//                               width: 24,
-
-//                               child:
-//                                   CircularProgressIndicator(),
-//                             )
-//                           : const Text(
-//                               "Save Note",
-
-//                               style:
-//                                   TextStyle(
-//                                 fontSize:
-//                                     16,
-//                               ),
-//                             ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-// // ================================================================
-// // IMAGE URL DIALOG
-// // ================================================================
-
-// class _ImageUrlDialog extends StatefulWidget {
-//   const _ImageUrlDialog();
-
-//   @override
-//   State<_ImageUrlDialog> createState() =>
-//       _ImageUrlDialogState();
-// }
-
-// class _ImageUrlDialogState
-//     extends State<_ImageUrlDialog> {
-//   final TextEditingController
-//       urlController =
-//       TextEditingController();
-
-//   @override
-//   void dispose() {
-//     urlController.dispose();
-
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(
-//     BuildContext context,
-//   ) {
-//     return AlertDialog(
-//       title: const Text(
-//         "Add Image URL",
-//       ),
-
-//       content: TextField(
-//         controller: urlController,
-
-//         keyboardType:
-//             TextInputType.url,
-
-//         decoration:
-//             const InputDecoration(
-//           hintText:
-//               "https://example.com/image.jpg",
-
-//           border:
-//               OutlineInputBorder(),
-//         ),
-//       ),
-
-//       actions: [
-//         TextButton(
-//           onPressed: () {
-//             Navigator.pop(
-//               context,
-//             );
-//           },
-
-//           child: const Text(
-//             "Cancel",
-//           ),
-//         ),
-
-//         ElevatedButton(
-//           onPressed: () {
-//             final String url =
-//                 urlController.text
-//                     .trim();
-
-//             if (url.isEmpty) {
-//               return;
-//             }
-
-//             Navigator.pop(
-//               context,
-//               url,
-//             );
-//           },
-
-//           child: const Text(
-//             "Add",
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-
-
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -1211,14 +31,12 @@ class NewNotes extends StatefulWidget {
 }
 
 class _NewNotesState extends State<NewNotes> {
-  final GlobalKey<FormState> _formKey =
-      GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController titleController =
       TextEditingController();
 
-  final ImagePicker imagePicker =
-      ImagePicker();
+  final ImagePicker imagePicker = ImagePicker();
 
   final List<NoteBlock> blocks = [];
 
@@ -1231,10 +49,30 @@ class _NewNotesState extends State<NewNotes> {
   bool isLoadingTopics = true;
   bool isSaving = false;
 
+  bool get isDark =>
+      Theme.of(context).brightness == Brightness.dark;
+
+  Color get backgroundColor =>
+      isDark ? const Color(0xFF121212) : const Color(0xFFF7F8FA);
+
+  Color get cardColor =>
+      isDark ? const Color(0xFF1E1E1E) : Colors.white;
+
+  Color get fieldColor =>
+      isDark ? const Color(0xFF292929) : const Color(0xFFF7F8FA);
+
+  Color get borderColor =>
+      isDark ? Colors.grey.shade800 : Colors.grey.shade200;
+
+  Color get secondaryTextColor =>
+      isDark ? Colors.grey.shade400 : Colors.grey.shade600;
+
+  Color get primaryTextColor =>
+      isDark ? Colors.white : Colors.black87;
+
   @override
   void initState() {
     super.initState();
-
     fetchTopics();
   }
 
@@ -1249,21 +87,14 @@ class _NewNotesState extends State<NewNotes> {
     super.dispose();
   }
 
-  // Fetch topics
-
   Future<void> fetchTopics() async {
     try {
-      final result =
-          await ApiServices().getTopicsAPI();
+      final result = await ApiServices().getTopicsAPI();
 
       if (!mounted) return;
 
       setState(() {
-        topics =
-            List<Map<String, dynamic>>.from(
-          result,
-        );
-
+        topics = List<Map<String, dynamic>>.from(result);
         isLoadingTopics = false;
       });
     } catch (error) {
@@ -1283,8 +114,6 @@ class _NewNotesState extends State<NewNotes> {
     }
   }
 
-  // Add text field
-
   void addTextBlock(String type) {
     final String id =
         "${type}_${DateTime.now().microsecondsSinceEpoch}";
@@ -1298,8 +127,6 @@ class _NewNotesState extends State<NewNotes> {
       );
     });
   }
-
-  // Add image field
 
   void addImageBlock() {
     final String id =
@@ -1315,123 +142,231 @@ class _NewNotesState extends State<NewNotes> {
     });
   }
 
-  // Add field options
-
   void showAddFieldOptions() {
     showModalBottomSheet(
       context: context,
+      backgroundColor: cardColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(24),
+        ),
+      ),
       builder: (context) {
         return SafeArea(
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: const Icon(
-                  Icons.title,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 12,
+            ),
+            child: Wrap(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    20,
+                    8,
+                    20,
+                    12,
+                  ),
+                  child: Text(
+                    "Add Field",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: primaryTextColor,
+                    ),
+                  ),
                 ),
-                title: const Text(
-                  "Heading",
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor:
+                        isDark
+                            ? Colors.blue.shade900
+                            : Colors.blue.shade50,
+                    child: Icon(
+                      Icons.title,
+                      color: isDark
+                          ? Colors.blue.shade200
+                          : Colors.blue.shade700,
+                    ),
+                  ),
+                  title: Text(
+                    "Heading",
+                    style: TextStyle(
+                      color: primaryTextColor,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    addTextBlock("heading");
+                  },
                 ),
-                onTap: () {
-                  Navigator.pop(context);
-
-                  addTextBlock(
-                    "heading",
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.subtitles,
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor:
+                        isDark
+                            ? Colors.purple.shade900
+                            : Colors.purple.shade50,
+                    child: Icon(
+                      Icons.subtitles,
+                      color: isDark
+                          ? Colors.purple.shade200
+                          : Colors.purple.shade700,
+                    ),
+                  ),
+                  title: Text(
+                    "Subtitle",
+                    style: TextStyle(
+                      color: primaryTextColor,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    addTextBlock("subtitle");
+                  },
                 ),
-                title: const Text(
-                  "Subtitle",
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor:
+                        isDark
+                            ? Colors.orange.shade900
+                            : Colors.orange.shade50,
+                    child: Icon(
+                      Icons.notes,
+                      color: isDark
+                          ? Colors.orange.shade200
+                          : Colors.orange.shade700,
+                    ),
+                  ),
+                  title: Text(
+                    "Paragraph",
+                    style: TextStyle(
+                      color: primaryTextColor,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    addTextBlock("content");
+                  },
                 ),
-                onTap: () {
-                  Navigator.pop(context);
-
-                  addTextBlock(
-                    "subtitle",
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.notes,
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor:
+                        isDark
+                            ? Colors.green.shade900
+                            : Colors.green.shade50,
+                    child: Icon(
+                      Icons.image,
+                      color: isDark
+                          ? Colors.green.shade200
+                          : Colors.green.shade700,
+                    ),
+                  ),
+                  title: Text(
+                    "Image",
+                    style: TextStyle(
+                      color: primaryTextColor,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    addImageBlock();
+                  },
                 ),
-                title: const Text(
-                  "Paragraph",
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-
-                  addTextBlock(
-                    "content",
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.image,
-                ),
-                title: const Text(
-                  "Image",
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-
-                  addImageBlock();
-                },
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
     );
   }
-
-  // Image options
 
   void showImageOptions(int index) {
     showModalBottomSheet(
       context: context,
+      backgroundColor: cardColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(24),
+        ),
+      ),
       builder: (context) {
         return SafeArea(
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: const Icon(
-                  Icons.photo_library,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 12,
+            ),
+            child: Wrap(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    20,
+                    8,
+                    20,
+                    12,
+                  ),
+                  child: Text(
+                    "Select Image",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: primaryTextColor,
+                    ),
+                  ),
                 ),
-                title: const Text(
-                  "Choose from Gallery",
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor:
+                        isDark
+                            ? Colors.blue.shade900
+                            : Colors.blue.shade50,
+                    child: Icon(
+                      Icons.photo_library,
+                      color: isDark
+                          ? Colors.blue.shade200
+                          : Colors.blue.shade700,
+                    ),
+                  ),
+                  title: Text(
+                    "Choose from Gallery",
+                    style: TextStyle(
+                      color: primaryTextColor,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    pickImage(index);
+                  },
                 ),
-                onTap: () {
-                  Navigator.pop(context);
-
-                  pickImage(index);
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.link,
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor:
+                        isDark
+                            ? Colors.green.shade900
+                            : Colors.green.shade50,
+                    child: Icon(
+                      Icons.link,
+                      color: isDark
+                          ? Colors.green.shade200
+                          : Colors.green.shade700,
+                    ),
+                  ),
+                  title: Text(
+                    "Add Image URL",
+                    style: TextStyle(
+                      color: primaryTextColor,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    addImageUrl(index);
+                  },
                 ),
-                title: const Text(
-                  "Add Image URL",
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-
-                  addImageUrl(index);
-                },
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
     );
   }
-
-  // Pick image
 
   Future<void> pickImage(int index) async {
     try {
@@ -1465,8 +400,6 @@ class _NewNotesState extends State<NewNotes> {
     }
   }
 
-  // Add image URL
-
   Future<void> addImageUrl(int index) async {
     final String? url =
         await showDialog<String>(
@@ -1476,22 +409,17 @@ class _NewNotesState extends State<NewNotes> {
       },
     );
 
-    if (url == null ||
-        url.trim().isEmpty) {
+    if (url == null || url.trim().isEmpty) {
       return;
     }
 
     if (!mounted) return;
 
     setState(() {
-      blocks[index].imageUrl =
-          url.trim();
-
+      blocks[index].imageUrl = url.trim();
       blocks[index].imageFile = null;
     });
   }
-
-  // Remove block
 
   void removeBlock(int index) {
     blocks[index].dispose();
@@ -1500,8 +428,6 @@ class _NewNotesState extends State<NewNotes> {
       blocks.removeAt(index);
     });
   }
-
-  // Reorder
 
   void reorderBlock(
     int oldIndex,
@@ -1521,8 +447,6 @@ class _NewNotesState extends State<NewNotes> {
       );
     });
   }
-
-  // Save note
 
   Future<void> saveNote() async {
     FocusScope.of(context).unfocus();
@@ -1557,9 +481,7 @@ class _NewNotesState extends State<NewNotes> {
 
     for (final block in blocks) {
       if (block.type != "image" &&
-          block.controller.text
-              .trim()
-              .isEmpty) {
+          block.controller.text.trim().isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -1673,8 +595,7 @@ class _NewNotesState extends State<NewNotes> {
       }
 
       await ApiServices().addNotesAPI(
-        title:
-            titleController.text.trim(),
+        title: titleController.text.trim(),
         topicid: selectedTopicId!,
         status: selectedStatus,
         subtitles: subtitles,
@@ -1714,8 +635,6 @@ class _NewNotesState extends State<NewNotes> {
     }
   }
 
-  // Block title
-
   String getBlockTitle(String type) {
     switch (type) {
       case "heading":
@@ -1731,8 +650,6 @@ class _NewNotesState extends State<NewNotes> {
         return "Field";
     }
   }
-
-  // Text block
 
   Widget buildTextBlock(int index) {
     final NoteBlock block =
@@ -1752,38 +669,57 @@ class _NewNotesState extends State<NewNotes> {
       key: ValueKey(block.id),
       margin:
           const EdgeInsets.only(
-        bottom: 16,
+        bottom: 14,
       ),
       padding:
-          const EdgeInsets.all(12),
+          const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.grey.shade300,
-        ),
+        color: cardColor,
         borderRadius:
-            BorderRadius.circular(12),
+            BorderRadius.circular(16),
+        border: Border.all(
+          color: borderColor,
+        ),
+        boxShadow: isDark
+            ? []
+            : [
+                BoxShadow(
+                  color:
+                      Colors.black.withOpacity(
+                    0.04,
+                  ),
+                  blurRadius: 8,
+                  offset:
+                      const Offset(0, 3),
+                ),
+              ],
       ),
       child: Row(
         crossAxisAlignment:
             CrossAxisAlignment.start,
         children: [
-          const Padding(
+          Padding(
             padding:
-                EdgeInsets.only(
+                const EdgeInsets.only(
               top: 12,
             ),
             child: Icon(
-              Icons.drag_handle,
+              Icons.drag_indicator,
+              color:
+                  secondaryTextColor,
             ),
           ),
           const SizedBox(
-            width: 8,
+            width: 10,
           ),
           Expanded(
             child: TextFormField(
               controller:
                   block.controller,
               maxLines: maxLines,
+              style: TextStyle(
+                color: primaryTextColor,
+              ),
               decoration:
                   InputDecoration(
                 labelText:
@@ -1792,24 +728,62 @@ class _NewNotesState extends State<NewNotes> {
                 ),
                 hintText:
                     "Enter ${getBlockTitle(block.type).toLowerCase()}",
+                hintStyle: TextStyle(
+                  color:
+                      secondaryTextColor,
+                ),
+                labelStyle: TextStyle(
+                  color:
+                      secondaryTextColor,
+                ),
+                filled: true,
+                fillColor:
+                    fieldColor,
                 border:
                     OutlineInputBorder(
                   borderRadius:
-                      BorderRadius
-                          .circular(12),
+                      BorderRadius.circular(
+                    12,
+                  ),
+                  borderSide:
+                      BorderSide.none,
+                ),
+                enabledBorder:
+                    OutlineInputBorder(
+                  borderRadius:
+                      BorderRadius.circular(
+                    12,
+                  ),
+                  borderSide:
+                      BorderSide(
+                    color:
+                        borderColor,
+                  ),
+                ),
+                focusedBorder:
+                    OutlineInputBorder(
+                  borderRadius:
+                      BorderRadius.circular(
+                    12,
+                  ),
+                  borderSide:
+                      const BorderSide(
+                    color: Colors.blue,
+                    width: 1.5,
+                  ),
                 ),
               ),
             ),
           ),
           const SizedBox(
-            width: 8,
+            width: 6,
           ),
           IconButton(
             onPressed: () {
               removeBlock(index);
             },
             icon: const Icon(
-              Icons.close,
+              Icons.delete_outline,
               color: Colors.red,
             ),
           ),
@@ -1817,8 +791,6 @@ class _NewNotesState extends State<NewNotes> {
       ),
     );
   }
-
-  // Image block
 
   Widget buildImageBlock(int index) {
     final NoteBlock block =
@@ -1829,7 +801,7 @@ class _NewNotesState extends State<NewNotes> {
     if (block.imageFile != null) {
       imageWidget = Image.file(
         block.imageFile!,
-        height: 180,
+        height: 210,
         width: double.infinity,
         fit: BoxFit.cover,
       );
@@ -1837,7 +809,7 @@ class _NewNotesState extends State<NewNotes> {
         block.imageUrl!.isNotEmpty) {
       imageWidget = Image.network(
         block.imageUrl!,
-        height: 180,
+        height: 210,
         width: double.infinity,
         fit: BoxFit.cover,
         errorBuilder:
@@ -1846,26 +818,28 @@ class _NewNotesState extends State<NewNotes> {
           error,
           stackTrace,
         ) {
-          return const SizedBox(
-            height: 180,
+          return SizedBox(
+            height: 210,
             child: Center(
               child: Icon(
-                Icons.broken_image,
+                Icons.broken_image_outlined,
                 size: 50,
+                color:
+                    secondaryTextColor,
               ),
             ),
           );
         },
       );
     } else {
-      imageWidget =
-          const SizedBox(
-        height: 180,
+      imageWidget = SizedBox(
+        height: 210,
         child: Center(
           child: Icon(
-            Icons
-                .add_photo_alternate,
+            Icons.add_photo_alternate_outlined,
             size: 55,
+            color:
+                secondaryTextColor,
           ),
         ),
       );
@@ -1875,35 +849,61 @@ class _NewNotesState extends State<NewNotes> {
       key: ValueKey(block.id),
       margin:
           const EdgeInsets.only(
-        bottom: 16,
+        bottom: 14,
       ),
       padding:
-          const EdgeInsets.all(12),
+          const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.grey.shade300,
-        ),
+        color: cardColor,
         borderRadius:
-            BorderRadius.circular(12),
+            BorderRadius.circular(16),
+        border: Border.all(
+          color: borderColor,
+        ),
+        boxShadow: isDark
+            ? []
+            : [
+                BoxShadow(
+                  color:
+                      Colors.black.withOpacity(
+                    0.04,
+                  ),
+                  blurRadius: 8,
+                  offset:
+                      const Offset(0, 3),
+                ),
+              ],
       ),
       child: Column(
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.drag_handle,
+              Icon(
+                Icons.drag_indicator,
+                color:
+                    secondaryTextColor,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Icon(
+                Icons.image_outlined,
+                size: 20,
+                color:
+                    primaryTextColor,
               ),
               const SizedBox(
                 width: 8,
               ),
-              const Expanded(
+              Expanded(
                 child: Text(
                   "Image",
-                  style:
-                      TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight:
                         FontWeight.bold,
+                    color:
+                        primaryTextColor,
                   ),
                 ),
               ),
@@ -1911,27 +911,26 @@ class _NewNotesState extends State<NewNotes> {
                 onPressed: () {
                   removeBlock(index);
                 },
-                icon:
-                    const Icon(
-                  Icons.close,
+                icon: const Icon(
+                  Icons.delete_outline,
                   color: Colors.red,
                 ),
               ),
             ],
           ),
           const SizedBox(
-            height: 8,
+            height: 10,
           ),
           ClipRRect(
             borderRadius:
                 BorderRadius.circular(
-              12,
+              14,
             ),
             child: Container(
               width:
                   double.infinity,
               color:
-                  Colors.grey.shade200,
+                  fieldColor,
               child:
                   imageWidget,
             ),
@@ -1951,11 +950,38 @@ class _NewNotesState extends State<NewNotes> {
               },
               icon:
                   const Icon(
-                Icons.image,
+                Icons
+                    .add_photo_alternate,
               ),
               label:
                   const Text(
                 "Select Image",
+              ),
+              style:
+                  OutlinedButton.styleFrom(
+                foregroundColor:
+                    isDark
+                        ? Colors.blue.shade200
+                        : Colors.blue,
+                side:
+                    BorderSide(
+                  color:
+                      isDark
+                          ? Colors.blue.shade700
+                          : Colors.blue.shade200,
+                ),
+                padding:
+                    const EdgeInsets
+                        .symmetric(
+                  vertical: 13,
+                ),
+                shape:
+                    RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(
+                    12,
+                  ),
+                ),
               ),
             ),
           ),
@@ -1964,29 +990,57 @@ class _NewNotesState extends State<NewNotes> {
     );
   }
 
-  // Dynamic fields
-
   Widget buildBlocksSection() {
     if (blocks.isEmpty) {
       return Container(
         padding:
-            const EdgeInsets.all(20),
+            const EdgeInsets.all(28),
         decoration:
             BoxDecoration(
-          border: Border.all(
-            color:
-                Colors.grey.shade300,
-          ),
+          color: cardColor,
           borderRadius:
               BorderRadius.circular(
-            12,
+            16,
+          ),
+          border:
+              Border.all(
+            color: borderColor,
           ),
         ),
         child:
-            const Center(
-          child: Text(
-            "No fields added yet",
-          ),
+            Column(
+          children: [
+            Icon(
+              Icons.note_add_outlined,
+              size: 45,
+              color:
+                  secondaryTextColor,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "No fields added yet",
+              style: TextStyle(
+                color:
+                    secondaryTextColor,
+                fontSize: 15,
+              ),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Text(
+              "Add heading, paragraph, subtitle or image",
+              textAlign:
+                  TextAlign.center,
+              style: TextStyle(
+                color:
+                    secondaryTextColor,
+                fontSize: 13,
+              ),
+            ),
+          ],
         ),
       );
     }
@@ -1995,7 +1049,8 @@ class _NewNotesState extends State<NewNotes> {
       shrinkWrap: true,
       physics:
           const NeverScrollableScrollPhysics(),
-      itemCount: blocks.length,
+      itemCount:
+          blocks.length,
       onReorder:
           reorderBlock,
       itemBuilder:
@@ -2016,8 +1071,6 @@ class _NewNotesState extends State<NewNotes> {
       },
     );
   }
-
-  // Topic dropdown
 
   Widget buildTopicDropdown() {
     if (isLoadingTopics) {
@@ -2043,15 +1096,60 @@ class _NewNotesState extends State<NewNotes> {
     return DropdownButtonFormField<int>(
       value:
           selectedTopicId,
+      dropdownColor:
+          cardColor,
+      style: TextStyle(
+        color: primaryTextColor,
+      ),
       decoration:
           InputDecoration(
         labelText:
             "Select Topic",
+        labelStyle: TextStyle(
+          color:
+              secondaryTextColor,
+        ),
+        prefixIcon:
+            Icon(
+          Icons.topic_outlined,
+          color:
+              secondaryTextColor,
+        ),
+        filled: true,
+        fillColor:
+            fieldColor,
         border:
             OutlineInputBorder(
           borderRadius:
-              BorderRadius
-                  .circular(12),
+              BorderRadius.circular(
+            14,
+          ),
+          borderSide:
+              BorderSide.none,
+        ),
+        enabledBorder:
+            OutlineInputBorder(
+          borderRadius:
+              BorderRadius.circular(
+            14,
+          ),
+          borderSide:
+              BorderSide(
+            color:
+                borderColor,
+          ),
+        ),
+        focusedBorder:
+            OutlineInputBorder(
+          borderRadius:
+              BorderRadius.circular(
+            14,
+          ),
+          borderSide:
+              const BorderSide(
+            color: Colors.blue,
+            width: 1.5,
+          ),
         ),
       ),
       items:
@@ -2064,22 +1162,26 @@ class _NewNotesState extends State<NewNotes> {
                         .toString(),
                   );
 
-        return DropdownMenuItem<
-            int>(
+        return DropdownMenuItem<int>(
           value: topicId,
           child: Text(
-            topic["name"]
-                .toString(),
+            topic["name"].toString(),
+            style: TextStyle(
+              color:
+                  primaryTextColor,
+            ),
           ),
         );
       }).toList(),
-      onChanged: (value) {
+      onChanged:
+          (value) {
         setState(() {
           selectedTopicId =
               value;
         });
       },
-      validator: (value) {
+      validator:
+          (value) {
         if (value == null) {
           return
               "Please select a topic";
@@ -2090,18 +1192,94 @@ class _NewNotesState extends State<NewNotes> {
     );
   }
 
+  InputDecoration fieldDecoration({
+    required String label,
+    required String hint,
+    IconData? icon,
+  }) {
+    return InputDecoration(
+      labelText: label,
+      hintText: hint,
+      labelStyle: TextStyle(
+        color: secondaryTextColor,
+      ),
+      hintStyle: TextStyle(
+        color: secondaryTextColor,
+      ),
+      prefixIcon:
+          icon == null
+              ? null
+              : Icon(
+                  icon,
+                  color:
+                      secondaryTextColor,
+                ),
+      filled: true,
+      fillColor: fieldColor,
+      border:
+          OutlineInputBorder(
+        borderRadius:
+            BorderRadius.circular(
+          14,
+        ),
+        borderSide:
+            BorderSide.none,
+      ),
+      enabledBorder:
+          OutlineInputBorder(
+        borderRadius:
+            BorderRadius.circular(
+          14,
+        ),
+        borderSide:
+            BorderSide(
+          color: borderColor,
+        ),
+      ),
+      focusedBorder:
+          OutlineInputBorder(
+        borderRadius:
+            BorderRadius.circular(
+          14,
+        ),
+        borderSide:
+            const BorderSide(
+          color: Colors.blue,
+          width: 1.5,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(
     BuildContext context,
   ) {
     return Scaffold(
-      appBar: AppBar(
+      backgroundColor:
+          backgroundColor,
+      appBar:
+          AppBar(
+        elevation: 0,
+        backgroundColor:
+            cardColor,
+        foregroundColor:
+            primaryTextColor,
+        centerTitle:
+            false,
         title:
             const Text(
-          "New Note",
+          "Add Notes",
+          style:
+              TextStyle(
+            fontSize: 22,
+            fontWeight:
+                FontWeight.bold,
+          ),
         ),
       ),
-      body: Center(
+      body:
+          SafeArea(
         child:
             SingleChildScrollView(
           padding:
@@ -2109,194 +1287,368 @@ class _NewNotesState extends State<NewNotes> {
             20,
           ),
           child:
-              ConstrainedBox(
-            constraints:
-                const BoxConstraints(
-              maxWidth: 850,
-            ),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment
-                        .stretch,
-                children: [
-                  // Title
-
-                  TextFormField(
-                    controller:
-                        titleController,
-                    decoration:
-                        InputDecoration(
-                      labelText:
-                          "Title",
-                      hintText:
-                          "Enter note title",
-                      border:
-                          OutlineInputBorder(
+              Center(
+            child:
+                ConstrainedBox(
+              constraints:
+                  const BoxConstraints(
+                maxWidth: 850,
+              ),
+              child:
+                  Form(
+                key:
+                    _formKey,
+                child:
+                    Column(
+                  crossAxisAlignment:
+                      CrossAxisAlignment
+                          .stretch,
+                  children: [
+                    Container(
+                      padding:
+                          const EdgeInsets.all(
+                        20,
+                      ),
+                      decoration:
+                          BoxDecoration(
+                        color:
+                            cardColor,
                         borderRadius:
                             BorderRadius
                                 .circular(
-                          12,
+                          20,
                         ),
+                        border:
+                            Border.all(
+                          color:
+                              borderColor,
+                        ),
+                        boxShadow:
+                            isDark
+                                ? []
+                                : [
+                                    BoxShadow(
+                                      color:
+                                          Colors.black.withOpacity(
+                                        0.04,
+                                      ),
+                                      blurRadius:
+                                          12,
+                                      offset:
+                                          const Offset(
+                                        0,
+                                        4,
+                                      ),
+                                    ),
+                                  ],
+                      ),
+                      child:
+                          Column(
+                        crossAxisAlignment:
+                            CrossAxisAlignment
+                                .stretch,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding:
+                                    const EdgeInsets.all(
+                                  10,
+                                ),
+                                decoration:
+                                    BoxDecoration(
+                                  color:
+                                      isDark
+                                          ? Colors.blue.shade900
+                                          : Colors.blue.shade50,
+                                  borderRadius:
+                                      BorderRadius.circular(
+                                    12,
+                                  ),
+                                ),
+                                child:
+                                    Icon(
+                                  Icons.edit_note,
+                                  color:
+                                      isDark
+                                          ? Colors.blue.shade200
+                                          : Colors.blue.shade700,
+                                  size:
+                                      26,
+                                ),
+                              ),
+                              const SizedBox(
+                                width:
+                                    12,
+                              ),
+                              Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment
+                                        .start,
+                                children: [
+                                  Text(
+                                    "Create a new note",
+                                    style:
+                                        TextStyle(
+                                      fontSize:
+                                          18,
+                                      fontWeight:
+                                          FontWeight.bold,
+                                      color:
+                                          primaryTextColor,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height:
+                                        3,
+                                  ),
+                                  Text(
+                                    "Add your note details",
+                                    style:
+                                        TextStyle(
+                                      color:
+                                          secondaryTextColor,
+                                      fontSize:
+                                          13,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height:
+                                22,
+                          ),
+                          TextFormField(
+                            controller:
+                                titleController,
+                            style:
+                                TextStyle(
+                              color:
+                                  primaryTextColor,
+                            ),
+                            decoration:
+                                fieldDecoration(
+                              label:
+                                  "Title",
+                              hint:
+                                  "Enter note title",
+                              icon:
+                                  Icons.title,
+                            ),
+                            validator:
+                                (value) {
+                              if (value ==
+                                      null ||
+                                  value
+                                      .trim()
+                                      .isEmpty) {
+                                return
+                                    "Title is required";
+                              }
+
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height:
+                                16,
+                          ),
+                          buildTopicDropdown(),
+                          const SizedBox(
+                            height:
+                                16,
+                          ),
+                          DropdownButtonFormField<String>(
+                            value:
+                                selectedStatus,
+                            dropdownColor:
+                                cardColor,
+                            style:
+                                TextStyle(
+                              color:
+                                  primaryTextColor,
+                            ),
+                            decoration:
+                                fieldDecoration(
+                              label:
+                                  "Status",
+                              hint:
+                                  "Select status",
+                              icon:
+                                  Icons.toggle_on_outlined,
+                            ),
+                            items:
+                                const [
+                              DropdownMenuItem(
+                                value:
+                                    "active",
+                                child:
+                                    Text(
+                                  "Active",
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value:
+                                    "inactive",
+                                child:
+                                    Text(
+                                  "Inactive",
+                                ),
+                              ),
+                            ],
+                            onChanged:
+                                (value) {
+                              if (value ==
+                                  null) {
+                                return;
+                              }
+
+                              setState(() {
+                                selectedStatus =
+                                    value;
+                              });
+                            },
+                          ),
+                        ],
                       ),
                     ),
-                    validator:
-                        (value) {
-                      if (value ==
-                              null ||
-                          value
-                              .trim()
-                              .isEmpty) {
-                        return
-                            "Title is required";
-                      }
-
-                      return null;
-                    },
-                  ),
-
-                  const SizedBox(
-                    height: 16,
-                  ),
-
-                  // Topic
-
-                  buildTopicDropdown(),
-
-                  const SizedBox(
-                    height: 16,
-                  ),
-
-                  // Status
-
-                  DropdownButtonFormField<
-                      String>(
-                    value:
-                        selectedStatus,
-                    decoration:
-                        InputDecoration(
-                      labelText:
-                          "Status",
-                      border:
-                          OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius
-                                .circular(
-                          12,
-                        ),
-                      ),
+                    const SizedBox(
+                      height:
+                          24,
                     ),
-                    items: const [
-                      DropdownMenuItem(
-                        value:
-                            "active",
-                        child:
-                            Text(
-                          "Active",
+                    Row(
+                      children: [
+                        Expanded(
+                          child:
+                              Column(
+                            crossAxisAlignment:
+                                CrossAxisAlignment
+                                    .start,
+                            children: [
+                              Text(
+                                "Note Content",
+                                style:
+                                    TextStyle(
+                                  fontSize:
+                                      20,
+                                  fontWeight:
+                                      FontWeight.bold,
+                                  color:
+                                      primaryTextColor,
+                                ),
+                              ),
+                              const SizedBox(
+                                height:
+                                    3,
+                              ),
+                              Text(
+                                "Arrange your content in any order",
+                                style:
+                                    TextStyle(
+                                  color:
+                                      secondaryTextColor,
+                                  fontSize:
+                                      13,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      DropdownMenuItem(
-                        value:
-                            "inactive",
-                        child:
-                            Text(
-                          "Inactive",
-                        ),
-                      ),
-                    ],
-                    onChanged:
-                        (value) {
-                      if (value ==
-                          null) {
-                        return;
-                      }
-
-                      setState(() {
-                        selectedStatus =
-                            value;
-                      });
-                    },
-                  ),
-
-                  const SizedBox(
-                    height: 24,
-                  ),
-
-                  // Add field
-
-                  Row(
-                    children: [
-                      const Expanded(
-                        child:
-                            Text(
-                          "Note Fields",
+                        ElevatedButton.icon(
+                          onPressed:
+                              showAddFieldOptions,
+                          icon:
+                              const Icon(
+                            Icons.add,
+                          ),
+                          label:
+                              const Text(
+                            "Add Field",
+                          ),
                           style:
-                              TextStyle(
+                              ElevatedButton.styleFrom(
+                            padding:
+                                const EdgeInsets
+                                    .symmetric(
+                              horizontal:
+                                  16,
+                              vertical:
+                                  13,
+                            ),
+                            shape:
+                                RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(
+                                12,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height:
+                          16,
+                    ),
+                    buildBlocksSection(),
+                    const SizedBox(
+                      height:
+                          28,
+                    ),
+                    SizedBox(
+                      height:
+                          54,
+                      child:
+                          ElevatedButton.icon(
+                        onPressed:
+                            isSaving
+                                ? null
+                                : saveNote,
+                        icon:
+                            isSaving
+                                ? const SizedBox(
+                                    height:
+                                        22,
+                                    width:
+                                        22,
+                                    child:
+                                        CircularProgressIndicator(
+                                      strokeWidth:
+                                          2,
+                                    ),
+                                  )
+                                : const Icon(
+                                    Icons.save_outlined,
+                                  ),
+                        label:
+                            Text(
+                          isSaving
+                              ? "Saving..."
+                              : "Save Note",
+                          style:
+                              const TextStyle(
                             fontSize:
-                                18,
+                                16,
                             fontWeight:
-                                FontWeight
-                                    .bold,
+                                FontWeight.w600,
+                          ),
+                        ),
+                        style:
+                            ElevatedButton.styleFrom(
+                          shape:
+                              RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(
+                              14,
+                            ),
                           ),
                         ),
                       ),
-                      ElevatedButton
-                          .icon(
-                        onPressed:
-                            showAddFieldOptions,
-                        icon:
-                            const Icon(
-                          Icons.add,
-                        ),
-                        label:
-                            const Text(
-                          "Add Field",
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(
-                    height: 16,
-                  ),
-
-                  // Fields
-
-                  buildBlocksSection(),
-
-                  const SizedBox(
-                    height: 24,
-                  ),
-
-                  // Save
-
-                  SizedBox(
-                    height: 52,
-                    child:
-                        ElevatedButton(
-                      onPressed:
-                          isSaving
-                              ? null
-                              : saveNote,
-                      child: isSaving
-                          ? const SizedBox(
-                              height: 24,
-                              width: 24,
-                              child:
-                                  CircularProgressIndicator(),
-                            )
-                          : const Text(
-                              "Save Note",
-                              style:
-                                  TextStyle(
-                                fontSize:
-                                    16,
-                              ),
-                            ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -2306,8 +1658,7 @@ class _NewNotesState extends State<NewNotes> {
   }
 }
 
-class ImageUrlDialog
-    extends StatefulWidget {
+class ImageUrlDialog extends StatefulWidget {
   const ImageUrlDialog({
     super.key,
   });
@@ -2323,10 +1674,28 @@ class _ImageUrlDialogState
       urlController =
       TextEditingController();
 
+  bool get isDark =>
+      Theme.of(context).brightness ==
+      Brightness.dark;
+
+  Color get cardColor =>
+      isDark
+          ? const Color(0xFF1E1E1E)
+          : Colors.white;
+
+  Color get textColor =>
+      isDark
+          ? Colors.white
+          : Colors.black87;
+
+  Color get fieldColor =>
+      isDark
+          ? const Color(0xFF292929)
+          : const Color(0xFFF7F8FA);
+
   @override
   void dispose() {
     urlController.dispose();
-
     super.dispose();
   }
 
@@ -2335,9 +1704,25 @@ class _ImageUrlDialogState
     BuildContext context,
   ) {
     return AlertDialog(
+      backgroundColor:
+          cardColor,
+      shape:
+          RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.circular(
+          18,
+        ),
+      ),
       title:
-          const Text(
+          Text(
         "Add Image URL",
+        style:
+            TextStyle(
+          fontWeight:
+              FontWeight.bold,
+          color:
+              textColor,
+        ),
       ),
       content:
           TextField(
@@ -2345,12 +1730,43 @@ class _ImageUrlDialogState
             urlController,
         keyboardType:
             TextInputType.url,
+        style:
+            TextStyle(
+          color:
+              textColor,
+        ),
         decoration:
-            const InputDecoration(
+            InputDecoration(
           hintText:
               "https://example.com/image.jpg",
+          hintStyle:
+              TextStyle(
+            color:
+                isDark
+                    ? Colors.grey.shade500
+                    : Colors.grey.shade600,
+          ),
+          prefixIcon:
+              Icon(
+            Icons.link,
+            color:
+                isDark
+                    ? Colors.grey.shade400
+                    : Colors.grey.shade700,
+          ),
+          filled:
+              true,
+          fillColor:
+              fieldColor,
           border:
-              OutlineInputBorder(),
+              OutlineInputBorder(
+            borderRadius:
+                BorderRadius.circular(
+              12,
+            ),
+            borderSide:
+                BorderSide.none,
+          ),
         ),
       ),
       actions: [
@@ -2368,8 +1784,7 @@ class _ImageUrlDialogState
         ElevatedButton(
           onPressed: () {
             final String url =
-                urlController.text
-                    .trim();
+                urlController.text.trim();
 
             if (url.isEmpty) {
               return;
