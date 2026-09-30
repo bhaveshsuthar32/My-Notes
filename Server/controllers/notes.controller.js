@@ -336,6 +336,8 @@ export const updateNotesLayoutById = async (req, res) => {
       layout
     );
 
+    // bhavesh@gmail.com suthar
+    // bhavesh
     if (!updatedNote) {
       return res.status(404).json({
         success: false,

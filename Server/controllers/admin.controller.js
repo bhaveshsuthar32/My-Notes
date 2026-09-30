@@ -5,43 +5,135 @@ import jwt from "jsonwebtoken";
 dotenv.config();
 
 
+// export const registerUser = async (req, res) => {
+//     const { firstname, lastname, email, password, isadmin } = req.body;
+//     try {
+//         if (!firstname || !lastname || !email || !password) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "All field is required",
+//             })
+//         }
+
+//         const hashpassword = await bcrypt.hash(password, 10);
+
+//         const result = await pool.query(
+//             `INSERT INTO users 
+//             (firstname, lastname, email, password, isadmin)
+//             VALUES ($1,$2,$3,$4,$5)
+//             RETURNING id, firstname, lastname, email, isadmin`,
+//             [
+//                 firstname,
+//                 lastname,
+//                 email,
+//                 hashpassword,
+//                 isadmin || "User",
+//             ]
+//         );
+//         return res.status(200).json({
+//             success: true,
+//             user: result.rows[0]
+//         })
+
+//     // } catch (error) {
+//     //     return res.status(500).json({
+//     //         success: false,
+//     //         message: "User register failed!"
+//     //     })
+//     // }
+//     } catch (error) {
+//     console.error("REGISTER ERROR:", error);
+
+//     return res.status(500).json({
+//         success: false,
+//         message: error.message || "User register failed!"
+//     });
+// }
+// }
+
+
+
 export const registerUser = async (req, res) => {
-    const { firstname, lastname, email, password, isadmin } = req.body;
-    try {
-        if (!firstname || !lastname || !email || !password) {
-            return res.status(400).json({
-                success: false,
-                message: "All field is required",
-            })
-        }
+  const {
+    firstname,
+    lastname,
+    email,
+    password,
+  } = req.body;
 
-        const hashpassword = await bcrypt.hash(password, 10);
-
-        const result = await pool.query(
-            `INSERT INTO users 
-            (firstname, lastname, email, password, isadmin)
-            VALUES ($1,$2,$3,$4,$5)
-            RETURNING id, firstname, lastname, email, isadmin`,
-            [
-                firstname,
-                lastname,
-                email,
-                hashpassword,
-                isadmin || "User",
-            ]
-        );
-        return res.status(200).json({
-            success: true,
-            user: result.rows[0]
-        })
-
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: "User register failed!"
-        })
+  try {
+    if (
+      !firstname ||
+      !lastname ||
+      !email ||
+      !password
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
     }
-}
+
+    const existingUser = await pool.query(
+      `SELECT id FROM users WHERE email = $1`,
+      [email]
+    );
+
+    if (existingUser.rows.length > 0) {
+      return res.status(409).json({
+        success: false,
+        message: "Email already registered",
+      });
+    }
+
+    const hashpassword =
+      await bcrypt.hash(password, 10);
+
+    const result = await pool.query(
+      `INSERT INTO users
+      (
+        firstname,
+        lastname,
+        email,
+        password,
+        isadmin
+      )
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING
+        id,
+        firstname,
+        lastname,
+        email,
+        isadmin`,
+      [
+        firstname,
+        lastname,
+        email,
+        hashpassword,
+        "user",
+      ]
+    );
+
+    return res.status(201).json({
+      success: true,
+      message: "User registered successfully",
+      user: result.rows[0],
+    });
+  } catch (error) {
+    console.error(
+      "REGISTER ERROR:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        error.message ||
+        "User register failed!",
+    });
+  }
+};
+
 
 export const login = async (req, res) => {
     try {
