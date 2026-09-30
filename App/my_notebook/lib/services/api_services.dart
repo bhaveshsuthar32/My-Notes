@@ -138,6 +138,8 @@ Future<Map<String, dynamic>> updateNotesLayoutAPI({
       throw Exception('Register error: $e');
     }
   }
+
+  
 // // Add Topic
 // Future<Map<String, dynamic>> addTopicAPI(
 //   String name,

@@ -28,13 +28,14 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:my_notebook/user/pages/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'package:my_notebook/theme/theme_provider.dart';
 import 'package:my_notebook/theme/light_theme.dart';
 import 'package:my_notebook/theme/dark_theme.dart';
 
-import 'package:my_notebook/user/pages/home.dart';
+// import 'package:my_notebook/user/pages/home.dart';
 
 void main() {
   runApp(
@@ -66,7 +67,7 @@ class MyApp extends StatelessWidget {
           themeMode: themeProvider.themeMode,
 
           // Home Page
-          home: const Home(),
+          home: const SplashScreen(),
         );
       },
     );
