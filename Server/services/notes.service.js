@@ -157,23 +157,17 @@ export const getNotesData = async () => {
         is_favorite,
         is_archived,
 
-        (
-          SELECT
-            CASE
-              WHEN array_length(
-                regexp_split_to_array(trim(block->>'text'), '\\s+'),
-                1
-              ) > 12
-              THEN array_to_string(
-                (regexp_split_to_array(trim(block->>'text'), '\\s+'))[1:12],
-                ' '
-              ) || '...'
-              ELSE block->>'text'
-            END
-          FROM jsonb_array_elements(content) AS block
-          ORDER BY (block->>'id')::int ASC
-          LIMIT 1
-        ) AS preview
+        CASE
+          WHEN array_length(
+            regexp_split_to_array(trim(content), '\\s+'),
+            1
+          ) > 12
+          THEN array_to_string(
+            (regexp_split_to_array(trim(content), '\\s+'))[1:12],
+            ' '
+          ) || '...'
+          ELSE content
+        END AS preview
 
       FROM notes
       ORDER BY created_at DESC
@@ -181,10 +175,10 @@ export const getNotesData = async () => {
 
     return result.rows;
   } catch (error) {
+    console.error("GET NOTES LIST ERROR:", error);
     throw error;
   }
 };
-
 
 export const getNotesById = async(notesId) =>{
   try {
