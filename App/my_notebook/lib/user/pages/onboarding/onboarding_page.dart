@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_notebook/user/pages/home.dart';
 import 'package:my_notebook/user/pages/splash/splash_screen.dart';
+import 'package:my_notebook/user/root_page.dart';
 // import 'package:my_notebook/user/pages/login/login.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -206,7 +207,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     Navigator.pushReplacement(
                       context, 
                         MaterialPageRoute(
-            builder: (context) => const Home(),
+            builder: (context) => const RootPage(),
           ),
                     );
                   },
