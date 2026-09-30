@@ -226,6 +226,22 @@ export const createNotes = async (req, res) => {
 
 export const getNotesList = async(req, res) =>{
   try {
+    const notesList = await getNotes();
+
+    return res.status(200).json({
+      success:true,
+      data: notesList
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+}
+
+export const getNotesListData = async(req, res) =>{
+  try {
     const notesList = await getNotesData();
 
     return res.status(200).json({
