@@ -1,4 +1,4 @@
-import { createNotesService, deleteNotes, getNotes, getNotesById, getNotesByTopicId, updateNotesLayout } from "../services/notes.service.js";
+import { createNotesService, deleteNotes, getNotes, getNotesById, getNotesByTopicId, getNotesData, updateNotesLayout } from "../services/notes.service.js";
 
 
 // export const createNotes = async (req, res) => {
@@ -226,7 +226,7 @@ export const createNotes = async (req, res) => {
 
 export const getNotesList = async(req, res) =>{
   try {
-    const notesList = await getNotes();
+    const notesList = await getNotesData();
 
     return res.status(200).json({
       success:true,

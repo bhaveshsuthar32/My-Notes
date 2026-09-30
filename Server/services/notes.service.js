@@ -145,6 +145,45 @@ export const getNotes = async() =>{
   }
 }
 
+export const getNotesData = async () => {
+  try {
+    const result = await client.query(`
+      SELECT
+        id,
+        title,
+        images,
+        created_at,
+        is_pinned,
+        is_favorite,
+        is_archived,
+
+        (
+          SELECT
+            CASE
+              WHEN array_length(
+                regexp_split_to_array(trim(block->>'text'), '\\s+'),
+                1
+              ) > 12
+              THEN array_to_string(
+                (regexp_split_to_array(trim(block->>'text'), '\\s+'))[1:12],
+                ' '
+              ) || '...'
+              ELSE block->>'text'
+            END
+          FROM jsonb_array_elements(content) AS block
+          ORDER BY (block->>'id')::int ASC
+          LIMIT 1
+        ) AS preview
+
+      FROM notes
+      ORDER BY created_at DESC
+    `);
+
+    return result.rows;
+  } catch (error) {
+    throw error;
+  }
+};
 
 
 export const getNotesById = async(notesId) =>{
