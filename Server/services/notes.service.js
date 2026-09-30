@@ -145,6 +145,7 @@ export const getNotes = async() =>{
   }
 }
 
+
 export const getNotesData = async () => {
   try {
     const result = await client.query(`
@@ -158,15 +159,56 @@ export const getNotesData = async () => {
         is_archived,
 
         CASE
-          WHEN array_length(
-            regexp_split_to_array(trim(content), '\\s+'),
-            1
-          ) > 12
-          THEN array_to_string(
-            (regexp_split_to_array(trim(content), '\\s+'))[1:12],
-            ' '
-          ) || '...'
-          ELSE content
+          -- Agar content JSON array hai
+          WHEN trim(content) LIKE '[%' THEN
+            (
+              SELECT
+                CASE
+                  WHEN array_length(
+                    regexp_split_to_array(
+                      trim(block->>'value'),
+                      '\\s+'
+                    ),
+                    1
+                  ) > 12
+                  THEN array_to_string(
+                    (
+                      regexp_split_to_array(
+                        trim(block->>'value'),
+                        '\\s+'
+                      )
+                    )[1:12],
+                    ' '
+                  ) || '...'
+                  ELSE block->>'value'
+                END
+              FROM jsonb_array_elements(
+                content::jsonb
+              ) AS block
+              LIMIT 1
+            )
+
+          -- Agar normal text hai
+          ELSE
+            CASE
+              WHEN array_length(
+                regexp_split_to_array(
+                  trim(content),
+                  '\\s+'
+                ),
+                1
+              ) > 12
+              THEN array_to_string(
+                (
+                  regexp_split_to_array(
+                    trim(content),
+                    '\\s+'
+                  )
+                )[1:12],
+                ' '
+              ) || '...'
+              ELSE content
+            END
         END AS preview
 
       FROM notes
