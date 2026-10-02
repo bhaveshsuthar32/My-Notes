@@ -23,6 +23,22 @@ class ApiServices {
     }
   }
 
+  Future<List<dynamic>> getNotesDataList() async {
+    try {
+      final res = await http.get(Uri.parse('$baseURL/getNotes-list'));
+
+      if (res.statusCode == 200) {
+        final decoded = jsonDecode(res.body);
+
+        return decoded["data"];
+      } else {
+        throw Exception("Failed to load Notes data: ${res.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("Error : $e");
+    }
+  }
+
 
 // Update Notes Layout
 Future<Map<String, dynamic>> updateNotesLayoutAPI({
