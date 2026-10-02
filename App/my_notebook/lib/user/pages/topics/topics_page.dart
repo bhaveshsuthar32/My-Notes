@@ -1015,8 +1015,8 @@ class _TopicsPageState extends State<TopicsPage> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(13),
       child: SizedBox(
-        width: 92,
-        height: 104,
+        width: 80,
+        height: 90,
         child: image != null &&
                 image.isNotEmpty &&
                 image != "null"
@@ -1056,7 +1056,7 @@ class _TopicsPageState extends State<TopicsPage> {
         child: Icon(
           Icons.menu_book_rounded,
           color: Color(0xFF5B5CEB),
-          size: 30,
+          size: 34,
         ),
       ),
     );
