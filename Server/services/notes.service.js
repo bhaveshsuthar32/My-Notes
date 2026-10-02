@@ -145,14 +145,17 @@ export const getNotes = async() =>{
   }
 }
 
-
 export const getNotesData = async () => {
   try {
     const result = await client.query(`
       SELECT
         id,
         title,
+        subtitle,
+        content,
         images,
+        "contentOrder",
+        topicid,
         created_at,
         is_pinned,
         is_favorite,
@@ -160,7 +163,7 @@ export const getNotesData = async () => {
 
         CASE
           -- Agar content JSON array hai
-          WHEN trim(content) LIKE '[%' THEN
+          WHEN trim(content::text) LIKE '[%' THEN
             (
               SELECT
                 CASE
@@ -193,7 +196,7 @@ export const getNotesData = async () => {
             CASE
               WHEN array_length(
                 regexp_split_to_array(
-                  trim(content),
+                  trim(content::text),
                   '\\s+'
                 ),
                 1
@@ -201,13 +204,13 @@ export const getNotesData = async () => {
               THEN array_to_string(
                 (
                   regexp_split_to_array(
-                    trim(content),
+                    trim(content::text),
                     '\\s+'
                   )
                 )[1:12],
                 ' '
               ) || '...'
-              ELSE content
+              ELSE content::text
             END
         END AS preview
 
@@ -216,11 +219,13 @@ export const getNotesData = async () => {
     `);
 
     return result.rows;
+
   } catch (error) {
     console.error("GET NOTES LIST ERROR:", error);
     throw error;
   }
 };
+
 
 export const getNotesById = async(notesId) =>{
   try {
