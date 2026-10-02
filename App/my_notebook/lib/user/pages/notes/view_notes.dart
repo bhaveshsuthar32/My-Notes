@@ -1561,6 +1561,9 @@ class _ViewNotesState extends State<ViewNotes> {
     super.dispose();
   }
 
+
+
+
   // ============================================================
   // DATA HELPERS
   // ============================================================
@@ -1621,178 +1624,368 @@ class _ViewNotesState extends State<ViewNotes> {
   // CREATE BLOCKS FROM NOTE DATA
   // ============================================================
 
+  // List<_NoteBlockData> _createBlocks() {
+  //   final List<dynamic> subtitles =
+  //       _asList(widget.note["subtitle"]);
+
+  //   final List<dynamic> contents =
+  //       _asList(widget.note["content"]);
+
+  //   final List<dynamic> images =
+  //       _asList(widget.note["images"]);
+
+  //   final List<dynamic> contentOrder =
+  //       _asList(widget.note["contentOrder"]);
+
+  //   final List<_NoteBlockData> result = [];
+
+  //   // ------------------------------------------------------------
+  //   // Use contentOrder
+  //   // ------------------------------------------------------------
+
+  //   if (contentOrder.isNotEmpty) {
+  //     for (final orderItem in contentOrder) {
+  //       if (orderItem is! Map) {
+  //         continue;
+  //       }
+
+  //       final String id =
+  //           orderItem["id"]?.toString() ?? "";
+
+  //       final String type =
+  //           orderItem["type"]
+  //                   ?.toString()
+  //                   .toLowerCase() ??
+  //               "";
+
+  //       if (id.isEmpty) {
+  //         continue;
+  //       }
+
+  //       // Heading / Subtitle
+  //       if (type == "heading" ||
+  //           type == "subtitle") {
+  //         final dynamic item =
+  //             _findById(subtitles, id);
+
+  //         if (item != null) {
+  //           result.add(
+  //             _NoteBlockData(
+  //               id: id,
+  //               type: type,
+  //               value: _getValue(item),
+  //             ),
+  //           );
+  //         }
+
+  //         continue;
+  //       }
+
+  //       // Content
+  //       if (type == "content") {
+  //         final dynamic item =
+  //             _findById(contents, id);
+
+  //         if (item != null) {
+  //           result.add(
+  //             _NoteBlockData(
+  //               id: id,
+  //               type: type,
+  //               value: _getValue(item),
+  //             ),
+  //           );
+  //         }
+
+  //         continue;
+  //       }
+
+  //       // Image
+  //       if (type == "image") {
+  //         final dynamic item =
+  //             _findById(images, id);
+
+  //         if (item != null) {
+  //           result.add(
+  //             _NoteBlockData(
+  //               id: id,
+  //               type: type,
+  //               value: _getValue(item),
+  //             ),
+  //           );
+  //         }
+
+  //         continue;
+  //       }
+  //     }
+  //   }
+
+  //   // ------------------------------------------------------------
+  //   // Fallback if contentOrder is empty
+  //   // ------------------------------------------------------------
+
+  //   if (result.isEmpty) {
+  //     for (final item in subtitles) {
+  //       if (item is! Map) {
+  //         continue;
+  //       }
+
+  //       final String id =
+  //           item["id"]?.toString() ?? "";
+
+  //       final String type =
+  //           item["type"]
+  //                   ?.toString()
+  //                   .toLowerCase() ??
+  //               "subtitle";
+
+  //       if (id.isEmpty) {
+  //         continue;
+  //       }
+
+  //       result.add(
+  //         _NoteBlockData(
+  //           id: id,
+  //           type: type,
+  //           value: _getValue(item),
+  //         ),
+  //       );
+  //     }
+
+  //     for (final item in contents) {
+  //       if (item is! Map) {
+  //         continue;
+  //       }
+
+  //       final String id =
+  //           item["id"]?.toString() ?? "";
+
+  //       if (id.isEmpty) {
+  //         continue;
+  //       }
+
+  //       result.add(
+  //         _NoteBlockData(
+  //           id: id,
+  //           type: "content",
+  //           value: _getValue(item),
+  //         ),
+  //       );
+  //     }
+
+  //     for (final item in images) {
+  //       if (item is! Map) {
+  //         continue;
+  //       }
+
+  //       final String id =
+  //           item["id"]?.toString() ?? "";
+
+  //       if (id.isEmpty) {
+  //         continue;
+  //       }
+
+  //       result.add(
+  //         _NoteBlockData(
+  //           id: id,
+  //           type: "image",
+  //           value: _getValue(item),
+  //         ),
+  //       );
+  //     }
+  //   };
+
+    
+
+  //   return result;
+  // }
+
+
   List<_NoteBlockData> _createBlocks() {
-    final List<dynamic> subtitles =
-        _asList(widget.note["subtitle"]);
+  final List<dynamic> subtitles =
+      _asList(widget.note["subtitle"]);
 
-    final List<dynamic> contents =
-        _asList(widget.note["content"]);
+  final List<dynamic> contents =
+      _asList(widget.note["content"]);
 
-    final List<dynamic> images =
-        _asList(widget.note["images"]);
+  final List<dynamic> images =
+      _asList(widget.note["images"]);
 
-    final List<dynamic> contentOrder =
-        _asList(widget.note["contentOrder"]);
+  final List<dynamic> contentOrder =
+      _asList(widget.note["contentOrder"]);
 
-    final List<_NoteBlockData> result = [];
+  // DEBUG
+  print("===== RAW NOTE DATA =====");
+  print("SUBTITLE: ${widget.note["subtitle"]}");
+  print("CONTENT: ${widget.note["content"]}");
+  print("IMAGES: ${widget.note["images"]}");
+  print("CONTENT ORDER: ${widget.note["contentOrder"]}");
+  print("=========================");
 
-    // ------------------------------------------------------------
-    // Use contentOrder
-    // ------------------------------------------------------------
+  final List<_NoteBlockData> result = [];
 
-    if (contentOrder.isNotEmpty) {
-      for (final orderItem in contentOrder) {
-        if (orderItem is! Map) {
-          continue;
+  // ------------------------------------------------------------
+  // Use contentOrder
+  // ------------------------------------------------------------
+
+  if (contentOrder.isNotEmpty) {
+    for (final orderItem in contentOrder) {
+      if (orderItem is! Map) {
+        continue;
+      }
+
+      final String id =
+          orderItem["id"]?.toString() ?? "";
+
+      final String type =
+          orderItem["type"]?.toString().toLowerCase() ?? "";
+
+      if (id.isEmpty) {
+        continue;
+      }
+
+      // Heading / Subtitle
+      if (type == "heading" || type == "subtitle") {
+        final dynamic item =
+            _findById(subtitles, id);
+
+        if (item != null) {
+          result.add(
+            _NoteBlockData(
+              id: id,
+              type: type,
+              value: _getValue(item),
+            ),
+          );
         }
 
-        final String id =
-            orderItem["id"]?.toString() ?? "";
+        continue;
+      }
 
-        final String type =
-            orderItem["type"]
-                    ?.toString()
-                    .toLowerCase() ??
-                "";
+      // Content
+      if (type == "content") {
+        final dynamic item =
+            _findById(contents, id);
 
-        if (id.isEmpty) {
-          continue;
+        if (item != null) {
+          result.add(
+            _NoteBlockData(
+              id: id,
+              type: type,
+              value: _getValue(item),
+            ),
+          );
         }
 
-        // Heading / Subtitle
-        if (type == "heading" ||
-            type == "subtitle") {
-          final dynamic item =
-              _findById(subtitles, id);
+        continue;
+      }
 
-          if (item != null) {
-            result.add(
-              _NoteBlockData(
-                id: id,
-                type: type,
-                value: _getValue(item),
-              ),
-            );
-          }
+      // Image
+      if (type == "image") {
+        final dynamic item =
+            _findById(images, id);
 
-          continue;
+        if (item != null) {
+          result.add(
+            _NoteBlockData(
+              id: id,
+              type: type,
+              value: _getValue(item),
+            ),
+          );
         }
 
-        // Content
-        if (type == "content") {
-          final dynamic item =
-              _findById(contents, id);
-
-          if (item != null) {
-            result.add(
-              _NoteBlockData(
-                id: id,
-                type: type,
-                value: _getValue(item),
-              ),
-            );
-          }
-
-          continue;
-        }
-
-        // Image
-        if (type == "image") {
-          final dynamic item =
-              _findById(images, id);
-
-          if (item != null) {
-            result.add(
-              _NoteBlockData(
-                id: id,
-                type: type,
-                value: _getValue(item),
-              ),
-            );
-          }
-
-          continue;
-        }
+        continue;
       }
     }
-
-    // ------------------------------------------------------------
-    // Fallback if contentOrder is empty
-    // ------------------------------------------------------------
-
-    if (result.isEmpty) {
-      for (final item in subtitles) {
-        if (item is! Map) {
-          continue;
-        }
-
-        final String id =
-            item["id"]?.toString() ?? "";
-
-        final String type =
-            item["type"]
-                    ?.toString()
-                    .toLowerCase() ??
-                "subtitle";
-
-        if (id.isEmpty) {
-          continue;
-        }
-
-        result.add(
-          _NoteBlockData(
-            id: id,
-            type: type,
-            value: _getValue(item),
-          ),
-        );
-      }
-
-      for (final item in contents) {
-        if (item is! Map) {
-          continue;
-        }
-
-        final String id =
-            item["id"]?.toString() ?? "";
-
-        if (id.isEmpty) {
-          continue;
-        }
-
-        result.add(
-          _NoteBlockData(
-            id: id,
-            type: "content",
-            value: _getValue(item),
-          ),
-        );
-      }
-
-      for (final item in images) {
-        if (item is! Map) {
-          continue;
-        }
-
-        final String id =
-            item["id"]?.toString() ?? "";
-
-        if (id.isEmpty) {
-          continue;
-        }
-
-        result.add(
-          _NoteBlockData(
-            id: id,
-            type: "image",
-            value: _getValue(item),
-          ),
-        );
-      }
-    }
-
-    return result;
   }
+
+  // ------------------------------------------------------------
+  // Fallback if contentOrder is empty
+  // ------------------------------------------------------------
+
+  if (result.isEmpty) {
+    for (final item in subtitles) {
+      if (item is! Map) {
+        continue;
+      }
+
+      final String id =
+          item["id"]?.toString() ?? "";
+
+      final String type =
+          item["type"]?.toString().toLowerCase() ?? "subtitle";
+
+      if (id.isEmpty) {
+        continue;
+      }
+
+      result.add(
+        _NoteBlockData(
+          id: id,
+          type: type,
+          value: _getValue(item),
+        ),
+      );
+    }
+
+    for (final item in contents) {
+      if (item is! Map) {
+        continue;
+      }
+
+      final String id =
+          item["id"]?.toString() ?? "";
+
+      if (id.isEmpty) {
+        continue;
+      }
+
+      result.add(
+        _NoteBlockData(
+          id: id,
+          type: "content",
+          value: _getValue(item),
+        ),
+      );
+    }
+
+    for (final item in images) {
+      if (item is! Map) {
+        continue;
+      }
+
+      final String id =
+          item["id"]?.toString() ?? "";
+
+      if (id.isEmpty) {
+        continue;
+      }
+
+      result.add(
+        _NoteBlockData(
+          id: id,
+          type: "image",
+          value: _getValue(item),
+        ),
+      );
+    }
+  }
+
+  // DEBUG
+  print("===== NOTE BLOCKS =====");
+
+  for (final block in result) {
+    print(
+      "TYPE: ${block.type} | "
+      "ID: ${block.id} | "
+      "VALUE: ${block.value}",
+    );
+  }
+
+  print("=======================");
+
+  return result;
+}
 
   dynamic _findById(
     List<dynamic> list,
@@ -2023,6 +2216,8 @@ class _ViewNotesState extends State<ViewNotes> {
     final int? noteId =
         int.tryParse(
       widget.note["id"]?.toString() ?? "",
+
+      
     );
 
     if (noteId == null) {
@@ -2075,6 +2270,8 @@ class _ViewNotesState extends State<ViewNotes> {
         notesId: noteId,
         layout: layout,
       );
+
+      
 
       if (!mounted) {
         return;
