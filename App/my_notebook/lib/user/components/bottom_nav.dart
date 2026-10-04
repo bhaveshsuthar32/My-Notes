@@ -41,7 +41,7 @@
 //           BottomNavigationBarItem(
 //             icon: Icon(Icons.home_outlined,),
 //             label: "Home",
-            
+
 //           ),
 //           BottomNavigationBarItem(
 //             icon: Icon(Icons.search),
@@ -64,8 +64,6 @@
 //     );
 //   }
 // }
-
-
 
 // import 'package:flutter/material.dart';
 
@@ -181,7 +179,6 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
 
 class BottomNavBar extends StatelessWidget {
@@ -234,12 +231,19 @@ class BottomNavBar extends StatelessWidget {
                 label: "Topics",
               ),
 
+              // _navItem(
+              //   context,
+              //   index: 2,
+              //   icon: Icons.search_outlined,
+              //   selectedIcon: Icons.search_rounded,
+              //   label: "Search",
+              // ),
               _navItem(
                 context,
                 index: 2,
-                icon: Icons.search_outlined,
-                selectedIcon: Icons.search_rounded,
-                label: "Search",
+                icon: Icons.notes_outlined,
+                selectedIcon: Icons.notes_rounded,
+                label: "Notes",
               ),
 
               _navItem(
@@ -304,17 +308,13 @@ class BottomNavBar extends StatelessWidget {
                     vertical: 3,
                   ),
                   decoration: BoxDecoration(
-                    color: isSelected
-                        ? selectedBackground
-                        : Colors.transparent,
+                    color: isSelected ? selectedBackground : Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     isSelected ? selectedIcon : icon,
                     size: 21,
-                    color: isSelected
-                        ? primaryColor
-                        : unselectedColor,
+                    color: isSelected ? primaryColor : unselectedColor,
                   ),
                 ),
 
@@ -327,12 +327,8 @@ class BottomNavBar extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 10.5,
                     height: 1.0,
-                    fontWeight: isSelected
-                        ? FontWeight.w600
-                        : FontWeight.w400,
-                    color: isSelected
-                        ? primaryColor
-                        : unselectedColor,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                    color: isSelected ? primaryColor : unselectedColor,
                   ),
                 ),
               ],
