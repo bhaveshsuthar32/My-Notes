@@ -525,19 +525,35 @@ class _TopicsPageState extends State<TopicsPage> {
   // BUILD
   // =========================================================
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+  // @override
+  // Widget build(BuildContext context) {
+  //   final theme = Theme.of(context);
 
-    return Container(
-      color: theme.scaffoldBackgroundColor,
+  //   return Container(
+  //     color: theme.scaffoldBackgroundColor,
+  //     child: RefreshIndicator(
+  //       color: const Color(0xFF5B5CEB),
+  //       onRefresh: getTopics,
+  //       child: _buildBody(context),
+  //     ),
+  //   );
+  // }
+
+  @override
+Widget build(BuildContext context) {
+  final theme = Theme.of(context);
+
+  return Scaffold(
+    backgroundColor: theme.scaffoldBackgroundColor,
+    body: SafeArea(
       child: RefreshIndicator(
         color: const Color(0xFF5B5CEB),
         onRefresh: getTopics,
         child: _buildBody(context),
       ),
-    );
-  }
+    ),
+  );
+}
 
   // =========================================================
   // BODY
