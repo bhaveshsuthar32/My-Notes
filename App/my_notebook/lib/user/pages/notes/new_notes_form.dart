@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_notebook/services/api_services.dart';
+import 'package:my_notebook/user/components/drawerbar.dart';
+import 'package:my_notebook/user/components/header.dart';
 
 class NoteBlock {
   final String id;
@@ -1258,26 +1260,8 @@ class _NewNotesState extends State<NewNotes> {
     return Scaffold(
       backgroundColor:
           backgroundColor,
-      appBar:
-          AppBar(
-        elevation: 0,
-        backgroundColor:
-            cardColor,
-        foregroundColor:
-            primaryTextColor,
-        centerTitle:
-            false,
-        title:
-            const Text(
-          "Add Notes",
-          style:
-              TextStyle(
-            fontSize: 22,
-            fontWeight:
-                FontWeight.bold,
-          ),
-        ),
-      ),
+      drawer: Drawerbar(),
+      appBar:Header(),
       body:
           SafeArea(
         child:
