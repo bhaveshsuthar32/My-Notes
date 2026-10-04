@@ -1319,6 +1319,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:my_notebook/user/pages/notes/notes_page.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -1407,6 +1408,7 @@ class _HomeState extends State<Home> {
                 action: "See all",
                 onTap: () {
                   // All Notes page open karna ho to yaha Navigator use karo
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const NotesPage()));
                 },
               ),
 
