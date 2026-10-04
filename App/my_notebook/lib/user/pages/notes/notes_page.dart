@@ -2719,9 +2719,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:my_notebook/services/api_services.dart';
-import 'package:my_notebook/user/components/bottom_nav.dart';
+// import 'package:my_notebook/user/components/bottom_nav.dart';
 import 'package:my_notebook/user/pages/notes/new_notes_form.dart';
 import 'package:my_notebook/user/pages/notes/view_notes.dart';
+// import 'package:my_notebook/user/pages/topics/topics_page.dart';
 
 class NotesPage extends StatefulWidget {
   const NotesPage({super.key});
@@ -3337,14 +3338,33 @@ class _NotesPageState extends State<NotesPage> {
       // BOTTOM NAV
       // ========================================================
 
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: 0,
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pop(context);
-          }
-        },
-      ),
+      // bottomNavigationBar: BottomNavBar(
+      //   currentIndex: 0,
+      //   onTap: (index) {
+      //     if (index == 0) {
+      //       Navigator.pop(context);
+      //     }
+      //   },
+      // ),
+
+
+//       bottomNavigationBar: BottomNavBar(
+//   currentIndex: 0,
+//   onTap: (index) {
+//     if (index == 0) {
+//       Navigator.pop(context);
+//     }
+
+//     if (index == 1) {
+//       Navigator.push(
+//         context,
+//         MaterialPageRoute(
+//           builder: (context) => const TopicsPage(),
+//         ),
+//       );
+//     }
+//   },
+// ),
 
       // ========================================================
       // ADD NOTE BUTTON
