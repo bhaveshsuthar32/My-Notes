@@ -1,32 +1,413 @@
-import { createNotesService, deleteNotes, getNotes, getNotesById, getNotesByTopicId, getNotesData, updateNotesLayout } from "../services/notes.service.js";
-import { uploadFile } from "../utils/cloudinary.js";
+// import { createNotesService, deleteNotes, getNotes, getNotesById, getNotesByTopicId, getNotesData, updateNotesLayout } from "../services/notes.service.js";
+// import { uploadFile } from "../utils/cloudinary.js";
+
+// // export const createNotes = async (req, res) => {
+
+// //   try {
+
+// //     const note = await createNotesService(req.body);
+
+// //     return res.status(201).json({
+// //       success: true,
+// //       data: note
+// //     });
+
+// //   } catch (error) {
+
+// //     console.log(error);
+
+// //     return res.status(500).json({
+// //       success: false,
+// //       message: "Failed to create note"
+// //     });
+// //   }
+// // };
 
 // export const createNotes = async (req, res) => {
-
 //   try {
+//     console.log("CREATE NOTES API STARTED");
 
-//     const note = await createNotesService(req.body);
+//     console.log("BODY:", req.body);
+//     console.log("FILES:", req.files);
+
+//     const {
+//       title,
+//       topicid,
+//       status,
+//       subtitle,
+//       content,
+//       images,
+//       contentOrder,
+//     } = req.body;
+
+//     // Required fields
+//     if (!title || !topicid) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Title and topicid are required",
+//       });
+//     }
+
+//     // Parse arrays
+//     let subtitles = [];
+//     let contents = [];
+//     let imageList = [];
+//     let order = [];
+
+//     try {
+//       subtitles = subtitle
+//         ? typeof subtitle === "string"
+//           ? JSON.parse(subtitle)
+//           : subtitle
+//         : [];
+
+//       contents = content
+//         ? typeof content === "string"
+//           ? JSON.parse(content)
+//           : content
+//         : [];
+
+//       imageList = images
+//         ? typeof images === "string"
+//           ? JSON.parse(images)
+//           : images
+//         : [];
+
+//       order = contentOrder
+//         ? typeof contentOrder === "string"
+//           ? JSON.parse(contentOrder)
+//           : contentOrder
+//         : [];
+//     } catch (error) {
+//       return res.status(400).json({
+//         success: false,
+//         message:
+//           "Invalid JSON format in subtitle, content, images or contentOrder",
+//       });
+//     }
+
+//     // Validate arrays
+//     if (!Array.isArray(subtitles)) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "subtitle must be an array",
+//       });
+//     }
+
+//     if (!Array.isArray(contents)) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "content must be an array",
+//       });
+//     }
+
+//     if (!Array.isArray(imageList)) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "images must be an array",
+//       });
+//     }
+
+//     if (!Array.isArray(order)) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "contentOrder must be an array",
+//       });
+//     }
+
+//     // Upload local images
+//     let fileIndex = 0;
+
+//     for (const image of imageList) {
+//       if (!image.value && req.files && req.files[fileIndex]) {
+//         const uploadedUrl = await uploadFile(req.files[fileIndex]);
+
+//         image.value = uploadedUrl;
+
+//         fileIndex++;
+//       }
+//     }
+
+//     // Final image data
+//     const imageData = imageList.map((image) => ({
+//       id: image.id,
+//       value: image.value,
+//     }));
+
+//     // Final content order
+//     const finalOrder = order.map((item) => ({
+//       id: item.id,
+//       type: item.type,
+//     }));
+
+//     // Create note
+//     const note = await createNotesService({
+//       title,
+//       subtitle: subtitles,
+//       content: contents,
+//       images: imageData,
+//       contentOrder: finalOrder,
+//       topicid: Number(topicid),
+//       status: status?.toLowerCase() || "active",
+//     });
 
 //     return res.status(201).json({
 //       success: true,
-//       data: note
+//       message: "Note created successfully",
+//       data: note,
 //     });
-
 //   } catch (error) {
-
-//     console.log(error);
+//     console.error("CREATE NOTES ERROR:", error);
 
 //     return res.status(500).json({
 //       success: false,
-//       message: "Failed to create note"
+//       message: error.message || "Failed to create note",
 //     });
 //   }
 // };
+
+// // export const createNotes = async (req, res) => {
+// //   try {
+// //     console.log("CREATE NOTES API STARTED");
+
+// //     console.log("BODY:", req.body);
+// //     console.log("FILES:", req.files);
+
+// //     const {
+// //       title,
+// //       subtitle,
+// //       content,
+// //       topicid,
+// //       status,
+// //     } = req.body;
+
+// //     if (!title || !content || !topicid) {
+// //       return res.status(400).json({
+// //         success: false,
+// //         message: "Title, content and topicid are required",
+// //       });
+// //     }
+
+// //     let imageUrls = [];
+
+// //     // Multiple images upload
+// //     if (req.files && req.files.length > 0) {
+// //       imageUrls = await Promise.all(
+// //         req.files.map(async (file) => {
+// //           return await uploadFile(file);
+// //         })
+// //       );
+// //     }
+
+// //     const note = await createNotesService({
+// //       title,
+// //       subtitle,
+// //       content,
+// //       images: imageUrls,
+// //       topicid: Number(topicid),
+// //       status: status?.toLowerCase() || "active",
+// //     });
+
+// //     return res.status(201).json({
+// //       success: true,
+// //       data: note,
+// //     });
+// //   } catch (error) {
+// //     console.error("CREATE NOTES ERROR:", error);
+
+// //     return res.status(500).json({
+// //       success: false,
+// //       message: error.message || "Failed to create note",
+// //     });
+// //   }
+// // };
+
+// // get notes
+
+// export const getNotesList = async(req, res) =>{
+//   try {
+//     const notesList = await getNotes();
+
+//     return res.status(200).json({
+//       success:true,
+//       data: notesList
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message
+//     });
+//   }
+// }
+
+// export const getNotesListData = async(req, res) =>{
+//   try {
+//     const notesList = await getNotesData();
+
+//     return res.status(200).json({
+//       success:true,
+//       data: notesList
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message
+//     });
+//   }
+// }
+
+// export const getNoteDetailsById = async (req,res)=>{
+//   try {
+//     const {notesId} = req.params;
+
+//     const notesDetails = await getNotesById(notesId);
+
+//     return res.status(200).json({
+//       success:true,
+//       data: notesDetails
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message
+//     });
+//   }
+// }
+
+// export const getNotesByTopic = async(req, res) =>{
+//   try {
+
+//     const {topicId} = req.params;
+
+//     const notesListByTopic = await getNotesByTopicId(topicId);
+
+//     return res.status(200).json({
+//       success:true,
+//       data: notesListByTopic
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message
+//     });
+//   }
+// }
+
+// export const deleteNotesById = async(req, res) =>{
+//   try {
+//     const notesId = req.params.notesId;
+//     const removeNotes = await deleteNotes(notesId)
+    
+//     return res.status(200).json({
+//       success:true,
+//       data: removeNotes
+//     });
+
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message
+//     });
+//   }
+// }
+
+
+// // Update Notes Layout
+// export const updateNotesLayoutById = async (req, res) => {
+//   try {
+//     const { notesId } = req.params;
+//     const { layout } = req.body;
+
+//     console.log("UPDATE NOTES LAYOUT API STARTED");
+//     console.log("NOTE ID:", notesId);
+//     console.log("LAYOUT:", layout);
+
+//     // Check note ID
+//     if (!notesId) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "notesId is required",
+//       });
+//     }
+
+//     // Check layout
+//     if (!layout) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "layout is required",
+//       });
+//     }
+
+//     // Layout must be object
+//     if (typeof layout !== "object" || Array.isArray(layout)) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "layout must be a valid object",
+//       });
+//     }
+
+//     // Update layout
+//     const updatedNote = await updateNotesLayout(
+//       notesId,
+//       layout
+//     );
+
+//     // bhavesh@gmail.com suthar
+//     // bhavesh
+//     if (!updatedNote) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Note not found",
+//       });
+//     }
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Note layout updated successfully",
+//       data: updatedNote,
+//     });
+
+//   } catch (error) {
+//     console.error("UPDATE NOTES LAYOUT ERROR:", error);
+
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message || "Failed to update note layout",
+//     });
+//   }
+// };
+
+
+
+
+
+
+
+
+
+
+
+import {
+  createNotesService,
+  deleteNotes,
+  getNotes,
+  getNotesById,
+  getNotesByTopicId,
+  getNotesData,
+  updateNotesLayout,
+} from "../services/notes.service.js";
+
+import { uploadFile } from "../utils/cloudinary.js";
+
+// ======================================================
+// CREATE NOTE
+// ======================================================
 
 export const createNotes = async (req, res) => {
   try {
     console.log("CREATE NOTES API STARTED");
 
+    console.log("USER:", req.user);
     console.log("BODY:", req.body);
     console.log("FILES:", req.files);
 
@@ -40,7 +421,23 @@ export const createNotes = async (req, res) => {
       contentOrder,
     } = req.body;
 
+    // --------------------------------------------------
+    // Check logged-in user
+    // --------------------------------------------------
+
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized user",
+      });
+    }
+
+    const userId = req.user.id;
+
+    // --------------------------------------------------
     // Required fields
+    // --------------------------------------------------
+
     if (!title || !topicid) {
       return res.status(400).json({
         success: false,
@@ -48,7 +445,10 @@ export const createNotes = async (req, res) => {
       });
     }
 
+    // --------------------------------------------------
     // Parse arrays
+    // --------------------------------------------------
+
     let subtitles = [];
     let contents = [];
     let imageList = [];
@@ -86,7 +486,10 @@ export const createNotes = async (req, res) => {
       });
     }
 
+    // --------------------------------------------------
     // Validate arrays
+    // --------------------------------------------------
+
     if (!Array.isArray(subtitles)) {
       return res.status(400).json({
         success: false,
@@ -115,7 +518,10 @@ export const createNotes = async (req, res) => {
       });
     }
 
+    // --------------------------------------------------
     // Upload local images
+    // --------------------------------------------------
+
     let fileIndex = 0;
 
     for (const image of imageList) {
@@ -128,19 +534,28 @@ export const createNotes = async (req, res) => {
       }
     }
 
+    // --------------------------------------------------
     // Final image data
+    // --------------------------------------------------
+
     const imageData = imageList.map((image) => ({
       id: image.id,
       value: image.value,
     }));
 
+    // --------------------------------------------------
     // Final content order
+    // --------------------------------------------------
+
     const finalOrder = order.map((item) => ({
       id: item.id,
       type: item.type,
     }));
 
+    // --------------------------------------------------
     // Create note
+    // --------------------------------------------------
+
     const note = await createNotesService({
       title,
       subtitle: subtitles,
@@ -149,6 +564,10 @@ export const createNotes = async (req, res) => {
       contentOrder: finalOrder,
       topicid: Number(topicid),
       status: status?.toLowerCase() || "active",
+
+      // IMPORTANT
+      // User ID comes from JWT
+      userId,
     });
 
     return res.status(201).json({
@@ -156,6 +575,7 @@ export const createNotes = async (req, res) => {
       message: "Note created successfully",
       data: note,
     });
+
   } catch (error) {
     console.error("CREATE NOTES ERROR:", error);
 
@@ -166,163 +586,93 @@ export const createNotes = async (req, res) => {
   }
 };
 
-// export const createNotes = async (req, res) => {
-//   try {
-//     console.log("CREATE NOTES API STARTED");
 
-//     console.log("BODY:", req.body);
-//     console.log("FILES:", req.files);
+// ======================================================
+// GET NOTES LIST
+// ======================================================
 
-//     const {
-//       title,
-//       subtitle,
-//       content,
-//       topicid,
-//       status,
-//     } = req.body;
-
-//     if (!title || !content || !topicid) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Title, content and topicid are required",
-//       });
-//     }
-
-//     let imageUrls = [];
-
-//     // Multiple images upload
-//     if (req.files && req.files.length > 0) {
-//       imageUrls = await Promise.all(
-//         req.files.map(async (file) => {
-//           return await uploadFile(file);
-//         })
-//       );
-//     }
-
-//     const note = await createNotesService({
-//       title,
-//       subtitle,
-//       content,
-//       images: imageUrls,
-//       topicid: Number(topicid),
-//       status: status?.toLowerCase() || "active",
-//     });
-
-//     return res.status(201).json({
-//       success: true,
-//       data: note,
-//     });
-//   } catch (error) {
-//     console.error("CREATE NOTES ERROR:", error);
-
-//     return res.status(500).json({
-//       success: false,
-//       message: error.message || "Failed to create note",
-//     });
-//   }
-// };
-
-// get notes
-
-export const getNotesList = async(req, res) =>{
-  try {
-    const notesList = await getNotes();
-
-    return res.status(200).json({
-      success:true,
-      data: notesList
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
-}
-
-export const getNotesListData = async(req, res) =>{
-  try {
-    const notesList = await getNotesData();
-
-    return res.status(200).json({
-      success:true,
-      data: notesList
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
-}
-
-export const getNoteDetailsById = async (req,res)=>{
-  try {
-    const {notesId} = req.params;
-
-    const notesDetails = await getNotesById(notesId);
-
-    return res.status(200).json({
-      success:true,
-      data: notesDetails
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
-}
-
-export const getNotesByTopic = async(req, res) =>{
+export const getNotesList = async (req, res) => {
   try {
 
-    const {topicId} = req.params;
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized user",
+      });
+    }
 
-    const notesListByTopic = await getNotesByTopicId(topicId);
+    const userId = req.user.id;
+
+    const notesList = await getNotes(userId);
 
     return res.status(200).json({
-      success:true,
-      data: notesListByTopic
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
-}
-
-export const deleteNotesById = async(req, res) =>{
-  try {
-    const notesId = req.params.notesId;
-    const removeNotes = await deleteNotes(notesId)
-    
-    return res.status(200).json({
-      success:true,
-      data: removeNotes
+      success: true,
+      data: notesList,
     });
 
   } catch (error) {
+
+    console.error("GET NOTES ERROR:", error);
+
     return res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
-}
+};
 
 
-// Update Notes Layout
-export const updateNotesLayoutById = async (req, res) => {
+// ======================================================
+// GET NOTES DATA
+// ======================================================
+
+export const getNotesListData = async (req, res) => {
   try {
+
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized user",
+      });
+    }
+
+    const userId = req.user.id;
+
+    const notesList = await getNotesData(userId);
+
+    return res.status(200).json({
+      success: true,
+      data: notesList,
+    });
+
+  } catch (error) {
+
+    console.error("GET NOTES DATA ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+// ======================================================
+// GET NOTE DETAILS BY ID
+// ======================================================
+
+export const getNoteDetailsById = async (req, res) => {
+  try {
+
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized user",
+      });
+    }
+
     const { notesId } = req.params;
-    const { layout } = req.body;
 
-    console.log("UPDATE NOTES LAYOUT API STARTED");
-    console.log("NOTE ID:", notesId);
-    console.log("LAYOUT:", layout);
-
-    // Check note ID
     if (!notesId) {
       return res.status(400).json({
         success: false,
@@ -330,7 +680,177 @@ export const updateNotesLayoutById = async (req, res) => {
       });
     }
 
+    const userId = req.user.id;
+
+    const notesDetails = await getNotesById(
+      notesId,
+      userId
+    );
+
+    if (!notesDetails || notesDetails.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Note not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: notesDetails,
+    });
+
+  } catch (error) {
+
+    console.error("GET NOTE BY ID ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+// ======================================================
+// GET NOTES BY TOPIC
+// ======================================================
+
+export const getNotesByTopic = async (req, res) => {
+  try {
+
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized user",
+      });
+    }
+
+    const { topicId } = req.params;
+
+    if (!topicId) {
+      return res.status(400).json({
+        success: false,
+        message: "topicId is required",
+      });
+    }
+
+    const userId = req.user.id;
+
+    const notesListByTopic = await getNotesByTopicId(
+      topicId,
+      userId
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: notesListByTopic,
+    });
+
+  } catch (error) {
+
+    console.error("GET NOTES BY TOPIC ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+// ======================================================
+// DELETE NOTE
+// ======================================================
+
+export const deleteNotesById = async (req, res) => {
+  try {
+
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized user",
+      });
+    }
+
+    const { notesId } = req.params;
+
+    if (!notesId) {
+      return res.status(400).json({
+        success: false,
+        message: "notesId is required",
+      });
+    }
+
+    const userId = req.user.id;
+
+    const removeNotes = await deleteNotes(
+      notesId,
+      userId
+    );
+
+    if (!removeNotes) {
+      return res.status(404).json({
+        success: false,
+        message: "Note not found or unauthorized",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Note deleted successfully",
+      data: removeNotes,
+    });
+
+  } catch (error) {
+
+    console.error("DELETE NOTES ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+// ======================================================
+// UPDATE NOTE LAYOUT
+// ======================================================
+
+export const updateNotesLayoutById = async (req, res) => {
+  try {
+
+    console.log("UPDATE NOTES LAYOUT API STARTED");
+
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized user",
+      });
+    }
+
+    const { notesId } = req.params;
+    const { layout } = req.body;
+
+    console.log("USER ID:", req.user.id);
+    console.log("NOTE ID:", notesId);
+    console.log("LAYOUT:", layout);
+
+    // --------------------------------------------------
+    // Check note ID
+    // --------------------------------------------------
+
+    if (!notesId) {
+      return res.status(400).json({
+        success: false,
+        message: "notesId is required",
+      });
+    }
+
+    // --------------------------------------------------
     // Check layout
+    // --------------------------------------------------
+
     if (!layout) {
       return res.status(400).json({
         success: false,
@@ -338,26 +858,36 @@ export const updateNotesLayoutById = async (req, res) => {
       });
     }
 
+    // --------------------------------------------------
     // Layout must be object
-    if (typeof layout !== "object" || Array.isArray(layout)) {
+    // --------------------------------------------------
+
+    if (
+      typeof layout !== "object" ||
+      Array.isArray(layout)
+    ) {
       return res.status(400).json({
         success: false,
         message: "layout must be a valid object",
       });
     }
 
+    const userId = req.user.id;
+
+    // --------------------------------------------------
     // Update layout
+    // --------------------------------------------------
+
     const updatedNote = await updateNotesLayout(
       notesId,
-      layout
+      layout,
+      userId
     );
 
-    // bhavesh@gmail.com suthar
-    // bhavesh
     if (!updatedNote) {
       return res.status(404).json({
         success: false,
-        message: "Note not found",
+        message: "Note not found or unauthorized",
       });
     }
 
@@ -368,11 +898,17 @@ export const updateNotesLayoutById = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("UPDATE NOTES LAYOUT ERROR:", error);
+
+    console.error(
+      "UPDATE NOTES LAYOUT ERROR:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
-      message: error.message || "Failed to update note layout",
+      message:
+        error.message ||
+        "Failed to update note layout",
     });
   }
 };
