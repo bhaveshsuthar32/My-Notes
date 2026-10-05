@@ -1,478 +1,272 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:http/http.dart' as http;
+// import 'dart:convert';
+// import 'dart:io';
+// import 'package:http/http.dart' as http;
 
-class ApiServices {
-  final String baseURL = 'https://my-notes-psi-snowy.vercel.app/api';
+// class ApiServices {
+//   final String baseURL = 'https://my-notes-psi-snowy.vercel.app/api';
 
-  // get notes
+//   // get notes
 
-  Future<List<dynamic>> getNotesData() async {
-    try {
-      final res = await http.get(Uri.parse('$baseURL/getNotes'));
+//   Future<List<dynamic>> getNotesData() async {
+//     try {
+//       final res = await http.get(Uri.parse('$baseURL/getNotes'));
 
-      if (res.statusCode == 200) {
-        final decoded = jsonDecode(res.body);
+//       if (res.statusCode == 200) {
+//         final decoded = jsonDecode(res.body);
 
-        return decoded["data"];
-      } else {
-        throw Exception("Failed to load Notes data: ${res.statusCode}");
-      }
-    } catch (e) {
-      throw Exception("Error : $e");
-    }
-  }
+//         return decoded["data"];
+//       } else {
+//         throw Exception("Failed to load Notes data: ${res.statusCode}");
+//       }
+//     } catch (e) {
+//       throw Exception("Error : $e");
+//     }
+//   }
 
-  Future<List<dynamic>> getNotesDataList() async {
-    try {
-      final res = await http.get(Uri.parse('$baseURL/getNotes-list'));
+//   Future<List<dynamic>> getNotesDataList() async {
+//     try {
+//       final res = await http.get(Uri.parse('$baseURL/getNotes-list'));
 
-      if (res.statusCode == 200) {
-        final decoded = jsonDecode(res.body);
+//       if (res.statusCode == 200) {
+//         final decoded = jsonDecode(res.body);
 
-        return decoded["data"];
-      } else {
-        throw Exception("Failed to load Notes data: ${res.statusCode}");
-      }
-    } catch (e) {
-      throw Exception("Error : $e");
-    }
-  }
-
-
-// Update Notes Layout
-Future<Map<String, dynamic>> updateNotesLayoutAPI({
-  required int notesId,
-  required Map<String, dynamic> layout,
-}) async {
-  try {
-    final Uri uri = Uri.parse(
-      "$baseURL/notes/$notesId/layout",
-    );
-
-    final response = await http.put(
-      uri,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: jsonEncode({
-        "layout": layout,
-      }),
-    );
-
-    print("UPDATE LAYOUT STATUS: ${response.statusCode}");
-    print("UPDATE LAYOUT RESPONSE: ${response.body}");
-
-    if (response.statusCode >= 200 &&
-        response.statusCode < 300) {
-      final dynamic decodedData =
-          jsonDecode(response.body);
-
-      return Map<String, dynamic>.from(decodedData);
-    }
-
-    String errorMessage;
-
-    try {
-      final dynamic decodedError =
-          jsonDecode(response.body);
-
-      errorMessage =
-          decodedError["message"]?.toString() ??
-              "Failed to update note layout";
-    } catch (e) {
-      errorMessage = response.body.isNotEmpty
-          ? response.body
-          : "Server error occurred";
-    }
-
-    throw Exception(
-      "Error ${response.statusCode}: $errorMessage",
-    );
-  } catch (e) {
-    throw Exception(
-      "Update layout error: $e",
-    );
-  }
-}
+//         return decoded["data"];
+//       } else {
+//         throw Exception("Failed to load Notes data: ${res.statusCode}");
+//       }
+//     } catch (e) {
+//       throw Exception("Error : $e");
+//     }
+//   }
 
 
-
-
-  // login
-  Future<Map<String, dynamic>> loginApi(String email, String password) async {
-    try {
-      final res = await http.post(
-        Uri.parse('$baseURL/login'),
-
-        headers: {'Content-Type': 'application/json'},
-
-        body: jsonEncode({'email': email, 'password': password}),
-      );
-
-      if (res.statusCode == 200) {
-        final decoded = jsonDecode(res.body);
-
-        return decoded;
-      } else {
-        throw Exception('Login failed: ${res.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Login error: $e');
-    }
-  }
-
-  // Register
-  Future<Map<String, dynamic>> RegisterAPI(
-    String firstname,
-    String lastname,
-    String email,
-    String password,
-  ) async {
-    try {
-      final res = await http.post(
-        Uri.parse('$baseURL/register'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'firstname': firstname,
-          'lastname': lastname,
-          'email': email,
-          'password': password,
-        }),
-      );
-
-      print("Register Status: ${res.statusCode}");
-      print("Register Response: ${res.body}");
-
-      if (res.statusCode == 200 || res.statusCode == 201) {
-        final decoded = jsonDecode(res.body);
-        return decoded;
-      } else {
-        throw Exception('Register failed: ${res.statusCode}\n${res.body}');
-      }
-    } catch (e) {
-      throw Exception('Register error: $e');
-    }
-  }
-
-  
-// // Add Topic
-// Future<Map<String, dynamic>> addTopicAPI(
-//   String name,
-//   String description,
-//   String coverImage,
-//   String status,
-// ) async {
+// // Update Notes Layout
+// Future<Map<String, dynamic>> updateNotesLayoutAPI({
+//   required int notesId,
+//   required Map<String, dynamic> layout,
+// }) async {
 //   try {
-//     final res = await http.post(
-//       Uri.parse('$baseURL/topics'),
+//     final Uri uri = Uri.parse(
+//       "$baseURL/notes/$notesId/layout",
+//     );
+
+//     final response = await http.put(
+//       uri,
 //       headers: {
-//         'Content-Type': 'application/json',
+//         "Content-Type": "application/json",
 //       },
 //       body: jsonEncode({
-//         'name': name,
-//         'description': description,
-//         'coverImage': coverImage,
-//         'status': status,
+//         "layout": layout,
 //       }),
 //     );
 
-//     print("Topic Status: ${res.statusCode}");
-//     print("Topic Response: ${res.body}");
+//     print("UPDATE LAYOUT STATUS: ${response.statusCode}");
+//     print("UPDATE LAYOUT RESPONSE: ${response.body}");
 
-//     if (res.statusCode == 200 || res.statusCode == 201) {
-//       final decoded = jsonDecode(res.body);
+//     if (response.statusCode >= 200 &&
+//         response.statusCode < 300) {
+//       final dynamic decodedData =
+//           jsonDecode(response.body);
 
-//       return decoded;
-//     } else {
-//       throw Exception(
-//         'Topic add failed: ${res.statusCode}\n${res.body}',
-//       );
+//       return Map<String, dynamic>.from(decodedData);
 //     }
+
+//     String errorMessage;
+
+//     try {
+//       final dynamic decodedError =
+//           jsonDecode(response.body);
+
+//       errorMessage =
+//           decodedError["message"]?.toString() ??
+//               "Failed to update note layout";
+//     } catch (e) {
+//       errorMessage = response.body.isNotEmpty
+//           ? response.body
+//           : "Server error occurred";
+//     }
+
+//     throw Exception(
+//       "Error ${response.statusCode}: $errorMessage",
+//     );
 //   } catch (e) {
-//     throw Exception("Error: $e");
+//     throw Exception(
+//       "Update layout error: $e",
+//     );
 //   }
 // }
 
 
 
 
+//   // login
+//   Future<Map<String, dynamic>> loginApi(String email, String password) async {
+//     try {
+//       final res = await http.post(
+//         Uri.parse('$baseURL/login'),
 
+//         headers: {'Content-Type': 'application/json'},
 
-Future<Map<String, dynamic>> addTopicAPI({
-  required String name,
-  required String description,
-  required String status,
-  String? imageUrl,
-  File? imageFile,
-}) async {
-  final uri = Uri.parse("$baseURL/topics");
+//         body: jsonEncode({'email': email, 'password': password}),
+//       );
 
-  final request = http.MultipartRequest(
-    "POST",
-    uri,
-  );
+//       if (res.statusCode == 200) {
+//         final decoded = jsonDecode(res.body);
 
-  request.fields["name"] = name;
-  request.fields["description"] = description;
-  request.fields["status"] = status.toLowerCase();
+//         return decoded;
+//       } else {
+//         throw Exception('Login failed: ${res.statusCode}');
+//       }
+//     } catch (e) {
+//       throw Exception('Login error: $e');
+//     }
+//   }
 
-  // URL option
-  if (imageFile == null &&
-      imageUrl != null &&
-      imageUrl.trim().isNotEmpty) {
-    request.fields["coverImageUrl"] = imageUrl.trim();
-  }
+//   // Register
+//   Future<Map<String, dynamic>> RegisterAPI(
+//     String firstname,
+//     String lastname,
+//     String email,
+//     String password,
+//   ) async {
+//     try {
+//       final res = await http.post(
+//         Uri.parse('$baseURL/register'),
+//         headers: {'Content-Type': 'application/json'},
+//         body: jsonEncode({
+//           'firstname': firstname,
+//           'lastname': lastname,
+//           'email': email,
+//           'password': password,
+//         }),
+//       );
 
-  // Gallery file option
-  if (imageFile != null) {
-    request.files.add(
-      await http.MultipartFile.fromPath(
-        "coverImage",
-        imageFile.path,
-      ),
-    );
-  }
+//       print("Register Status: ${res.statusCode}");
+//       print("Register Response: ${res.body}");
 
-  final streamedResponse = await request.send();
+//       if (res.statusCode == 200 || res.statusCode == 201) {
+//         final decoded = jsonDecode(res.body);
+//         return decoded;
+//       } else {
+//         throw Exception('Register failed: ${res.statusCode}\n${res.body}');
+//       }
+//     } catch (e) {
+//       throw Exception('Register error: $e');
+//     }
+//   }
 
-  final response = await http.Response.fromStream(
-    streamedResponse,
-  );
+  
+// // // Add Topic
+// // Future<Map<String, dynamic>> addTopicAPI(
+// //   String name,
+// //   String description,
+// //   String coverImage,
+// //   String status,
+// // ) async {
+// //   try {
+// //     final res = await http.post(
+// //       Uri.parse('$baseURL/topics'),
+// //       headers: {
+// //         'Content-Type': 'application/json',
+// //       },
+// //       body: jsonEncode({
+// //         'name': name,
+// //         'description': description,
+// //         'coverImage': coverImage,
+// //         'status': status,
+// //       }),
+// //     );
 
-  // Debugging
-  print("STATUS CODE: ${response.statusCode}");
-  print("RESPONSE BODY: ${response.body}");
+// //     print("Topic Status: ${res.statusCode}");
+// //     print("Topic Response: ${res.body}");
 
-  // Success response
-  if (response.statusCode >= 200 &&
-      response.statusCode < 300) {
-    try {
-      final data = jsonDecode(response.body);
+// //     if (res.statusCode == 200 || res.statusCode == 201) {
+// //       final decoded = jsonDecode(res.body);
 
-      return Map<String, dynamic>.from(data);
-    } catch (e) {
-      throw Exception(
-        "Invalid JSON response: ${response.body}",
-      );
-    }
-  }
-
-  // Error response
-  String errorMessage;
-
-  try {
-    final errorData = jsonDecode(response.body);
-
-    errorMessage = errorData["message"]?.toString() ??
-        "Failed to add topic";
-  } catch (e) {
-    errorMessage = response.body.isNotEmpty
-        ? response.body
-        : "Server error occurred";
-  }
-
-  throw Exception(
-    "Error ${response.statusCode}: $errorMessage",
-  );
-}
-
-
-
-
-
-
-  // getTopic
-
-  Future<List<dynamic>> getTopicsAPI() async {
-    try {
-      final res = await http.get(Uri.parse('$baseURL/getTopic'));
-
-      if (res.statusCode == 200) {
-        final decoded = jsonDecode(res.body);
-        return decoded["data"];
-      } else {
-        throw Exception("Failed to load Topics data: ${res.statusCode}");
-      }
-    } catch (e) {
-      throw Exception("Error: $e");
-    }
-  }
-
-  // get User
-
-  Future<List<dynamic>> getUserAPI() async {
-    try {
-      final res = await http.get(Uri.parse('$baseURL/user'));
-
-      if (res.statusCode == 200) {
-        final decoded = jsonDecode(res.body);
-        return decoded["data"];
-      } else {
-        throw Exception("Failed to load Usre data: ${res.statusCode}");
-      }
-    } catch (e) {
-      throw Exception("Error: $e");
-    }
-  }
+// //       return decoded;
+// //     } else {
+// //       throw Exception(
+// //         'Topic add failed: ${res.statusCode}\n${res.body}',
+// //       );
+// //     }
+// //   } catch (e) {
+// //     throw Exception("Error: $e");
+// //   }
+// // }
 
 
 
 
-  // add notes
 
 
-
-  // // Add Notes API
-  // Future<Map<String, dynamic>> addNotesAPI({
-  //   required String title,
-  //   required String subtitle,
-  //   required String content,
-  //   required int topicId,
-  //   required String status,
-  //   List<File> images = const [],
-  // }) async {
-  //   final Uri uri = Uri.parse("$baseURL/notes");
-
-  //   final http.MultipartRequest request =
-  //       http.MultipartRequest(
-  //     "POST",
-  //     uri,
-  //   );
-
-  //   // Text fields
-  //   request.fields["title"] = title;
-  //   request.fields["subtitle"] = subtitle;
-  //   request.fields["content"] = content;
-  //   request.fields["topicId"] = topicId.toString();
-  //   request.fields["status"] = status.toLowerCase();
-
-  //   // Multiple images
-  //   for (final File image in images) {
-  //     request.files.add(
-  //       await http.MultipartFile.fromPath(
-  //         "images",
-  //         image.path,
-  //       ),
-  //     );
-  //   }
-
-  //   final streamedResponse = await request.send();
-
-  //   final http.Response response =
-  //       await http.Response.fromStream(
-  //     streamedResponse,
-  //   );
-
-  //   print("STATUS CODE: ${response.statusCode}");
-  //   print("RESPONSE BODY: ${response.body}");
-
-  //   if (response.statusCode >= 200 &&
-  //       response.statusCode < 300) {
-  //     try {
-  //       final dynamic decodedData =
-  //           jsonDecode(response.body);
-
-  //       return Map<String, dynamic>.from(decodedData);
-  //     } catch (error) {
-  //       throw Exception(
-  //         "Invalid JSON response: ${response.body}",
-  //       );
-  //     }
-  //   }
-
-  //   String errorMessage;
-
-  //   try {
-  //     final dynamic decodedError =
-  //         jsonDecode(response.body);
-
-  //     errorMessage =
-  //         decodedError["message"]?.toString() ??
-  //             "Failed to create note";
-  //   } catch (error) {
-  //     errorMessage = response.body.isNotEmpty
-  //         ? response.body
-  //         : "Server error occurred";
-  //   }
-
-  //   throw Exception(
-  //     "Error ${response.statusCode}: $errorMessage",
-  //   );
-  // }
-
-
-
-// // Add Notes API
-// Future<Map<String, dynamic>> addNotesAPI({
-//   required String title,
-//   required String subtitle,
-//   required String content,
-//   required int topicid,
+// Future<Map<String, dynamic>> addTopicAPI({
+//   required String name,
+//   required String description,
 //   required String status,
-//   List<File> images = const [],
-//   List<String> imageUrls = const []
-//   ,
+//   String? imageUrl,
+//   File? imageFile,
 // }) async {
-//   final Uri uri = Uri.parse("$baseURL/notes");
+//   final uri = Uri.parse("$baseURL/topics");
 
-//   final http.MultipartRequest request = http.MultipartRequest(
+//   final request = http.MultipartRequest(
 //     "POST",
 //     uri,
 //   );
 
-//   // Text fields
-//   request.fields["title"] = title;
-//   request.fields["subtitle"] = subtitle;
-//   request.fields["content"] = content;
-//   request.fields["topicid"] = topicid.toString();
+//   request.fields["name"] = name;
+//   request.fields["description"] = description;
 //   request.fields["status"] = status.toLowerCase();
 
-//   // Image URLs send as JSON string
-//   if (imageUrls.isNotEmpty) {
-//     request.fields["imageUrls"] = jsonEncode(imageUrls);
+//   // URL option
+//   if (imageFile == null &&
+//       imageUrl != null &&
+//       imageUrl.trim().isNotEmpty) {
+//     request.fields["coverImageUrl"] = imageUrl.trim();
 //   }
 
-//   // Multiple gallery images
-//   for (final File image in images) {
+//   // Gallery file option
+//   if (imageFile != null) {
 //     request.files.add(
 //       await http.MultipartFile.fromPath(
-//         "images",
-//         image.path,
+//         "coverImage",
+//         imageFile.path,
 //       ),
 //     );
 //   }
 
 //   final streamedResponse = await request.send();
 
-//   final http.Response response = await http.Response.fromStream(
+//   final response = await http.Response.fromStream(
 //     streamedResponse,
 //   );
 
+//   // Debugging
 //   print("STATUS CODE: ${response.statusCode}");
 //   print("RESPONSE BODY: ${response.body}");
 
+//   // Success response
 //   if (response.statusCode >= 200 &&
 //       response.statusCode < 300) {
 //     try {
-//       final dynamic decodedData = jsonDecode(response.body);
+//       final data = jsonDecode(response.body);
 
-//       return Map<String, dynamic>.from(decodedData);
-//     } catch (error) {
+//       return Map<String, dynamic>.from(data);
+//     } catch (e) {
 //       throw Exception(
 //         "Invalid JSON response: ${response.body}",
 //       );
 //     }
 //   }
 
+//   // Error response
 //   String errorMessage;
 
 //   try {
-//     final dynamic decodedError = jsonDecode(response.body);
+//     final errorData = jsonDecode(response.body);
 
-//     errorMessage = decodedError["message"]?.toString() ??
-//         "Failed to create note";
-//   } catch (error) {
+//     errorMessage = errorData["message"]?.toString() ??
+//         "Failed to add topic";
+//   } catch (e) {
 //     errorMessage = response.body.isNotEmpty
 //         ? response.body
 //         : "Server error occurred";
@@ -484,137 +278,1099 @@ Future<Map<String, dynamic>> addTopicAPI({
 // }
 
 
-// create notes
 
-// Add Notes API
-Future<Map<String, dynamic>> addNotesAPI({
-  required String title,
-  required int topicid,
-  required String status,
 
-  required List<Map<String, dynamic>> subtitles,
-  required List<Map<String, dynamic>> contents,
-  required List<Map<String, dynamic>> images,
-  required List<Map<String, dynamic>> contentOrder,
 
-  List<File> imageFiles = const [],
-}) async {
-  final Uri uri = Uri.parse("$baseURL/notes");
 
-  final http.MultipartRequest request =
-      http.MultipartRequest(
-    "POST",
-    uri,
-  );
+//   // getTopic
 
-  // ============================================================
-  // FIXED FIELDS
-  // ============================================================
+//   Future<List<dynamic>> getTopicsAPI() async {
+//     try {
+//       final res = await http.get(Uri.parse('$baseURL/getTopic'));
 
-  request.fields["title"] = title;
-  request.fields["topicid"] = topicid.toString();
-  request.fields["status"] = status.toLowerCase();
+//       if (res.statusCode == 200) {
+//         final decoded = jsonDecode(res.body);
+//         return decoded["data"];
+//       } else {
+//         throw Exception("Failed to load Topics data: ${res.statusCode}");
+//       }
+//     } catch (e) {
+//       throw Exception("Error: $e");
+//     }
+//   }
 
-  // ============================================================
-  // DYNAMIC CONTENT
-  // ============================================================
+//   // get User
 
-  request.fields["subtitle"] =
-      jsonEncode(subtitles);
+//   Future<List<dynamic>> getUserAPI() async {
+//     try {
+//       final res = await http.get(Uri.parse('$baseURL/user'));
 
-  request.fields["content"] =
-      jsonEncode(contents);
+//       if (res.statusCode == 200) {
+//         final decoded = jsonDecode(res.body);
+//         return decoded["data"];
+//       } else {
+//         throw Exception("Failed to load Usre data: ${res.statusCode}");
+//       }
+//     } catch (e) {
+//       throw Exception("Error: $e");
+//     }
+//   }
 
-  request.fields["images"] =
-      jsonEncode(
-    images,
-  );
 
-  request.fields["contentOrder"] =
-      jsonEncode(
-    contentOrder,
-  );
 
-  // ============================================================
-  // IMAGE FILES
-  // ============================================================
 
-  for (final File image in imageFiles) {
-    request.files.add(
-      await http.MultipartFile.fromPath(
-        "images",
-        image.path,
-      ),
-    );
+//   // add notes
+
+
+
+//   // // Add Notes API
+//   // Future<Map<String, dynamic>> addNotesAPI({
+//   //   required String title,
+//   //   required String subtitle,
+//   //   required String content,
+//   //   required int topicId,
+//   //   required String status,
+//   //   List<File> images = const [],
+//   // }) async {
+//   //   final Uri uri = Uri.parse("$baseURL/notes");
+
+//   //   final http.MultipartRequest request =
+//   //       http.MultipartRequest(
+//   //     "POST",
+//   //     uri,
+//   //   );
+
+//   //   // Text fields
+//   //   request.fields["title"] = title;
+//   //   request.fields["subtitle"] = subtitle;
+//   //   request.fields["content"] = content;
+//   //   request.fields["topicId"] = topicId.toString();
+//   //   request.fields["status"] = status.toLowerCase();
+
+//   //   // Multiple images
+//   //   for (final File image in images) {
+//   //     request.files.add(
+//   //       await http.MultipartFile.fromPath(
+//   //         "images",
+//   //         image.path,
+//   //       ),
+//   //     );
+//   //   }
+
+//   //   final streamedResponse = await request.send();
+
+//   //   final http.Response response =
+//   //       await http.Response.fromStream(
+//   //     streamedResponse,
+//   //   );
+
+//   //   print("STATUS CODE: ${response.statusCode}");
+//   //   print("RESPONSE BODY: ${response.body}");
+
+//   //   if (response.statusCode >= 200 &&
+//   //       response.statusCode < 300) {
+//   //     try {
+//   //       final dynamic decodedData =
+//   //           jsonDecode(response.body);
+
+//   //       return Map<String, dynamic>.from(decodedData);
+//   //     } catch (error) {
+//   //       throw Exception(
+//   //         "Invalid JSON response: ${response.body}",
+//   //       );
+//   //     }
+//   //   }
+
+//   //   String errorMessage;
+
+//   //   try {
+//   //     final dynamic decodedError =
+//   //         jsonDecode(response.body);
+
+//   //     errorMessage =
+//   //         decodedError["message"]?.toString() ??
+//   //             "Failed to create note";
+//   //   } catch (error) {
+//   //     errorMessage = response.body.isNotEmpty
+//   //         ? response.body
+//   //         : "Server error occurred";
+//   //   }
+
+//   //   throw Exception(
+//   //     "Error ${response.statusCode}: $errorMessage",
+//   //   );
+//   // }
+
+
+
+// // // Add Notes API
+// // Future<Map<String, dynamic>> addNotesAPI({
+// //   required String title,
+// //   required String subtitle,
+// //   required String content,
+// //   required int topicid,
+// //   required String status,
+// //   List<File> images = const [],
+// //   List<String> imageUrls = const []
+// //   ,
+// // }) async {
+// //   final Uri uri = Uri.parse("$baseURL/notes");
+
+// //   final http.MultipartRequest request = http.MultipartRequest(
+// //     "POST",
+// //     uri,
+// //   );
+
+// //   // Text fields
+// //   request.fields["title"] = title;
+// //   request.fields["subtitle"] = subtitle;
+// //   request.fields["content"] = content;
+// //   request.fields["topicid"] = topicid.toString();
+// //   request.fields["status"] = status.toLowerCase();
+
+// //   // Image URLs send as JSON string
+// //   if (imageUrls.isNotEmpty) {
+// //     request.fields["imageUrls"] = jsonEncode(imageUrls);
+// //   }
+
+// //   // Multiple gallery images
+// //   for (final File image in images) {
+// //     request.files.add(
+// //       await http.MultipartFile.fromPath(
+// //         "images",
+// //         image.path,
+// //       ),
+// //     );
+// //   }
+
+// //   final streamedResponse = await request.send();
+
+// //   final http.Response response = await http.Response.fromStream(
+// //     streamedResponse,
+// //   );
+
+// //   print("STATUS CODE: ${response.statusCode}");
+// //   print("RESPONSE BODY: ${response.body}");
+
+// //   if (response.statusCode >= 200 &&
+// //       response.statusCode < 300) {
+// //     try {
+// //       final dynamic decodedData = jsonDecode(response.body);
+
+// //       return Map<String, dynamic>.from(decodedData);
+// //     } catch (error) {
+// //       throw Exception(
+// //         "Invalid JSON response: ${response.body}",
+// //       );
+// //     }
+// //   }
+
+// //   String errorMessage;
+
+// //   try {
+// //     final dynamic decodedError = jsonDecode(response.body);
+
+// //     errorMessage = decodedError["message"]?.toString() ??
+// //         "Failed to create note";
+// //   } catch (error) {
+// //     errorMessage = response.body.isNotEmpty
+// //         ? response.body
+// //         : "Server error occurred";
+// //   }
+
+// //   throw Exception(
+// //     "Error ${response.statusCode}: $errorMessage",
+// //   );
+// // }
+
+
+// // create notes
+
+// // Add Notes API
+// Future<Map<String, dynamic>> addNotesAPI({
+//   required String title,
+//   required int topicid,
+//   required String status,
+
+//   required List<Map<String, dynamic>> subtitles,
+//   required List<Map<String, dynamic>> contents,
+//   required List<Map<String, dynamic>> images,
+//   required List<Map<String, dynamic>> contentOrder,
+
+//   List<File> imageFiles = const [],
+// }) async {
+//   final Uri uri = Uri.parse("$baseURL/notes");
+
+//   final http.MultipartRequest request =
+//       http.MultipartRequest(
+//     "POST",
+//     uri,
+//   );
+
+//   // ============================================================
+//   // FIXED FIELDS
+//   // ============================================================
+
+//   request.fields["title"] = title;
+//   request.fields["topicid"] = topicid.toString();
+//   request.fields["status"] = status.toLowerCase();
+
+//   // ============================================================
+//   // DYNAMIC CONTENT
+//   // ============================================================
+
+//   request.fields["subtitle"] =
+//       jsonEncode(subtitles);
+
+//   request.fields["content"] =
+//       jsonEncode(contents);
+
+//   request.fields["images"] =
+//       jsonEncode(
+//     images,
+//   );
+
+//   request.fields["contentOrder"] =
+//       jsonEncode(
+//     contentOrder,
+//   );
+
+//   // ============================================================
+//   // IMAGE FILES
+//   // ============================================================
+
+//   for (final File image in imageFiles) {
+//     request.files.add(
+//       await http.MultipartFile.fromPath(
+//         "images",
+//         image.path,
+//       ),
+//     );
+//   }
+
+//   // ============================================================
+//   // SEND REQUEST
+//   // ============================================================
+
+//   final streamedResponse =
+//       await request.send();
+
+//   final http.Response response =
+//       await http.Response.fromStream(
+//     streamedResponse,
+//   );
+
+//   print(
+//     "STATUS CODE: ${response.statusCode}",
+//   );
+
+//   print(
+//     "RESPONSE BODY: ${response.body}",
+//   );
+
+//   // ============================================================
+//   // SUCCESS
+//   // ============================================================
+
+//   if (response.statusCode >= 200 &&
+//       response.statusCode < 300) {
+//     try {
+//       final dynamic decodedData =
+//           jsonDecode(
+//         response.body,
+//       );
+
+//       return Map<String, dynamic>.from(
+//         decodedData,
+//       );
+//     } catch (error) {
+//       throw Exception(
+//         "Invalid JSON response: ${response.body}",
+//       );
+//     }
+//   }
+
+//   // ============================================================
+//   // ERROR
+//   // ============================================================
+
+//   String errorMessage;
+
+//   try {
+//     final dynamic decodedError =
+//         jsonDecode(
+//       response.body,
+//     );
+
+//     errorMessage =
+//         decodedError["message"]?.toString() ??
+//             "Failed to create note";
+//   } catch (error) {
+//     errorMessage =
+//         response.body.isNotEmpty
+//             ? response.body
+//             : "Server error occurred";
+//   }
+
+//   throw Exception(
+//     "Error ${response.statusCode}: $errorMessage",
+//   );
+// }
+
+// }
+
+
+
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+class ApiServices {
+  final String baseURL =
+      'https://my-notes-psi-snowy.vercel.app/api';
+
+
+  
+  // logout
+
+    Future<bool> isLoggedIn() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final accessToken = prefs.getString("accessToken");
+
+    return accessToken != null && accessToken.isNotEmpty;
   }
 
   // ============================================================
-  // SEND REQUEST
+  // TOKEN HELPERS
   // ============================================================
 
-  final streamedResponse =
-      await request.send();
+  Future<String?> _getAccessToken() async {
+    final prefs = await SharedPreferences.getInstance();
 
-  final http.Response response =
-      await http.Response.fromStream(
-    streamedResponse,
-  );
+    return prefs.getString("accessToken");
+  }
 
-  print(
-    "STATUS CODE: ${response.statusCode}",
-  );
+  Future<String?> _getRefreshToken() async {
+    final prefs = await SharedPreferences.getInstance();
 
-  print(
-    "RESPONSE BODY: ${response.body}",
-  );
+    return prefs.getString("refreshToken");
+  }
+
+  Future<Map<String, String>> _authHeaders() async {
+    final token = await _getAccessToken();
+
+    return {
+      "Authorization": "Bearer $token",
+    };
+  }
+
+  Future<Map<String, String>> _jsonAuthHeaders() async {
+    final token = await _getAccessToken();
+
+    return {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    };
+  }
 
   // ============================================================
-  // SUCCESS
+  // GET NOTES
   // ============================================================
 
-  if (response.statusCode >= 200 &&
-      response.statusCode < 300) {
+  Future<List<dynamic>> getNotesData() async {
     try {
-      final dynamic decodedData =
-          jsonDecode(
-        response.body,
+      final headers = await _authHeaders();
+
+      final res = await http.get(
+        Uri.parse('$baseURL/getNotes'),
+        headers: headers,
       );
 
-      return Map<String, dynamic>.from(
-        decodedData,
+      if (res.statusCode == 200) {
+        final decoded = jsonDecode(res.body);
+
+        return decoded["data"];
+      } else {
+        throw Exception(
+          "Failed to load Notes data: ${res.statusCode}",
+        );
+      }
+    } catch (e) {
+      throw Exception("Error : $e");
+    }
+  }
+
+  // ============================================================
+  // GET NOTES LIST DATA
+  // ============================================================
+
+  Future<List<dynamic>> getNotesDataList() async {
+    try {
+      final headers = await _authHeaders();
+
+      final res = await http.get(
+        Uri.parse('$baseURL/getNotes-list'),
+        headers: headers,
       );
-    } catch (error) {
+
+      if (res.statusCode == 200) {
+        final decoded = jsonDecode(res.body);
+
+        return decoded["data"];
+      } else {
+        throw Exception(
+          "Failed to load Notes data: ${res.statusCode}",
+        );
+      }
+    } catch (e) {
+      throw Exception("Error : $e");
+    }
+  }
+
+  // ============================================================
+  // UPDATE NOTES LAYOUT
+  // ============================================================
+
+  Future<Map<String, dynamic>> updateNotesLayoutAPI({
+    required int notesId,
+    required Map<String, dynamic> layout,
+  }) async {
+    try {
+      final Uri uri = Uri.parse(
+        "$baseURL/notes/$notesId/layout",
+      );
+
+      final headers = await _jsonAuthHeaders();
+
+      final response = await http.put(
+        uri,
+        headers: headers,
+        body: jsonEncode({
+          "layout": layout,
+        }),
+      );
+
+      print(
+        "UPDATE LAYOUT STATUS: ${response.statusCode}",
+      );
+
+      print(
+        "UPDATE LAYOUT RESPONSE: ${response.body}",
+      );
+
+      if (response.statusCode >= 200 &&
+          response.statusCode < 300) {
+        final dynamic decodedData =
+            jsonDecode(response.body);
+
+        return Map<String, dynamic>.from(
+          decodedData,
+        );
+      }
+
+      String errorMessage;
+
+      try {
+        final dynamic decodedError =
+            jsonDecode(response.body);
+
+        errorMessage =
+            decodedError["message"]?.toString() ??
+                "Failed to update note layout";
+      } catch (e) {
+        errorMessage = response.body.isNotEmpty
+            ? response.body
+            : "Server error occurred";
+      }
+
       throw Exception(
-        "Invalid JSON response: ${response.body}",
+        "Error ${response.statusCode}: $errorMessage",
+      );
+    } catch (e) {
+      throw Exception(
+        "Update layout error: $e",
       );
     }
   }
 
   // ============================================================
-  // ERROR
+  // LOGIN
   // ============================================================
 
-  String errorMessage;
+  Future<Map<String, dynamic>> loginApi(
+    String email,
+    String password,
+  ) async {
+    try {
+      final res = await http.post(
+        Uri.parse('$baseURL/login'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': email,
+          'password': password,
+        }),
+      );
 
-  try {
-    final dynamic decodedError =
-        jsonDecode(
-      response.body,
-    );
+      print("LOGIN STATUS: ${res.statusCode}");
+      print("LOGIN RESPONSE: ${res.body}");
 
-    errorMessage =
-        decodedError["message"]?.toString() ??
-            "Failed to create note";
-  } catch (error) {
-    errorMessage =
-        response.body.isNotEmpty
-            ? response.body
-            : "Server error occurred";
+      if (res.statusCode == 200) {
+        final decoded = jsonDecode(res.body);
+
+        // ------------------------------------------------------
+        // SAVE TOKENS
+        // ------------------------------------------------------
+
+        final accessToken =
+            decoded["data"]?["accessToken"];
+
+        final refreshToken =
+            decoded["data"]?["refreshToken"];
+
+        if (accessToken != null) {
+          final prefs =
+              await SharedPreferences.getInstance();
+
+          await prefs.setString(
+            "accessToken",
+            accessToken.toString(),
+          );
+
+          if (refreshToken != null) {
+            await prefs.setString(
+              "refreshToken",
+              refreshToken.toString(),
+            );
+          }
+        }
+
+        return Map<String, dynamic>.from(
+          decoded,
+        );
+      } else {
+        String message = "Login failed";
+
+        try {
+          final decoded = jsonDecode(res.body);
+
+          message =
+              decoded["message"]?.toString() ??
+                  message;
+        } catch (_) {}
+
+        throw Exception(
+          "$message: ${res.statusCode}",
+        );
+      }
+    } catch (e) {
+      throw Exception(
+        'Login error: $e',
+      );
+    }
   }
 
-  throw Exception(
-    "Error ${response.statusCode}: $errorMessage",
-  );
-}
+  // ============================================================
+  // REGISTER
+  // ============================================================
 
+  Future<Map<String, dynamic>> RegisterAPI(
+    String firstname,
+    String lastname,
+    String email,
+    String password,
+  ) async {
+    try {
+      final res = await http.post(
+        Uri.parse('$baseURL/register'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'firstname': firstname,
+          'lastname': lastname,
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      print(
+        "Register Status: ${res.statusCode}",
+      );
+
+      print(
+        "Register Response: ${res.body}",
+      );
+
+      if (res.statusCode == 200 ||
+          res.statusCode == 201) {
+        final decoded = jsonDecode(res.body);
+
+        return Map<String, dynamic>.from(
+          decoded,
+        );
+      } else {
+        throw Exception(
+          'Register failed: ${res.statusCode}\n${res.body}',
+        );
+      }
+    } catch (e) {
+      throw Exception(
+        'Register error: $e',
+      );
+    }
+  }
+
+  // ============================================================
+  // LOGOUT
+  // ============================================================
+
+  Future<Map<String, dynamic>> logoutAPI() async {
+    try {
+      final token = await _getAccessToken();
+
+      // --------------------------------------------------------
+      // If token doesn't exist, simply clear local storage
+      // --------------------------------------------------------
+
+      if (token == null || token.isEmpty) {
+        final prefs =
+            await SharedPreferences.getInstance();
+
+        await prefs.remove("accessToken");
+        await prefs.remove("refreshToken");
+
+        return {
+          "success": true,
+          "message": "Logout successful",
+        };
+      }
+
+      // --------------------------------------------------------
+      // Call backend logout API
+      // --------------------------------------------------------
+
+      final response = await http.post(
+        Uri.parse('$baseURL/logout'),
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      print(
+        "LOGOUT STATUS: ${response.statusCode}",
+      );
+
+      print(
+        "LOGOUT RESPONSE: ${response.body}",
+      );
+
+      // --------------------------------------------------------
+      // Always clear local tokens
+      // --------------------------------------------------------
+
+      final prefs =
+          await SharedPreferences.getInstance();
+
+      await prefs.remove("accessToken");
+      await prefs.remove("refreshToken");
+
+      if (response.statusCode >= 200 &&
+          response.statusCode < 300) {
+        try {
+          final decoded =
+              jsonDecode(response.body);
+
+          return Map<String, dynamic>.from(
+            decoded,
+          );
+        } catch (_) {
+          return {
+            "success": true,
+            "message": "Logout successful",
+          };
+        }
+      }
+
+      // Even if server logout fails, local session is removed.
+      return {
+        "success": true,
+        "message": "Logged out locally",
+      };
+    } catch (e) {
+      // --------------------------------------------------------
+      // Clear tokens even if network/server fails
+      // --------------------------------------------------------
+
+      final prefs =
+          await SharedPreferences.getInstance();
+
+      await prefs.remove("accessToken");
+      await prefs.remove("refreshToken");
+
+      return {
+        "success": true,
+        "message": "Logged out locally",
+      };
+    }
+  }
+
+  // ============================================================
+  // ADD TOPIC
+  // ============================================================
+
+  Future<Map<String, dynamic>> addTopicAPI({
+    required String name,
+    required String description,
+    required String status,
+    String? imageUrl,
+    File? imageFile,
+  }) async {
+    final uri = Uri.parse(
+      "$baseURL/topics",
+    );
+
+    final request = http.MultipartRequest(
+      "POST",
+      uri,
+    );
+
+    // ----------------------------------------------------------
+    // AUTHORIZATION
+    // ----------------------------------------------------------
+
+    final token = await _getAccessToken();
+
+    if (token == null || token.isEmpty) {
+      throw Exception(
+        "Authentication token not found. Please login again.",
+      );
+    }
+
+    request.headers["Authorization"] =
+        "Bearer $token";
+
+    // ----------------------------------------------------------
+    // TEXT FIELDS
+    // ----------------------------------------------------------
+
+    request.fields["name"] = name;
+
+    request.fields["description"] =
+        description;
+
+    request.fields["status"] =
+        status.toLowerCase();
+
+    // ----------------------------------------------------------
+    // URL OPTION
+    // ----------------------------------------------------------
+
+    if (imageFile == null &&
+        imageUrl != null &&
+        imageUrl.trim().isNotEmpty) {
+      request.fields["coverImageUrl"] =
+          imageUrl.trim();
+    }
+
+    // ----------------------------------------------------------
+    // GALLERY FILE OPTION
+    // ----------------------------------------------------------
+
+    if (imageFile != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          "coverImage",
+          imageFile.path,
+        ),
+      );
+    }
+
+    // ----------------------------------------------------------
+    // SEND REQUEST
+    // ----------------------------------------------------------
+
+    final streamedResponse =
+        await request.send();
+
+    final response =
+        await http.Response.fromStream(
+      streamedResponse,
+    );
+
+    // ----------------------------------------------------------
+    // DEBUG
+    // ----------------------------------------------------------
+
+    print(
+      "STATUS CODE: ${response.statusCode}",
+    );
+
+    print(
+      "RESPONSE BODY: ${response.body}",
+    );
+
+    // ----------------------------------------------------------
+    // SUCCESS
+    // ----------------------------------------------------------
+
+    if (response.statusCode >= 200 &&
+        response.statusCode < 300) {
+      try {
+        final data =
+            jsonDecode(response.body);
+
+        return Map<String, dynamic>.from(
+          data,
+        );
+      } catch (e) {
+        throw Exception(
+          "Invalid JSON response: ${response.body}",
+        );
+      }
+    }
+
+    // ----------------------------------------------------------
+    // ERROR
+    // ----------------------------------------------------------
+
+    String errorMessage;
+
+    try {
+      final errorData =
+          jsonDecode(response.body);
+
+      errorMessage =
+          errorData["message"]?.toString() ??
+              "Failed to add topic";
+    } catch (e) {
+      errorMessage = response.body.isNotEmpty
+          ? response.body
+          : "Server error occurred";
+    }
+
+    throw Exception(
+      "Error ${response.statusCode}: $errorMessage",
+    );
+  }
+
+  // ============================================================
+  // GET TOPICS
+  // ============================================================
+
+  Future<List<dynamic>> getTopicsAPI() async {
+    try {
+      final headers = await _authHeaders();
+
+      final res = await http.get(
+        Uri.parse('$baseURL/getTopic'),
+        headers: headers,
+      );
+
+      if (res.statusCode == 200) {
+        final decoded =
+            jsonDecode(res.body);
+
+        return decoded["data"];
+      } else {
+        throw Exception(
+          "Failed to load Topics data: ${res.statusCode}",
+        );
+      }
+    } catch (e) {
+      throw Exception(
+        "Error: $e",
+      );
+    }
+  }
+
+  // ============================================================
+  // GET USER
+  // ============================================================
+
+  Future<List<dynamic>> getUserAPI() async {
+    try {
+      final headers =
+          await _authHeaders();
+
+      final res = await http.get(
+        Uri.parse('$baseURL/user'),
+        headers: headers,
+      );
+
+      if (res.statusCode == 200) {
+        final decoded =
+            jsonDecode(res.body);
+
+        return decoded["data"];
+      } else {
+        throw Exception(
+          "Failed to load User data: ${res.statusCode}",
+        );
+      }
+    } catch (e) {
+      throw Exception(
+        "Error: $e",
+      );
+    }
+  }
+
+  // ============================================================
+  // ADD NOTES
+  // ============================================================
+
+  Future<Map<String, dynamic>> addNotesAPI({
+    required String title,
+    required int topicid,
+    required String status,
+    required List<Map<String, dynamic>> subtitles,
+    required List<Map<String, dynamic>> contents,
+    required List<Map<String, dynamic>> images,
+    required List<Map<String, dynamic>> contentOrder,
+    List<File> imageFiles = const [],
+  }) async {
+    final Uri uri =
+        Uri.parse("$baseURL/notes");
+
+    final http.MultipartRequest request =
+        http.MultipartRequest(
+      "POST",
+      uri,
+    );
+
+    // ----------------------------------------------------------
+    // AUTHORIZATION
+    // ----------------------------------------------------------
+
+    final token =
+        await _getAccessToken();
+
+    if (token == null || token.isEmpty) {
+      throw Exception(
+        "Authentication token not found. Please login again.",
+      );
+    }
+
+    request.headers["Authorization"] =
+        "Bearer $token";
+
+    // ----------------------------------------------------------
+    // FIXED FIELDS
+    // ----------------------------------------------------------
+
+    request.fields["title"] =
+        title;
+
+    request.fields["topicid"] =
+        topicid.toString();
+
+    request.fields["status"] =
+        status.toLowerCase();
+
+    // ----------------------------------------------------------
+    // DYNAMIC CONTENT
+    // ----------------------------------------------------------
+
+    request.fields["subtitle"] =
+        jsonEncode(subtitles);
+
+    request.fields["content"] =
+        jsonEncode(contents);
+
+    request.fields["images"] =
+        jsonEncode(images);
+
+    request.fields["contentOrder"] =
+        jsonEncode(contentOrder);
+
+    // ----------------------------------------------------------
+    // IMAGE FILES
+    // ----------------------------------------------------------
+
+    for (final File image
+        in imageFiles) {
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          "images",
+          image.path,
+        ),
+      );
+    }
+
+    // ----------------------------------------------------------
+    // SEND REQUEST
+    // ----------------------------------------------------------
+
+    final streamedResponse =
+        await request.send();
+
+    final http.Response response =
+        await http.Response.fromStream(
+      streamedResponse,
+    );
+
+    // ----------------------------------------------------------
+    // DEBUG
+    // ----------------------------------------------------------
+
+    print(
+      "STATUS CODE: ${response.statusCode}",
+    );
+
+    print(
+      "RESPONSE BODY: ${response.body}",
+    );
+
+    // ----------------------------------------------------------
+    // SUCCESS
+    // ----------------------------------------------------------
+
+    if (response.statusCode >= 200 &&
+        response.statusCode < 300) {
+      try {
+        final dynamic decodedData =
+            jsonDecode(
+          response.body,
+        );
+
+        return Map<String, dynamic>.from(
+          decodedData,
+        );
+      } catch (error) {
+        throw Exception(
+          "Invalid JSON response: ${response.body}",
+        );
+      }
+    }
+
+    // ----------------------------------------------------------
+    // ERROR
+    // ----------------------------------------------------------
+
+    String errorMessage;
+
+    try {
+      final dynamic decodedError =
+          jsonDecode(
+        response.body,
+      );
+
+      errorMessage =
+          decodedError["message"]?.toString() ??
+              "Failed to create note";
+    } catch (error) {
+      errorMessage =
+          response.body.isNotEmpty
+              ? response.body
+              : "Server error occurred";
+    }
+
+    throw Exception(
+      "Error ${response.statusCode}: $errorMessage",
+    );
+  }
 }
