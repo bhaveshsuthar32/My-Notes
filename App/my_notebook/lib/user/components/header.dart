@@ -247,13 +247,211 @@
 
 
 
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 
-class Header extends StatelessWidget implements PreferredSizeWidget {
+// class Header extends StatelessWidget implements PreferredSizeWidget {
+//   const Header({super.key});
+
+//   @override
+//   Size get preferredSize => const Size.fromHeight(72);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final theme = Theme.of(context);
+//     final isDark = theme.brightness == Brightness.dark;
+
+//     final backgroundColor =
+//         isDark ? const Color(0xFF17171F) : Colors.white;
+
+//     final textColor =
+//         isDark ? const Color(0xFFF5F5F7) : const Color(0xFF20202B);
+
+//     final secondaryTextColor =
+//         isDark ? const Color(0xFFA5A5B5) : const Color(0xFF8A8A98);
+
+//     final borderColor =
+//         isDark ? const Color(0xFF2A2A35) : const Color(0xFFEDEDF3);
+
+//     final iconBackground =
+//         isDark ? const Color(0xFF292844) : const Color(0xFFEDEBFF);
+
+//     return AppBar(
+//       elevation: 0,
+//       scrolledUnderElevation: 0,
+//       backgroundColor: backgroundColor,
+//       surfaceTintColor: Colors.transparent,
+
+//       // ================= LEFT =================
+//       leading: Builder(
+//         builder: (context) {
+//           return IconButton(
+//             onPressed: () {
+//               Scaffold.of(context).openDrawer();
+//             },
+//             icon: Icon(
+//               Icons.menu_rounded,
+//               size: 27,
+//               color: textColor,
+//             ),
+//           );
+//         },
+//       ),
+
+//       titleSpacing: 0,
+
+//       title: Row(
+//         children: [
+//           // Notebook Icon
+//           Container(
+//             width: 38,
+//             height: 38,
+//             decoration: BoxDecoration(
+//               color: iconBackground,
+//               borderRadius: BorderRadius.circular(11),
+//             ),
+//             child: const Icon(
+//               Icons.menu_book_rounded,
+//               color: Color(0xFF5B5CEB),
+//               size: 22,
+//             ),
+//           ),
+
+//           const SizedBox(width: 10),
+
+//           // App Name
+//           Flexible(
+//             child: Text(
+//               "My Notebook",
+//               overflow: TextOverflow.ellipsis,
+//               style: TextStyle(
+//                 color: textColor,
+//                 fontSize: 19,
+//                 fontWeight: FontWeight.w700,
+//                 letterSpacing: -0.2,
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+
+//       // ================= RIGHT =================
+//       actions: [
+//         Row(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             // Hello + Name
+//             Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               crossAxisAlignment: CrossAxisAlignment.end,
+//               children: [
+//                 Text(
+//                   "Hello,",
+//                   style: TextStyle(
+//                     color: secondaryTextColor,
+//                     fontSize: 11,
+//                     fontWeight: FontWeight.w400,
+//                   ),
+//                 ),
+//                 Text(
+//                   "John",
+//                   style: TextStyle(
+//                     color: textColor,
+//                     fontSize: 16,
+//                     fontWeight: FontWeight.w700,
+//                   ),
+//                 ),
+//               ],
+//             ),
+
+//             const SizedBox(width: 10),
+
+//             // Profile Image
+//             Padding(
+//               padding: const EdgeInsets.only(right: 14),
+//               child: Container(
+//                 width: 40,
+//                 height: 40,
+//                 decoration: BoxDecoration(
+//                   shape: BoxShape.circle,
+//                   color: iconBackground,
+//                   border: Border.all(
+//                     color: isDark
+//                         ? const Color(0xFF3A3948)
+//                         : const Color(0xFFE6E5F2),
+//                     width: 1,
+//                   ),
+//                 ),
+//                 child: ClipOval(
+//                   child: Image.network(
+//                     "https://i.pravatar.cc/150?img=12",
+//                     fit: BoxFit.cover,
+//                     errorBuilder: (context, error, stackTrace) {
+//                       return Icon(
+//                         Icons.person_rounded,
+//                         color: const Color(0xFF5B5CEB),
+//                         size: 25,
+//                       );
+//                     },
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ],
+
+//       // ================= BOTTOM BORDER =================
+//       bottom: PreferredSize(
+//         preferredSize: const Size.fromHeight(1),
+//         child: Container(
+//           height: 1,
+//           color: borderColor,
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+
+
+
+
+import 'package:flutter/material.dart';
+import 'package:my_notebook/services/api_services.dart';
+
+class Header extends StatefulWidget implements PreferredSizeWidget {
   const Header({super.key});
 
   @override
   Size get preferredSize => const Size.fromHeight(72);
+
+  @override
+  State<Header> createState() => _HeaderState();
+}
+
+class _HeaderState extends State<Header> {
+  String userName = "User";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    try {
+      final user = await ApiServices().getProfileAPI();
+
+      if (!mounted) return;
+
+      setState(() {
+        userName = user["firstname"] ?? "User";
+      });
+    } catch (e) {
+      debugPrint("Profile Error: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -281,7 +479,9 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: backgroundColor,
       surfaceTintColor: Colors.transparent,
 
-      // ================= LEFT =================
+      // =========================
+      // MENU BUTTON
+      // =========================
       leading: Builder(
         builder: (context) {
           return IconButton(
@@ -299,9 +499,11 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
 
       titleSpacing: 0,
 
+      // =========================
+      // APP TITLE
+      // =========================
       title: Row(
         children: [
-          // Notebook Icon
           Container(
             width: 38,
             height: 38,
@@ -318,7 +520,6 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
 
           const SizedBox(width: 10),
 
-          // App Name
           Flexible(
             child: Text(
               "My Notebook",
@@ -334,12 +535,13 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
 
-      // ================= RIGHT =================
+      // =========================
+      // USER SECTION
+      // =========================
       actions: [
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Hello + Name
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -352,8 +554,10 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
+
                 Text(
-                  "John",
+                  userName,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: textColor,
                     fontSize: 16,
@@ -365,7 +569,9 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
 
             const SizedBox(width: 10),
 
-            // Profile Image
+            // =========================
+            // DUMMY PROFILE AVATAR
+            // =========================
             Padding(
               padding: const EdgeInsets.only(right: 14),
               child: Container(
@@ -385,10 +591,14 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
                   child: Image.network(
                     "https://i.pravatar.cc/150?img=12",
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Icon(
+                    errorBuilder: (
+                      context,
+                      error,
+                      stackTrace,
+                    ) {
+                      return const Icon(
                         Icons.person_rounded,
-                        color: const Color(0xFF5B5CEB),
+                        color: Color(0xFF5B5CEB),
                         size: 25,
                       );
                     },
@@ -400,7 +610,9 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
         ),
       ],
 
-      // ================= BOTTOM BORDER =================
+      // =========================
+      // BOTTOM BORDER
+      // =========================
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
         child: Container(
