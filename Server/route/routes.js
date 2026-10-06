@@ -28,7 +28,7 @@
 
 
 import express from "express";
-import { getUser, login, logout, registerUser } from "../controllers/admin.controller.js";
+import { getProfile, getUser, login, logout, registerUser } from "../controllers/admin.controller.js";
 import { createNotes, deleteNotesById, getNoteDetailsById, getNotesByTopic, getNotesList, getNotesListData, updateNotesLayoutById } from "../controllers/notes.controller.js";
 import { createTopic, deleteTopicById, getTopicList, getTopicListById } from "../controllers/topics.controller.js";
 import upload from "../middleware/upload.js";
@@ -55,5 +55,7 @@ router.put("/notes/:notesId/layout", authMiddleware, updateNotesLayoutById);
 router.post("/logout", authMiddleware, logout);
 
 router.get("/user", authMiddleware, getUser);
+
+router.get("/profile", authMiddleware, getProfile);
 
 export default router;
