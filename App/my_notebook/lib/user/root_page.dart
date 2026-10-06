@@ -241,6 +241,7 @@ import 'package:my_notebook/user/components/header.dart';
 import 'package:my_notebook/user/pages/home.dart';
 import 'package:my_notebook/user/pages/login/login.dart';
 import 'package:my_notebook/user/pages/notes/notes_page.dart';
+import 'package:my_notebook/user/pages/profile/profile_page.dart';
 import 'package:my_notebook/user/pages/topics/topics_page.dart';
 
 class RootPage extends StatefulWidget {
@@ -263,9 +264,7 @@ class _RootPageState extends State<RootPage> {
     const Center(
       child: Text("AI Assistant"),
     ),
-    const Center(
-      child: Text("Profile"),
-    ),
+    const ProfilePage(),
   ];
 
   @override

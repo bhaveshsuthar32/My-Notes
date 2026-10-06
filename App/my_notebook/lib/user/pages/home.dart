@@ -1320,6 +1320,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:my_notebook/user/pages/notes/notes_page.dart';
+import 'package:my_notebook/user/pages/profile/profile_page.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -1390,7 +1391,7 @@ class _HomeState extends State<Home> {
                 title: "Quick Topics",
                 action: "See all",
                 onTap: () {
-                  // RootPage ke Topics tab par ja sakta hai
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()));
                 },
               ),
 
