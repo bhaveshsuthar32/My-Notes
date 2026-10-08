@@ -627,6 +627,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:flutter/foundation.dart';
+
 class ApiServices {
   final String baseURL =
       'https://my-notes-psi-snowy.vercel.app/api';
@@ -635,13 +637,92 @@ class ApiServices {
   
   // logout
 
-    Future<bool> isLoggedIn() async {
-    final prefs = await SharedPreferences.getInstance();
+  //   Future<bool> isLoggedIn() async {
+  //   final prefs = await SharedPreferences.getInstance();
 
-    final accessToken = prefs.getString("accessToken");
+  //   final accessToken = prefs.getString("accessToken");
 
-    return accessToken != null && accessToken.isNotEmpty;
+  //   return accessToken != null && accessToken.isNotEmpty;
+  // }
+
+
+  Future<void> clearTokens() async {
+  final prefs = await SharedPreferences.getInstance();
+
+  await prefs.remove("accessToken");
+  await prefs.remove("refreshToken");
+}
+
+Future<bool> isLoggedIn() async {
+  final prefs = await SharedPreferences.getInstance();
+
+  final accessToken = prefs.getString("accessToken");
+  final refreshToken = prefs.getString("refreshToken");
+
+  // No tokens -> not logged in
+  if (accessToken == null || accessToken.isEmpty) {
+    if (refreshToken == null || refreshToken.isEmpty) {
+      return false;
+    }
+
+    // Access token missing, try refresh
+    return await refreshAccessToken();
   }
+
+  // Check whether current access token is still valid
+  try {
+    final parts = accessToken.split('.');
+
+    if (parts.length != 3) {
+      return await refreshAccessToken();
+    }
+
+    final payload = jsonDecode(
+      utf8.decode(
+        base64Url.decode(
+          base64Url.normalize(parts[1]),
+        ),
+      ),
+    );
+
+    final exp = payload["exp"];
+
+    if (exp == null) {
+      return await refreshAccessToken();
+    }
+
+    final expiryTime =
+        DateTime.fromMillisecondsSinceEpoch(exp * 1000);
+
+    // Token still valid
+    if (DateTime.now().isBefore(expiryTime)) {
+      return true;
+    }
+
+    // Access token expired -> refresh
+    debugPrint("ACCESS TOKEN EXPIRED. REFRESHING...");
+
+    final refreshed = await refreshAccessToken();
+
+    if (!refreshed) {
+      await clearTokens();
+    }
+
+    return refreshed;
+  } catch (e) {
+    debugPrint("TOKEN CHECK ERROR: $e");
+
+    final refreshed = await refreshAccessToken();
+
+    if (!refreshed) {
+      await clearTokens();
+    }
+
+    return refreshed;
+  }
+}
+
+
 
   // ============================================================
   // TOKEN HELPERS
@@ -707,28 +788,125 @@ class ApiServices {
   // GET NOTES LIST DATA
   // ============================================================
 
-  Future<List<dynamic>> getNotesDataList() async {
-    try {
-      final headers = await _authHeaders();
+  // Future<List<dynamic>> getNotesDataList() async {
+  //   try {
+  //     final headers = await _authHeaders();
 
-      final res = await http.get(
-        Uri.parse('$baseURL/getNotes-list'),
-        headers: headers,
+  //     final res = await http.get(
+  //       Uri.parse('$baseURL/getNotes-list'),
+  //       headers: headers,
+  //     );
+
+  //     if (res.statusCode == 200) {
+  //       final decoded = jsonDecode(res.body);
+
+  //       return decoded["data"];
+  //     } else {
+  //       throw Exception(
+  //         "Failed to load Notes data: ${res.statusCode}",
+  //       );
+  //     }
+  //   } catch (e) {
+  //     throw Exception("Error : $e");
+  //   }
+  // }
+
+// Future<Map<String, dynamic>> getNoteDetailsAPI({
+//   required int notesId,
+// }) async {
+//   try {
+//     final headers = await _authHeaders();
+
+//     final response = await http.get(
+//       Uri.parse('$baseURL/note-details/$notesId'),
+//       headers: headers,
+//     );
+
+//     print("NOTE DETAILS STATUS: ${response.statusCode}");
+//     print("NOTE DETAILS RESPONSE: ${response.body}");
+
+//     if (response.statusCode == 200) {
+//       final decoded = jsonDecode(response.body);
+
+//       return Map<String, dynamic>.from(
+//         decoded["data"],
+//       );
+//     }
+
+//     throw Exception(
+//       "Failed to load note details: ${response.statusCode}",
+//     );
+//   } catch (e) {
+//     throw Exception("Note details error: $e");
+//   }
+// }
+
+
+Future<Map<String, dynamic>> getNoteDetailsAPI({
+  required int notesId,
+}) async {
+  try {
+    final headers = await _authHeaders();
+
+    final response = await http.get(
+      Uri.parse('$baseURL/note-details/$notesId'),
+      headers: headers,
+    );
+
+    print(
+      "NOTE DETAILS STATUS: ${response.statusCode}",
+    );
+
+    print(
+      "NOTE DETAILS RESPONSE: ${response.body}",
+    );
+
+    if (response.statusCode == 200) {
+      final decoded = jsonDecode(response.body);
+
+      return Map<String, dynamic>.from(
+        decoded["data"],
       );
-
-      if (res.statusCode == 200) {
-        final decoded = jsonDecode(res.body);
-
-        return decoded["data"];
-      } else {
-        throw Exception(
-          "Failed to load Notes data: ${res.statusCode}",
-        );
-      }
-    } catch (e) {
-      throw Exception("Error : $e");
     }
+
+    throw Exception(
+      "Failed to load note details: ${response.statusCode}",
+    );
+  } catch (e) {
+    throw Exception(
+      "Note details error: $e",
+    );
   }
+}
+
+
+Future<List<dynamic>> getNotesDataList() async {
+  try {
+    final headers = await _authHeaders();
+
+    final res = await http.get(
+      Uri.parse('$baseURL/getNotes-list'),
+      headers: headers,
+    );
+
+    print("NOTES LIST STATUS: ${res.statusCode}");
+    print("NOTES LIST RESPONSE: ${res.body}");
+
+    if (res.statusCode == 200) {
+      final decoded = jsonDecode(res.body);
+
+      return decoded["data"] ?? [];
+    }
+
+    throw Exception(
+      "Failed to load Notes data: ${res.statusCode}",
+    );
+  } catch (e) {
+    throw Exception("Error: $e");
+  }
+}
+
+
 
   // ============================================================
   // UPDATE NOTES LAYOUT
@@ -922,6 +1100,52 @@ class ApiServices {
       throw Exception(
         'Register error: $e',
       );
+    }
+  }
+
+
+    Future<bool> refreshAccessToken() async {
+    try {
+      final refreshToken = await _getRefreshToken();
+
+      if (refreshToken == null || refreshToken.isEmpty) {
+        return false;
+      }
+
+      final response = await http.post(
+        Uri.parse('$baseURL/refresh'),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "refreshToken": refreshToken,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        final newAccessToken = data["data"]["accessToken"];
+
+        if (newAccessToken == null ||
+            newAccessToken.toString().isEmpty) {
+          return false;
+        }
+
+        final prefs = await SharedPreferences.getInstance();
+
+        await prefs.setString(
+          "accessToken",
+          newAccessToken,
+        );
+
+        return true;
+      }
+
+      return false;
+    } catch (e) {
+      debugPrint("REFRESH ERROR: $e");
+      return false;
     }
   }
 
@@ -1218,6 +1442,34 @@ class ApiServices {
       );
     }
   }
+
+
+  // Get Profile
+
+  Future<Map<String, dynamic>> getProfileAPI() async {
+  try {
+    final headers = await _authHeaders();
+
+    final res = await http.get(
+      Uri.parse('$baseURL/profile'),
+      headers: headers,
+    );
+
+    if (res.statusCode == 200) {
+      final decoded = jsonDecode(res.body);
+
+      return decoded["data"];
+    } else {
+      throw Exception(
+        "Failed to load profile: ${res.statusCode}",
+      );
+    }
+  } catch (e) {
+    throw Exception(
+      "Error: $e",
+    );
+  }
+}
 
   // ============================================================
   // ADD NOTES

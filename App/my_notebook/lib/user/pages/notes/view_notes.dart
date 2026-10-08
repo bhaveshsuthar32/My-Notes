@@ -1474,151 +1474,151 @@
 
 
 
-import 'dart:convert';
+// import 'dart:convert';
 
-import 'package:flutter/material.dart';
-// import 'package:my_notebook/service/api_service.dart';
-import 'package:my_notebook/services/api_services.dart';
-import 'package:my_notebook/theme/theme_provider.dart';
-import 'package:my_notebook/user/components/drawerbar.dart';
-import 'package:my_notebook/user/components/header.dart';
-import 'package:provider/provider.dart';
+// import 'package:flutter/material.dart';
+// // import 'package:my_notebook/service/api_service.dart';
+// import 'package:my_notebook/services/api_services.dart';
+// import 'package:my_notebook/theme/theme_provider.dart';
+// import 'package:my_notebook/user/components/drawerbar.dart';
+// import 'package:my_notebook/user/components/header.dart';
+// import 'package:provider/provider.dart';
 
-class ViewNotes extends StatefulWidget {
-  final Map<String, dynamic> note;
+// class ViewNotes extends StatefulWidget {
+//   final Map<String, dynamic> note;
 
-  const ViewNotes({
-    super.key,
-    required this.note,
-  });
+//   const ViewNotes({
+//     super.key,
+//     required this.note,
+//   });
 
-  @override
-  State<ViewNotes> createState() => _ViewNotesState();
-}
+//   @override
+//   State<ViewNotes> createState() => _ViewNotesState();
+// }
 
-class _ViewNotesState extends State<ViewNotes> {
-  final PageController pageController = PageController();
+// class _ViewNotesState extends State<ViewNotes> {
+//   final PageController pageController = PageController();
 
-  List<_NoteBlockData> allBlocks = [];
-  List<List<_NoteBlockData>> pages = [];
+//   List<_NoteBlockData> allBlocks = [];
+//   List<List<_NoteBlockData>> pages = [];
 
-  int currentPage = 0;
+//   int currentPage = 0;
 
-  bool isCustomizeMode = false;
-  bool isSaving = false;
+//   bool isCustomizeMode = false;
+//   bool isSaving = false;
 
-  bool get isDark =>
-      Provider.of<ThemeProvider>(
-        context,
-        listen: false,
-      ).isDarkMode;
+//   bool get isDark =>
+//       Provider.of<ThemeProvider>(
+//         context,
+//         listen: false,
+//       ).isDarkMode;
 
-  Color get backgroundColor =>
-      isDark
-          ? const Color(0xFF121212)
-          : const Color(0xFFF5F5F5);
+//   Color get backgroundColor =>
+//       isDark
+//           ? const Color(0xFF121212)
+//           : const Color(0xFFF5F5F5);
 
-  Color get paperColor =>
-      isDark
-          ? const Color(0xFF1E1E1E)
-          : Colors.white;
+//   Color get paperColor =>
+//       isDark
+//           ? const Color(0xFF1E1E1E)
+//           : Colors.white;
 
-  Color get primaryTextColor =>
-      isDark
-          ? Colors.white
-          : const Color(0xFF1F2937);
+//   Color get primaryTextColor =>
+//       isDark
+//           ? Colors.white
+//           : const Color(0xFF1F2937);
 
-  Color get secondaryTextColor =>
-      isDark
-          ? Colors.white70
-          : const Color(0xFF4B5563);
+//   Color get secondaryTextColor =>
+//       isDark
+//           ? Colors.white70
+//           : const Color(0xFF4B5563);
 
-  Color get borderColor =>
-      isDark
-          ? Colors.white12
-          : Colors.grey.shade300;
+//   Color get borderColor =>
+//       isDark
+//           ? Colors.white12
+//           : Colors.grey.shade300;
 
-  @override
-  void initState() {
-    super.initState();
+//   @override
+//   void initState() {
+//     super.initState();
 
-    allBlocks = _createBlocks();
+//     allBlocks = _createBlocks();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       if (!mounted) return;
 
-      _loadSavedLayout();
+//       _loadSavedLayout();
 
-      if (mounted) {
-        setState(() {});
-      }
-    });
-  }
+//       if (mounted) {
+//         setState(() {});
+//       }
+//     });
+//   }
 
-  @override
-  void dispose() {
-    pageController.dispose();
-    super.dispose();
-  }
-
-
+//   @override
+//   void dispose() {
+//     pageController.dispose();
+//     super.dispose();
+//   }
 
 
-  // ============================================================
-  // DATA HELPERS
-  // ============================================================
 
-  List<dynamic> _asList(dynamic data) {
-    if (data == null) {
-      return [];
-    }
 
-    if (data is List) {
-      return data;
-    }
+//   // ============================================================
+//   // DATA HELPERS
+//   // ============================================================
 
-    if (data is String) {
-      try {
-        final dynamic decoded = jsonDecode(data);
+//   List<dynamic> _asList(dynamic data) {
+//     if (data == null) {
+//       return [];
+//     }
 
-        if (decoded is List) {
-          return decoded;
-        }
-      } catch (_) {
-        return [];
-      }
-    }
+//     if (data is List) {
+//       return data;
+//     }
 
-    return [];
-  }
+//     if (data is String) {
+//       try {
+//         final dynamic decoded = jsonDecode(data);
 
-  Map<String, dynamic>? _asMap(dynamic data) {
-    if (data == null) {
-      return null;
-    }
+//         if (decoded is List) {
+//           return decoded;
+//         }
+//       } catch (_) {
+//         return [];
+//       }
+//     }
 
-    if (data is Map<String, dynamic>) {
-      return data;
-    }
+//     return [];
+//   }
 
-    if (data is Map) {
-      return Map<String, dynamic>.from(data);
-    }
+//   Map<String, dynamic>? _asMap(dynamic data) {
+//     if (data == null) {
+//       return null;
+//     }
 
-    if (data is String) {
-      try {
-        final dynamic decoded = jsonDecode(data);
+//     if (data is Map<String, dynamic>) {
+//       return data;
+//     }
 
-        if (decoded is Map) {
-          return Map<String, dynamic>.from(decoded);
-        }
-      } catch (_) {
-        return null;
-      }
-    }
+//     if (data is Map) {
+//       return Map<String, dynamic>.from(data);
+//     }
 
-    return null;
-  }
+//     if (data is String) {
+//       try {
+//         final dynamic decoded = jsonDecode(data);
+
+//         if (decoded is Map) {
+//           return Map<String, dynamic>.from(decoded);
+//         }
+//       } catch (_) {
+//         return null;
+//       }
+//     }
+
+//     return null;
+//   }
 
   // ============================================================
   // CREATE BLOCKS FROM NOTE DATA
@@ -1800,192 +1800,1468 @@ class _ViewNotesState extends State<ViewNotes> {
   // }
 
 
-  List<_NoteBlockData> _createBlocks() {
-  final List<dynamic> subtitles =
-      _asList(widget.note["subtitle"]);
+//   List<_NoteBlockData> _createBlocks() {
+//   final List<dynamic> subtitles =
+//       _asList(widget.note["subtitle"]);
 
-  final List<dynamic> contents =
-      _asList(widget.note["content"]);
+//   final List<dynamic> contents =
+//       _asList(widget.note["content"]);
 
-  final List<dynamic> images =
-      _asList(widget.note["images"]);
+//   final List<dynamic> images =
+//       _asList(widget.note["images"]);
 
-  final List<dynamic> contentOrder =
-      _asList(widget.note["contentOrder"]);
+//   final List<dynamic> contentOrder =
+//       _asList(widget.note["contentOrder"]);
 
-  // DEBUG
-  print("===== RAW NOTE DATA =====");
-  print("SUBTITLE: ${widget.note["subtitle"]}");
-  print("CONTENT: ${widget.note["content"]}");
-  print("IMAGES: ${widget.note["images"]}");
-  print("CONTENT ORDER: ${widget.note["contentOrder"]}");
-  print("=========================");
+//   // DEBUG
+//   print("===== RAW NOTE DATA =====");
+//   print("SUBTITLE: ${widget.note["subtitle"]}");
+//   print("CONTENT: ${widget.note["content"]}");
+//   print("IMAGES: ${widget.note["images"]}");
+//   print("CONTENT ORDER: ${widget.note["contentOrder"]}");
+//   print("=========================");
 
-  final List<_NoteBlockData> result = [];
+//   final List<_NoteBlockData> result = [];
 
-  // ------------------------------------------------------------
-  // Use contentOrder
-  // ------------------------------------------------------------
+//   // ------------------------------------------------------------
+//   // Use contentOrder
+//   // ------------------------------------------------------------
 
-  if (contentOrder.isNotEmpty) {
-    for (final orderItem in contentOrder) {
-      if (orderItem is! Map) {
-        continue;
-      }
+//   if (contentOrder.isNotEmpty) {
+//     for (final orderItem in contentOrder) {
+//       if (orderItem is! Map) {
+//         continue;
+//       }
 
-      final String id =
-          orderItem["id"]?.toString() ?? "";
+//       final String id =
+//           orderItem["id"]?.toString() ?? "";
 
-      final String type =
-          orderItem["type"]?.toString().toLowerCase() ?? "";
+//       final String type =
+//           orderItem["type"]?.toString().toLowerCase() ?? "";
 
-      if (id.isEmpty) {
-        continue;
-      }
+//       if (id.isEmpty) {
+//         continue;
+//       }
 
-      // Heading / Subtitle
-      if (type == "heading" || type == "subtitle") {
-        final dynamic item =
-            _findById(subtitles, id);
+//       // Heading / Subtitle
+//       if (type == "heading" || type == "subtitle") {
+//         final dynamic item =
+//             _findById(subtitles, id);
 
-        if (item != null) {
-          result.add(
-            _NoteBlockData(
-              id: id,
-              type: type,
-              value: _getValue(item),
-            ),
-          );
-        }
+//         if (item != null) {
+//           result.add(
+//             _NoteBlockData(
+//               id: id,
+//               type: type,
+//               value: _getValue(item),
+//             ),
+//           );
+//         }
 
-        continue;
-      }
+//         continue;
+//       }
 
-      // Content
-      if (type == "content") {
-        final dynamic item =
-            _findById(contents, id);
+//       // Content
+//       if (type == "content") {
+//         final dynamic item =
+//             _findById(contents, id);
 
-        if (item != null) {
-          result.add(
-            _NoteBlockData(
-              id: id,
-              type: type,
-              value: _getValue(item),
-            ),
-          );
-        }
+//         if (item != null) {
+//           result.add(
+//             _NoteBlockData(
+//               id: id,
+//               type: type,
+//               value: _getValue(item),
+//             ),
+//           );
+//         }
 
-        continue;
-      }
+//         continue;
+//       }
 
-      // Image
-      if (type == "image") {
-        final dynamic item =
-            _findById(images, id);
+//       // Image
+//       if (type == "image") {
+//         final dynamic item =
+//             _findById(images, id);
 
-        if (item != null) {
-          result.add(
-            _NoteBlockData(
-              id: id,
-              type: type,
-              value: _getValue(item),
-            ),
-          );
-        }
+//         if (item != null) {
+//           result.add(
+//             _NoteBlockData(
+//               id: id,
+//               type: type,
+//               value: _getValue(item),
+//             ),
+//           );
+//         }
 
-        continue;
-      }
-    }
-  }
+//         continue;
+//       }
+//     }
+//   }
 
-  // ------------------------------------------------------------
-  // Fallback if contentOrder is empty
-  // ------------------------------------------------------------
+//   // ------------------------------------------------------------
+//   // Fallback if contentOrder is empty
+//   // ------------------------------------------------------------
 
-  if (result.isEmpty) {
-    for (final item in subtitles) {
-      if (item is! Map) {
-        continue;
-      }
+//   if (result.isEmpty) {
+//     for (final item in subtitles) {
+//       if (item is! Map) {
+//         continue;
+//       }
 
-      final String id =
-          item["id"]?.toString() ?? "";
+//       final String id =
+//           item["id"]?.toString() ?? "";
 
-      final String type =
-          item["type"]?.toString().toLowerCase() ?? "subtitle";
+//       final String type =
+//           item["type"]?.toString().toLowerCase() ?? "subtitle";
 
-      if (id.isEmpty) {
-        continue;
-      }
+//       if (id.isEmpty) {
+//         continue;
+//       }
 
-      result.add(
-        _NoteBlockData(
-          id: id,
-          type: type,
-          value: _getValue(item),
-        ),
-      );
-    }
+//       result.add(
+//         _NoteBlockData(
+//           id: id,
+//           type: type,
+//           value: _getValue(item),
+//         ),
+//       );
+//     }
 
-    for (final item in contents) {
-      if (item is! Map) {
-        continue;
-      }
+//     for (final item in contents) {
+//       if (item is! Map) {
+//         continue;
+//       }
 
-      final String id =
-          item["id"]?.toString() ?? "";
+//       final String id =
+//           item["id"]?.toString() ?? "";
 
-      if (id.isEmpty) {
-        continue;
-      }
+//       if (id.isEmpty) {
+//         continue;
+//       }
 
-      result.add(
-        _NoteBlockData(
-          id: id,
-          type: "content",
-          value: _getValue(item),
-        ),
-      );
-    }
+//       result.add(
+//         _NoteBlockData(
+//           id: id,
+//           type: "content",
+//           value: _getValue(item),
+//         ),
+//       );
+//     }
 
-    for (final item in images) {
-      if (item is! Map) {
-        continue;
-      }
+//     for (final item in images) {
+//       if (item is! Map) {
+//         continue;
+//       }
 
-      final String id =
-          item["id"]?.toString() ?? "";
+//       final String id =
+//           item["id"]?.toString() ?? "";
 
-      if (id.isEmpty) {
-        continue;
-      }
+//       if (id.isEmpty) {
+//         continue;
+//       }
 
-      result.add(
-        _NoteBlockData(
-          id: id,
-          type: "image",
-          value: _getValue(item),
-        ),
-      );
-    }
-  }
+//       result.add(
+//         _NoteBlockData(
+//           id: id,
+//           type: "image",
+//           value: _getValue(item),
+//         ),
+//       );
+//     }
+//   }
 
-  // DEBUG
-  print("===== NOTE BLOCKS =====");
+//   // DEBUG
+//   print("===== NOTE BLOCKS =====");
 
-  for (final block in result) {
-    print(
-      "TYPE: ${block.type} | "
-      "ID: ${block.id} | "
-      "VALUE: ${block.value}",
-    );
-  }
+//   for (final block in result) {
+//     print(
+//       "TYPE: ${block.type} | "
+//       "ID: ${block.id} | "
+//       "VALUE: ${block.value}",
+//     );
+//   }
 
-  print("=======================");
+//   print("=======================");
 
-  return result;
+//   return result;
+// }
+
+//   dynamic _findById(
+//     List<dynamic> list,
+//     String id,
+//   ) {
+//     for (final item in list) {
+//       if (item is Map) {
+//         if (item["id"]?.toString() == id) {
+//           return item;
+//         }
+//       }
+//     }
+
+//     return null;
+//   }
+
+//   String _getValue(dynamic item) {
+//     if (item is Map) {
+//       return item["value"]?.toString() ?? "";
+//     }
+
+//     return item?.toString() ?? "";
+//   }
+
+//   // ============================================================
+//   // LOAD SAVED LAYOUT
+//   // ============================================================
+
+//   void _loadSavedLayout() {
+//     final Map<String, dynamic>? layout =
+//         _asMap(widget.note["layout"]);
+
+//     if (layout == null) {
+//       _createDefaultPages();
+//       return;
+//     }
+
+//     final dynamic pagesData =
+//         layout["pages"];
+
+//     if (pagesData is! List ||
+//         pagesData.isEmpty) {
+//       _createDefaultPages();
+//       return;
+//     }
+
+//     final List<List<_NoteBlockData>>
+//         loadedPages = [];
+
+//     final Set<String> usedIds = {};
+
+//     // ------------------------------------------------------------
+//     // Load saved pages
+//     // ------------------------------------------------------------
+
+//     for (final pageData in pagesData) {
+//       if (pageData is! Map) {
+//         continue;
+//       }
+
+//       final dynamic itemsData =
+//           pageData["items"];
+
+//       if (itemsData is! List) {
+//         continue;
+//       }
+
+//       final List<_NoteBlockData>
+//           pageBlocks = [];
+
+//       for (final item in itemsData) {
+//         if (item is! Map) {
+//           continue;
+//         }
+
+//         final String id =
+//             item["id"]?.toString() ?? "";
+
+//         if (id.isEmpty) {
+//           continue;
+//         }
+
+//         final _NoteBlockData? originalBlock =
+//             _findBlockById(id);
+
+//         if (originalBlock == null) {
+//           continue;
+//         }
+
+//         final Map<String, dynamic>
+//             savedProperties =
+//             Map<String, dynamic>.from(item);
+
+//         final _NoteBlockData block =
+//             _NoteBlockData(
+//           id: originalBlock.id,
+//           type: originalBlock.type,
+//           value: originalBlock.value,
+//           layoutData: savedProperties,
+//         );
+
+//         pageBlocks.add(block);
+//         usedIds.add(id);
+//       }
+
+//       if (pageBlocks.isNotEmpty) {
+//         loadedPages.add(pageBlocks);
+//       }
+//     }
+
+//     // ------------------------------------------------------------
+//     // Add new/missing blocks
+//     // ------------------------------------------------------------
+
+//     for (final block in allBlocks) {
+//       if (!usedIds.contains(block.id)) {
+//         if (loadedPages.isEmpty) {
+//           loadedPages.add([]);
+//         }
+
+//         loadedPages.last.add(block);
+//       }
+//     }
+
+//     if (loadedPages.isEmpty) {
+//       _createDefaultPages();
+//     } else {
+//       pages = loadedPages;
+//     }
+//   }
+
+//   _NoteBlockData? _findBlockById(
+//     String id,
+//   ) {
+//     for (final block in allBlocks) {
+//       if (block.id == id) {
+//         return block;
+//       }
+//     }
+
+//     return null;
+//   }
+
+//   // ============================================================
+//   // DEFAULT PAGE CREATION
+//   // ============================================================
+
+//   void _createDefaultPages() {
+//     pages.clear();
+
+//     if (allBlocks.isEmpty) {
+//       return;
+//     }
+
+//     const double estimatedPageHeight = 850;
+
+//     List<_NoteBlockData> currentPage = [];
+
+//     double currentHeight = 0;
+
+//     for (final block in allBlocks) {
+//       final double blockHeight =
+//           _estimateBlockHeight(block);
+
+//       if (currentPage.isNotEmpty &&
+//           currentHeight + blockHeight >
+//               estimatedPageHeight) {
+//         pages.add(currentPage);
+
+//         currentPage = [];
+//         currentHeight = 0;
+//       }
+
+//       currentPage.add(block);
+//       currentHeight += blockHeight;
+//     }
+
+//     if (currentPage.isNotEmpty) {
+//       pages.add(currentPage);
+//     }
+//   }
+
+//   double _estimateBlockHeight(
+//     _NoteBlockData block,
+//   ) {
+//     switch (block.type) {
+//       case "heading":
+//         return 70;
+
+//       case "subtitle":
+//         return 80;
+
+//       case "content":
+//         final int length =
+//             block.value.length;
+
+//         if (length > 500) {
+//           return 300;
+//         }
+
+//         if (length > 250) {
+//           return 220;
+//         }
+
+//         if (length > 100) {
+//           return 160;
+//         }
+
+//         return 100;
+
+//       case "image":
+//         return 230;
+
+//       default:
+//         return 100;
+//     }
+//   }
+
+//   // ============================================================
+//   // SAVE LAYOUT
+//   // ============================================================
+
+//   Future<void> _saveLayout() async {
+//     if (isSaving) {
+//       return;
+//     }
+
+//     final int? noteId =
+//         int.tryParse(
+//       widget.note["id"]?.toString() ?? "",
+
+      
+//     );
+
+//     if (noteId == null) {
+//       _showMessage(
+//         "Note ID not found",
+//       );
+//       return;
+//     }
+
+//     setState(() {
+//       isSaving = true;
+//     });
+
+//     try {
+//       final Map<String, dynamic> layout =
+//           {
+//         "version": 1,
+//         "pages": List.generate(
+//           pages.length,
+//           (pageIndex) {
+//             return {
+//               "page": pageIndex + 1,
+//               "items": List.generate(
+//                 pages[pageIndex].length,
+//                 (itemIndex) {
+//                   final _NoteBlockData block =
+//                       pages[pageIndex][itemIndex];
+
+//                   final Map<String, dynamic>
+//                       item =
+//                       Map<String, dynamic>.from(
+//                     block.layoutData,
+//                   );
+
+//                   item["id"] = block.id;
+//                   item["type"] = block.type;
+//                   item["order"] = itemIndex + 1;
+
+//                   return item;
+//                 },
+//               ),
+//             };
+//           },
+//         ),
+//       };
+
+//       final Map<String, dynamic> response =
+//           await ApiServices()
+//               .updateNotesLayoutAPI(
+//         notesId: noteId,
+//         layout: layout,
+//       );
+
+      
+
+//       if (!mounted) {
+//         return;
+//       }
+
+//       // Update local note object also
+//       widget.note["layout"] = layout;
+
+//       setState(() {
+//         isCustomizeMode = false;
+//         isSaving = false;
+//       });
+
+//       _showMessage(
+//         response["message"]?.toString() ??
+//             "Layout saved successfully",
+//       );
+//     } catch (error) {
+//       if (!mounted) {
+//         return;
+//       }
+
+//       setState(() {
+//         isSaving = false;
+//       });
+
+//       _showMessage(
+//         "Layout save nahi hua: $error",
+//       );
+//     }
+//   }
+
+//   // ============================================================
+//   // REORDER
+//   // ============================================================
+
+//   void _reorderBlock(
+//     int pageIndex,
+//     int oldIndex,
+//     int newIndex,
+//   ) {
+//     if (oldIndex < newIndex) {
+//       newIndex -= 1;
+//     }
+
+//     if (oldIndex < 0 ||
+//         oldIndex >= pages[pageIndex].length) {
+//       return;
+//     }
+
+//     if (newIndex < 0 ||
+//         newIndex > pages[pageIndex].length) {
+//       return;
+//     }
+
+//     setState(() {
+//       final _NoteBlockData block =
+//           pages[pageIndex].removeAt(
+//         oldIndex,
+//       );
+
+//       pages[pageIndex].insert(
+//         newIndex,
+//         block,
+//       );
+//     });
+//   }
+
+//   // ============================================================
+//   // PAGE NAVIGATION
+//   // ============================================================
+
+//   Future<void> _nextPage() async {
+//     if (currentPage >= pages.length - 1) {
+//       return;
+//     }
+
+//     await pageController.nextPage(
+//       duration:
+//           const Duration(milliseconds: 300),
+//       curve: Curves.easeInOut,
+//     );
+//   }
+
+//   Future<void> _previousPage() async {
+//     if (currentPage <= 0) {
+//       return;
+//     }
+
+//     await pageController.previousPage(
+//       duration:
+//           const Duration(milliseconds: 300),
+//       curve: Curves.easeInOut,
+//     );
+//   }
+
+//   // ============================================================
+//   // MESSAGE
+//   // ============================================================
+
+//   void _showMessage(String message) {
+//     if (!mounted) {
+//       return;
+//     }
+
+//     ScaffoldMessenger.of(context)
+//         .hideCurrentSnackBar();
+
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(
+//         content: Text(message),
+//       ),
+//     );
+//   }
+
+//   // ============================================================
+//   // BUILD
+//   // ============================================================
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: backgroundColor,
+//       drawer: const Drawerbar(),
+//       appBar: const Header(),
+
+//       body: Column(
+//         children: [
+//           _buildTopBar(),
+
+//           Expanded(
+//             child: pages.isEmpty
+//                 ? _buildEmptyState()
+//                 : PageView.builder(
+//                     controller: pageController,
+//                     itemCount: pages.length,
+//                     onPageChanged: (index) {
+//                       setState(() {
+//                         currentPage = index;
+//                       });
+//                     },
+//                     itemBuilder:
+//                         (context, pageIndex) {
+//                       return isCustomizeMode
+//                           ? _buildCustomizePage(
+//                               pageIndex,
+//                             )
+//                           : _buildNormalPage(
+//                               pageIndex,
+//                             );
+//                     },
+//                   ),
+//           ),
+
+//           _buildBottomBar(),
+//         ],
+//       ),
+//     );
+//   }
+
+//   // ============================================================
+//   // TOP BAR
+//   // ============================================================
+
+//   Widget _buildTopBar() {
+//     final String title =
+//         widget.note["title"]
+//                 ?.toString() ??
+//             "Note";
+
+//     return Container(
+//       width: double.infinity,
+//       padding:
+//           const EdgeInsets.symmetric(
+//         horizontal: 16,
+//         vertical: 12,
+//       ),
+//       decoration: BoxDecoration(
+//         color: paperColor,
+//         border: Border(
+//           bottom: BorderSide(
+//             color: borderColor,
+//           ),
+//         ),
+//       ),
+//       child: Row(
+//         children: [
+//           Expanded(
+//             child: Text(
+//               title,
+//               maxLines: 1,
+//               overflow:
+//                   TextOverflow.ellipsis,
+//               style: TextStyle(
+//                 color: primaryTextColor,
+//                 fontSize: 20,
+//                 fontWeight:
+//                     FontWeight.w700,
+//               ),
+//             ),
+//           ),
+
+//           const SizedBox(width: 10),
+
+//           if (isCustomizeMode) ...[
+//             TextButton.icon(
+//               onPressed:
+//                   isSaving
+//                       ? null
+//                       : () {
+//                           _loadSavedLayout();
+
+//                           setState(() {
+//                             isCustomizeMode =
+//                                 false;
+//                           });
+//                         },
+//               icon: const Icon(
+//                 Icons.close,
+//                 size: 19,
+//               ),
+//               label:
+//                   const Text("Cancel"),
+//             ),
+
+//             const SizedBox(width: 4),
+
+//             ElevatedButton.icon(
+//               onPressed:
+//                   isSaving
+//                       ? null
+//                       : _saveLayout,
+//               icon: isSaving
+//                   ? const SizedBox(
+//                       width: 17,
+//                       height: 17,
+//                       child:
+//                           CircularProgressIndicator(
+//                         strokeWidth: 2,
+//                       ),
+//                     )
+//                   : const Icon(
+//                       Icons.save_outlined,
+//                       size: 18,
+//                     ),
+//               label: Text(
+//                 isSaving
+//                     ? "Saving..."
+//                     : "Save",
+//               ),
+//             ),
+//           ] else ...[
+//             OutlinedButton.icon(
+//               onPressed: () {
+//                 setState(() {
+//                   isCustomizeMode = true;
+//                 });
+//               },
+//               icon: const Icon(
+//                 Icons.tune,
+//                 size: 18,
+//               ),
+//               label:
+//                   const Text("Customize"),
+//             ),
+//           ],
+//         ],
+//       ),
+//     );
+//   }
+
+//   // ============================================================
+//   // NORMAL PAGE
+//   // ============================================================
+
+//   Widget _buildNormalPage(
+//     int pageIndex,
+//   ) {
+//     final List<_NoteBlockData>
+//         pageBlocks =
+//         pages[pageIndex];
+
+//     return Container(
+//       color: backgroundColor,
+//       child: SingleChildScrollView(
+//         padding:
+//             const EdgeInsets.all(18),
+//         child: Center(
+//           child: Container(
+//             width: double.infinity,
+//             constraints:
+//                 const BoxConstraints(
+//               maxWidth: 850,
+//             ),
+//             padding:
+//                 const EdgeInsets.all(24),
+//             decoration: BoxDecoration(
+//               color: paperColor,
+//               borderRadius:
+//                   BorderRadius.circular(8),
+//               boxShadow: [
+//                 BoxShadow(
+//                   color: Colors.black
+//                       .withValues(
+//                     alpha: isDark
+//                         ? 0.25
+//                         : 0.08,
+//                   ),
+//                   blurRadius: 12,
+//                   offset:
+//                       const Offset(0, 4),
+//                 ),
+//               ],
+//             ),
+//             child: Column(
+//               crossAxisAlignment:
+//                   CrossAxisAlignment
+//                       .stretch,
+//               children: [
+//                 for (final block
+//                     in pageBlocks)
+//                   Padding(
+//                     padding:
+//                         const EdgeInsets.only(
+//                       bottom: 20,
+//                     ),
+//                     child:
+//                         _buildBlock(block),
+//                   ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   // ============================================================
+//   // CUSTOMIZE PAGE
+//   // ============================================================
+
+//   Widget _buildCustomizePage(
+//     int pageIndex,
+//   ) {
+//     final List<_NoteBlockData>
+//         pageBlocks =
+//         pages[pageIndex];
+
+//     return Container(
+//       color: backgroundColor,
+//       child: Center(
+//         child: Container(
+//           width: double.infinity,
+//           constraints:
+//               const BoxConstraints(
+//             maxWidth: 850,
+//           ),
+//           margin:
+//               const EdgeInsets.all(18),
+//           decoration: BoxDecoration(
+//             color: paperColor,
+//             borderRadius:
+//                 BorderRadius.circular(8),
+//             boxShadow: [
+//               BoxShadow(
+//                 color: Colors.black
+//                     .withValues(
+//                   alpha:
+//                       isDark ? 0.25 : 0.08,
+//                 ),
+//                 blurRadius: 12,
+//                 offset:
+//                     const Offset(0, 4),
+//               ),
+//             ],
+//           ),
+//           child:
+//               ReorderableListView.builder(
+//             padding:
+//                 const EdgeInsets.all(20),
+//             buildDefaultDragHandles:
+//                 false,
+//             itemCount:
+//                 pageBlocks.length,
+//             onReorder:
+//                 (oldIndex, newIndex) {
+//               _reorderBlock(
+//                 pageIndex,
+//                 oldIndex,
+//                 newIndex,
+//               );
+//             },
+//             itemBuilder:
+//                 (context, index) {
+//               final _NoteBlockData block =
+//                   pageBlocks[index];
+
+//               return Container(
+//                 key: ValueKey(
+//                   block.id,
+//                 ),
+//                 margin:
+//                     const EdgeInsets.only(
+//                   bottom: 14,
+//                 ),
+//                 padding:
+//                     const EdgeInsets.all(12),
+//                 decoration:
+//                     BoxDecoration(
+//                   color: isDark
+//                       ? const Color(
+//                           0xFF252525,
+//                         )
+//                       : const Color(
+//                           0xFFF9FAFB,
+//                         ),
+//                   border: Border.all(
+//                     color: isDark
+//                         ? Colors.white24
+//                         : Colors.grey
+//                             .shade300,
+//                   ),
+//                   borderRadius:
+//                       BorderRadius.circular(
+//                     12,
+//                   ),
+//                 ),
+//                 child: Row(
+//                   crossAxisAlignment:
+//                       CrossAxisAlignment
+//                           .start,
+//                   children: [
+//                     Expanded(
+//                       child:
+//                           _buildBlock(
+//                         block,
+//                       ),
+//                     ),
+
+//                     const SizedBox(
+//                       width: 10,
+//                     ),
+
+//                     ReorderableDragStartListener(
+//                       index: index,
+//                       child: Container(
+//                         padding:
+//                             const EdgeInsets
+//                                 .all(8),
+//                         decoration:
+//                             BoxDecoration(
+//                           color: isDark
+//                               ? Colors.white10
+//                               : Colors.black
+//                                   .withValues(
+//                                   alpha: 0.04,
+//                                 ),
+//                           borderRadius:
+//                               BorderRadius
+//                                   .circular(
+//                             8,
+//                           ),
+//                         ),
+//                         child: Icon(
+//                           Icons
+//                               .drag_indicator,
+//                           color:
+//                               secondaryTextColor,
+//                         ),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               );
+//             },
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   // ============================================================
+//   // BLOCK
+//   // ============================================================
+
+//   Widget _buildBlock(
+//     _NoteBlockData block,
+//   ) {
+//     switch (block.type) {
+//       case "heading":
+//         return Text(
+//           block.value,
+//           style: TextStyle(
+//             color: primaryTextColor,
+//             fontSize: 26,
+//             fontWeight:
+//                 FontWeight.w700,
+//             height: 1.25,
+//           ),
+//         );
+
+//       case "subtitle":
+//         return Text(
+//           block.value,
+//           style: TextStyle(
+//             color: secondaryTextColor,
+//             fontSize: 19,
+//             fontWeight:
+//                 FontWeight.w500,
+//             height: 1.4,
+//           ),
+//         );
+
+//       case "content":
+//         return Text(
+//           block.value,
+//           style: TextStyle(
+//             color: primaryTextColor,
+//             fontSize: 16,
+//             height: 1.8,
+//           ),
+//         );
+
+//       case "image":
+//         return _buildImage(block);
+
+//       default:
+//         return Text(
+//           block.value,
+//           style: TextStyle(
+//             color: primaryTextColor,
+//             fontSize: 16,
+//           ),
+//         );
+//     }
+//   }
+
+//   // ============================================================
+//   // IMAGE
+//   // ============================================================
+
+//   Widget _buildImage(
+//     _NoteBlockData block,
+//   ) {
+//     if (block.value.trim().isEmpty) {
+//       return _buildImagePlaceholder();
+//     }
+
+//     final double width =
+//         _getDoubleLayoutValue(
+//           block,
+//           "width",
+//           220,
+//         );
+
+//     final double height =
+//         _getDoubleLayoutValue(
+//           block,
+//           "height",
+//           180,
+//         );
+
+//     final Alignment alignment =
+//         _getImageAlignment(block);
+
+//     return Align(
+//       alignment: alignment,
+//       child: ClipRRect(
+//         borderRadius:
+//             BorderRadius.circular(10),
+//         child: Image.network(
+//           block.value,
+//           width: width,
+//           height: height,
+//           fit: BoxFit.contain,
+//           errorBuilder:
+//               (context, error, stackTrace) {
+//             return _buildImagePlaceholder(
+//               width: width,
+//               height: height,
+//             );
+//           },
+//           loadingBuilder:
+//               (
+//                 context,
+//                 child,
+//                 loadingProgress,
+//               ) {
+//             if (loadingProgress ==
+//                 null) {
+//               return child;
+//             }
+
+//             return SizedBox(
+//               width: width,
+//               height: height,
+//               child: const Center(
+//                 child:
+//                     CircularProgressIndicator(),
+//               ),
+//             );
+//           },
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _buildImagePlaceholder({
+//     double width = 220,
+//     double height = 180,
+//   }) {
+//     return Container(
+//       width: width,
+//       height: height,
+//       decoration: BoxDecoration(
+//         color: isDark
+//             ? Colors.grey.shade800
+//             : Colors.grey.shade100,
+//         borderRadius:
+//             BorderRadius.circular(10),
+//       ),
+//       child: Center(
+//         child: Icon(
+//           Icons
+//               .image_not_supported_outlined,
+//           size: 40,
+//           color: isDark
+//               ? Colors.white38
+//               : Colors.black26,
+//         ),
+//       ),
+//     );
+//   }
+
+//   double _getDoubleLayoutValue(
+//     _NoteBlockData block,
+//     String key,
+//     double defaultValue,
+//   ) {
+//     final dynamic value =
+//         block.layoutData[key];
+
+//     if (value is num) {
+//       return value.toDouble();
+//     }
+
+//     if (value != null) {
+//       return double.tryParse(
+//             value.toString(),
+//           ) ??
+//           defaultValue;
+//     }
+
+//     return defaultValue;
+//   }
+
+//   Alignment _getImageAlignment(
+//     _NoteBlockData block,
+//   ) {
+//     final String alignment =
+//         block.layoutData["alignment"]
+//                 ?.toString()
+//                 .toLowerCase() ??
+//             "center";
+
+//     switch (alignment) {
+//       case "left":
+//         return Alignment.centerLeft;
+
+//       case "right":
+//         return Alignment.centerRight;
+
+//       case "center":
+//       default:
+//         return Alignment.center;
+//     }
+//   }
+
+//   // ============================================================
+//   // BOTTOM BAR
+//   // ============================================================
+
+//   Widget _buildBottomBar() {
+//     return Container(
+//       padding:
+//           const EdgeInsets.symmetric(
+//         horizontal: 16,
+//         vertical: 10,
+//       ),
+//       decoration: BoxDecoration(
+//         color: paperColor,
+//         border: Border(
+//           top: BorderSide(
+//             color: borderColor,
+//           ),
+//         ),
+//       ),
+//       child: Row(
+//         mainAxisAlignment:
+//             MainAxisAlignment.center,
+//         children: [
+//           IconButton(
+//             onPressed:
+//                 currentPage > 0
+//                     ? _previousPage
+//                     : null,
+//             icon: const Icon(
+//               Icons.chevron_left,
+//             ),
+//           ),
+
+//           const SizedBox(width: 10),
+
+//           Text(
+//             pages.isEmpty
+//                 ? "0 / 0"
+//                 : "${currentPage + 1} / ${pages.length}",
+//             style: TextStyle(
+//               color: primaryTextColor,
+//               fontWeight:
+//                   FontWeight.w600,
+//             ),
+//           ),
+
+//           const SizedBox(width: 10),
+
+//           IconButton(
+//             onPressed:
+//                 currentPage <
+//                         pages.length - 1
+//                     ? _nextPage
+//                     : null,
+//             icon: const Icon(
+//               Icons.chevron_right,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   // ============================================================
+//   // EMPTY STATE
+//   // ============================================================
+
+//   Widget _buildEmptyState() {
+//     return Center(
+//       child: Column(
+//         mainAxisSize:
+//             MainAxisSize.min,
+//         children: [
+//           Icon(
+//             Icons.note_alt_outlined,
+//             size: 60,
+//             color: secondaryTextColor,
+//           ),
+//           const SizedBox(height: 12),
+//           Text(
+//             "No content found",
+//             style: TextStyle(
+//               color: primaryTextColor,
+//               fontSize: 18,
+//               fontWeight:
+//                   FontWeight.w600,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+// // ============================================================
+// // NOTE BLOCK MODEL
+// // ============================================================
+
+// class _NoteBlockData {
+//   final String id;
+//   final String type;
+//   final String value;
+
+//   // Extra layout properties are preserved here.
+//   final Map<String, dynamic> layoutData;
+
+//   _NoteBlockData({
+//     required this.id,
+//     required this.type,
+//     required this.value,
+//     Map<String, dynamic>? layoutData,
+//   }) : layoutData =
+//             layoutData ?? {};
+// }
+
+
+
+
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:my_notebook/services/api_services.dart';
+import 'package:my_notebook/theme/theme_provider.dart';
+import 'package:my_notebook/user/components/drawerbar.dart';
+import 'package:my_notebook/user/components/header.dart';
+import 'package:provider/provider.dart';
+
+class ViewNotes extends StatefulWidget {
+  final Map<String, dynamic> note;
+
+  const ViewNotes({
+    super.key,
+    required this.note,
+  });
+
+  @override
+  State<ViewNotes> createState() => _ViewNotesState();
 }
+
+class _ViewNotesState extends State<ViewNotes> {
+  final PageController pageController = PageController();
+
+  List<_NoteBlockData> allBlocks = [];
+  List<List<_NoteBlockData>> pages = [];
+
+  int currentPage = 0;
+
+  bool isCustomizeMode = false;
+  bool isSaving = false;
+  bool isLoading = true;
+
+  // ============================================================
+  // THEME
+  // ============================================================
+
+  bool get isDark {
+    return Provider.of<ThemeProvider>(
+      context,
+      listen: false,
+    ).isDarkMode;
+  }
+
+  Color get backgroundColor =>
+      isDark ? const Color(0xFF121212) : const Color(0xFFF5F5F7);
+
+  Color get paperColor =>
+      isDark ? const Color(0xFF1E1E1E) : Colors.white;
+
+  Color get cardColor =>
+      isDark ? const Color(0xFF252525) : const Color(0xFFF9FAFB);
+
+  Color get primaryTextColor =>
+      isDark ? Colors.white : const Color(0xFF1F2937);
+
+  Color get secondaryTextColor =>
+      isDark ? Colors.white70 : const Color(0xFF4B5563);
+
+  Color get borderColor =>
+      isDark ? Colors.white12 : Colors.grey.shade300;
+
+  static const Color primaryColor = Color(0xFF5B5CEB);
+
+  // ============================================================
+  // INIT
+  // ============================================================
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNoteDetails();
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
+
+  // ============================================================
+  // LOAD NOTE DETAILS
+  // ============================================================
+
+  Future<void> _loadNoteDetails() async {
+    try {
+      final int? noteId = int.tryParse(
+        widget.note["id"]?.toString() ?? "",
+      );
+
+      if (noteId == null) {
+        allBlocks = _createBlocks();
+        _createDefaultPages();
+
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+
+        return;
+      }
+
+      final freshNote = await ApiServices().getNoteDetailsAPI(
+        notesId: noteId,
+      );
+
+      if (!mounted) return;
+
+      widget.note
+        ..clear()
+        ..addAll(freshNote);
+
+      allBlocks = _createBlocks();
+
+      _loadSavedLayout();
+
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      debugPrint("VIEW NOTE LOAD ERROR: $e");
+
+      if (!mounted) return;
+
+      allBlocks = _createBlocks();
+
+      _loadSavedLayout();
+
+      setState(() {
+        isLoading = false;
+      });
+
+      _showMessage(
+        "Latest note data load nahi hua.",
+      );
+    }
+  }
+
+  // ============================================================
+  // DATA HELPERS
+  // ============================================================
+
+  List<dynamic> _asList(dynamic data) {
+    if (data == null) {
+      return [];
+    }
+
+    if (data is List) {
+      return data;
+    }
+
+    if (data is String) {
+      try {
+        final decoded = jsonDecode(data);
+
+        if (decoded is List) {
+          return decoded;
+        }
+      } catch (_) {
+        return [];
+      }
+    }
+
+    return [];
+  }
+
+  Map<String, dynamic>? _asMap(dynamic data) {
+    if (data == null) {
+      return null;
+    }
+
+    if (data is Map<String, dynamic>) {
+      return data;
+    }
+
+    if (data is Map) {
+      return Map<String, dynamic>.from(data);
+    }
+
+    if (data is String) {
+      try {
+        final decoded = jsonDecode(data);
+
+        if (decoded is Map) {
+          return Map<String, dynamic>.from(decoded);
+        }
+      } catch (_) {
+        return null;
+      }
+    }
+
+    return null;
+  }
 
   dynamic _findById(
     List<dynamic> list,
@@ -2011,6 +3287,169 @@ class _ViewNotesState extends State<ViewNotes> {
   }
 
   // ============================================================
+  // CREATE BLOCKS
+  // ============================================================
+
+  List<_NoteBlockData> _createBlocks() {
+    final List<dynamic> subtitles =
+        _asList(widget.note["subtitle"]);
+
+    final List<dynamic> contents =
+        _asList(widget.note["content"]);
+
+    final List<dynamic> images =
+        _asList(widget.note["images"]);
+
+    final List<dynamic> contentOrder =
+        _asList(widget.note["contentOrder"]);
+
+    final List<_NoteBlockData> result = [];
+
+    // ----------------------------------------------------------
+    // USE CONTENT ORDER
+    // ----------------------------------------------------------
+
+    if (contentOrder.isNotEmpty) {
+      for (final orderItem in contentOrder) {
+        if (orderItem is! Map) {
+          continue;
+        }
+
+        final String id =
+            orderItem["id"]?.toString() ?? "";
+
+        final String type =
+            orderItem["type"]?.toString().toLowerCase() ?? "";
+
+        if (id.isEmpty) {
+          continue;
+        }
+
+        // Heading / Subtitle
+        if (type == "heading" || type == "subtitle") {
+          final item = _findById(
+            subtitles,
+            id,
+          );
+
+          if (item != null) {
+            result.add(
+              _NoteBlockData(
+                id: id,
+                type: type,
+                value: _getValue(item),
+              ),
+            );
+          }
+
+          continue;
+        }
+
+        // Content / Paragraph
+        if (type == "content" || type == "paragraph") {
+          final item = _findById(
+            contents,
+            id,
+          );
+
+          if (item != null) {
+            result.add(
+              _NoteBlockData(
+                id: id,
+                type: "content",
+                value: _getValue(item),
+              ),
+            );
+          }
+
+          continue;
+        }
+
+        // Image
+        if (type == "image") {
+          final item = _findById(
+            images,
+            id,
+          );
+
+          if (item != null) {
+            result.add(
+              _NoteBlockData(
+                id: id,
+                type: "image",
+                value: _getValue(item),
+              ),
+            );
+          }
+        }
+      }
+    }
+
+    // ----------------------------------------------------------
+    // FALLBACK
+    // ----------------------------------------------------------
+
+    if (result.isEmpty) {
+      for (final item in subtitles) {
+        if (item is! Map) continue;
+
+        final String id =
+            item["id"]?.toString() ?? "";
+
+        if (id.isEmpty) continue;
+
+        final String type =
+            item["type"]?.toString().toLowerCase() ??
+                "subtitle";
+
+        result.add(
+          _NoteBlockData(
+            id: id,
+            type: type,
+            value: _getValue(item),
+          ),
+        );
+      }
+
+      for (final item in contents) {
+        if (item is! Map) continue;
+
+        final String id =
+            item["id"]?.toString() ?? "";
+
+        if (id.isEmpty) continue;
+
+        result.add(
+          _NoteBlockData(
+            id: id,
+            type: "content",
+            value: _getValue(item),
+          ),
+        );
+      }
+
+      for (final item in images) {
+        if (item is! Map) continue;
+
+        final String id =
+            item["id"]?.toString() ?? "";
+
+        if (id.isEmpty) continue;
+
+        result.add(
+          _NoteBlockData(
+            id: id,
+            type: "image",
+            value: _getValue(item),
+          ),
+        );
+      }
+    }
+
+    return result;
+  }
+
+  // ============================================================
   // LOAD SAVED LAYOUT
   // ============================================================
 
@@ -2023,83 +3462,64 @@ class _ViewNotesState extends State<ViewNotes> {
       return;
     }
 
-    final dynamic pagesData =
-        layout["pages"];
+    final dynamic pagesData = layout["pages"];
 
-    if (pagesData is! List ||
-        pagesData.isEmpty) {
+    if (pagesData is! List || pagesData.isEmpty) {
       _createDefaultPages();
       return;
     }
 
-    final List<List<_NoteBlockData>>
-        loadedPages = [];
-
+    final List<List<_NoteBlockData>> loadedPages = [];
     final Set<String> usedIds = {};
-
-    // ------------------------------------------------------------
-    // Load saved pages
-    // ------------------------------------------------------------
 
     for (final pageData in pagesData) {
       if (pageData is! Map) {
         continue;
       }
 
-      final dynamic itemsData =
-          pageData["items"];
+      final dynamic itemsData = pageData["items"];
 
-      if (itemsData is! List) {
-        continue;
+      final List<_NoteBlockData> pageBlocks = [];
+
+      if (itemsData is List) {
+        for (final item in itemsData) {
+          if (item is! Map) {
+            continue;
+          }
+
+          final String id =
+              item["id"]?.toString() ?? "";
+
+          if (id.isEmpty) {
+            continue;
+          }
+
+          final originalBlock =
+              _findBlockById(id);
+
+          if (originalBlock == null) {
+            continue;
+          }
+
+          final Map<String, dynamic> savedProperties =
+              Map<String, dynamic>.from(item);
+
+          final block = _NoteBlockData(
+            id: originalBlock.id,
+            type: originalBlock.type,
+            value: originalBlock.value,
+            layoutData: savedProperties,
+          );
+
+          pageBlocks.add(block);
+          usedIds.add(id);
+        }
       }
 
-      final List<_NoteBlockData>
-          pageBlocks = [];
-
-      for (final item in itemsData) {
-        if (item is! Map) {
-          continue;
-        }
-
-        final String id =
-            item["id"]?.toString() ?? "";
-
-        if (id.isEmpty) {
-          continue;
-        }
-
-        final _NoteBlockData? originalBlock =
-            _findBlockById(id);
-
-        if (originalBlock == null) {
-          continue;
-        }
-
-        final Map<String, dynamic>
-            savedProperties =
-            Map<String, dynamic>.from(item);
-
-        final _NoteBlockData block =
-            _NoteBlockData(
-          id: originalBlock.id,
-          type: originalBlock.type,
-          value: originalBlock.value,
-          layoutData: savedProperties,
-        );
-
-        pageBlocks.add(block);
-        usedIds.add(id);
-      }
-
-      if (pageBlocks.isNotEmpty) {
-        loadedPages.add(pageBlocks);
-      }
+      loadedPages.add(pageBlocks);
     }
 
-    // ------------------------------------------------------------
-    // Add new/missing blocks
-    // ------------------------------------------------------------
-
+    // Add blocks that are not present in saved layout.
     for (final block in allBlocks) {
       if (!usedIds.contains(block.id)) {
         if (loadedPages.isEmpty) {
@@ -2114,6 +3534,11 @@ class _ViewNotesState extends State<ViewNotes> {
       _createDefaultPages();
     } else {
       pages = loadedPages;
+    }
+
+    if (currentPage >= pages.length) {
+      currentPage =
+          pages.isEmpty ? 0 : pages.length - 1;
     }
   }
 
@@ -2130,7 +3555,7 @@ class _ViewNotesState extends State<ViewNotes> {
   }
 
   // ============================================================
-  // DEFAULT PAGE CREATION
+  // DEFAULT PAGES
   // ============================================================
 
   void _createDefaultPages() {
@@ -2140,7 +3565,8 @@ class _ViewNotesState extends State<ViewNotes> {
       return;
     }
 
-    const double estimatedPageHeight = 850;
+    // Increased page size.
+    const double estimatedPageHeight = 1050;
 
     List<_NoteBlockData> currentPage = [];
 
@@ -2179,8 +3605,7 @@ class _ViewNotesState extends State<ViewNotes> {
         return 80;
 
       case "content":
-        final int length =
-            block.value.length;
+        final int length = block.value.length;
 
         if (length > 500) {
           return 300;
@@ -2197,7 +3622,7 @@ class _ViewNotesState extends State<ViewNotes> {
         return 100;
 
       case "image":
-        return 230;
+        return 250;
 
       default:
         return 100;
@@ -2213,17 +3638,12 @@ class _ViewNotesState extends State<ViewNotes> {
       return;
     }
 
-    final int? noteId =
-        int.tryParse(
+    final int? noteId = int.tryParse(
       widget.note["id"]?.toString() ?? "",
-
-      
     );
 
     if (noteId == null) {
-      _showMessage(
-        "Note ID not found",
-      );
+      _showMessage("Note ID not found");
       return;
     }
 
@@ -2232,8 +3652,7 @@ class _ViewNotesState extends State<ViewNotes> {
     });
 
     try {
-      final Map<String, dynamic> layout =
-          {
+      final Map<String, dynamic> layout = {
         "version": 1,
         "pages": List.generate(
           pages.length,
@@ -2243,11 +3662,10 @@ class _ViewNotesState extends State<ViewNotes> {
               "items": List.generate(
                 pages[pageIndex].length,
                 (itemIndex) {
-                  final _NoteBlockData block =
+                  final block =
                       pages[pageIndex][itemIndex];
 
-                  final Map<String, dynamic>
-                      item =
+                  final Map<String, dynamic> item =
                       Map<String, dynamic>.from(
                     block.layoutData,
                   );
@@ -2264,20 +3682,22 @@ class _ViewNotesState extends State<ViewNotes> {
         ),
       };
 
-      final Map<String, dynamic> response =
-          await ApiServices()
-              .updateNotesLayoutAPI(
+      debugPrint(
+        "========== SAVING LAYOUT ==========",
+      );
+
+      debugPrint(
+        jsonEncode(layout),
+      );
+
+      final response =
+          await ApiServices().updateNotesLayoutAPI(
         notesId: noteId,
         layout: layout,
       );
 
-      
+      if (!mounted) return;
 
-      if (!mounted) {
-        return;
-      }
-
-      // Update local note object also
       widget.note["layout"] = layout;
 
       setState(() {
@@ -2289,23 +3709,21 @@ class _ViewNotesState extends State<ViewNotes> {
         response["message"]?.toString() ??
             "Layout saved successfully",
       );
-    } catch (error) {
-      if (!mounted) {
-        return;
-      }
+    } catch (e) {
+      if (!mounted) return;
 
       setState(() {
         isSaving = false;
       });
 
       _showMessage(
-        "Layout save nahi hua: $error",
+        "Layout save nahi hua: $e",
       );
     }
   }
 
   // ============================================================
-  // REORDER
+  // REORDER WITHIN SAME PAGE
   // ============================================================
 
   void _reorderBlock(
@@ -2328,10 +3746,8 @@ class _ViewNotesState extends State<ViewNotes> {
     }
 
     setState(() {
-      final _NoteBlockData block =
-          pages[pageIndex].removeAt(
-        oldIndex,
-      );
+      final block =
+          pages[pageIndex].removeAt(oldIndex);
 
       pages[pageIndex].insert(
         newIndex,
@@ -2341,7 +3757,204 @@ class _ViewNotesState extends State<ViewNotes> {
   }
 
   // ============================================================
-  // PAGE NAVIGATION
+  // MOVE BLOCK TO ANOTHER PAGE
+  // ============================================================
+
+  void _moveBlockToPage({
+    required int fromPage,
+    required int blockIndex,
+    required int toPage,
+  }) {
+    if (fromPage < 0 ||
+        fromPage >= pages.length) {
+      return;
+    }
+
+    if (toPage < 0 ||
+        toPage >= pages.length) {
+      return;
+    }
+
+    if (blockIndex < 0 ||
+        blockIndex >= pages[fromPage].length) {
+      return;
+    }
+
+    if (fromPage == toPage) {
+      return;
+    }
+
+    final block =
+        pages[fromPage][blockIndex];
+
+    setState(() {
+      pages[fromPage].removeAt(blockIndex);
+
+      pages[toPage].add(block);
+
+      currentPage = toPage;
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+
+      pageController.animateToPage(
+        toPage,
+        duration:
+            const Duration(milliseconds: 350),
+        curve: Curves.easeInOut,
+      );
+    });
+
+    _showMessage(
+      "${_getBlockTypeName(block.type)} moved to Page ${toPage + 1}",
+    );
+  }
+
+  // ============================================================
+  // MOVE TO PAGE DIALOG
+  // ============================================================
+
+  void _showMoveToPageDialog({
+    required int currentPageIndex,
+    required int blockIndex,
+  }) {
+    if (currentPageIndex < 0 ||
+        currentPageIndex >= pages.length) {
+      return;
+    }
+
+    if (blockIndex < 0 ||
+        blockIndex >=
+            pages[currentPageIndex].length) {
+      return;
+    }
+
+    final block =
+        pages[currentPageIndex][blockIndex];
+
+    int selectedPage = currentPageIndex;
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (
+            context,
+            setDialogState,
+          ) {
+            return AlertDialog(
+              title: Row(
+                children: [
+                  const Icon(
+                    Icons.drive_file_move_outlined,
+                    color: primaryColor,
+                  ),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: Text("Move Block"),
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _getBlockTypeName(
+                      block.type,
+                    ),
+                    style: TextStyle(
+                      color: primaryTextColor,
+                      fontWeight:
+                          FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    _shortenText(
+                      block.value,
+                      80,
+                    ),
+                    style: TextStyle(
+                      color: secondaryTextColor,
+                      fontSize: 13,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  DropdownButtonFormField<int>(
+                    value: selectedPage,
+                    decoration:
+                        const InputDecoration(
+                      labelText: "Move to page",
+                      border:
+                          OutlineInputBorder(),
+                    ),
+                    items: List.generate(
+                      pages.length,
+                      (index) {
+                        return DropdownMenuItem<int>(
+                          value: index,
+                          child: Text(
+                            "Page ${index + 1}",
+                          ),
+                        );
+                      },
+                    ),
+                    onChanged: (value) {
+                      if (value == null) return;
+
+                      setDialogState(() {
+                        selectedPage = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(
+                      dialogContext,
+                    );
+                  },
+                  child: const Text("Cancel"),
+                ),
+                ElevatedButton.icon(
+                  onPressed:
+                      selectedPage == currentPageIndex
+                          ? null
+                          : () {
+                              Navigator.pop(
+                                dialogContext,
+                              );
+
+                              _moveBlockToPage(
+                                fromPage:
+                                    currentPageIndex,
+                                blockIndex:
+                                    blockIndex,
+                                toPage:
+                                    selectedPage,
+                              );
+                            },
+                  icon: const Icon(
+                    Icons.arrow_forward,
+                    size: 18,
+                  ),
+                  label: const Text("Move"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // ============================================================
+  // NEXT / PREVIOUS
   // ============================================================
 
   Future<void> _nextPage() async {
@@ -2369,6 +3982,100 @@ class _ViewNotesState extends State<ViewNotes> {
   }
 
   // ============================================================
+  // GO TO PAGE
+  // ============================================================
+
+  void _goToPage(int pageNumber) {
+    if (pageNumber < 1 ||
+        pageNumber > pages.length) {
+      return;
+    }
+
+    pageController.animateToPage(
+      pageNumber - 1,
+      duration:
+          const Duration(milliseconds: 350),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _showGoToPageDialog() {
+    if (pages.isEmpty) {
+      return;
+    }
+
+    final controller =
+        TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(
+                Icons.find_in_page_outlined,
+                color: primaryColor,
+              ),
+              const SizedBox(width: 10),
+              const Text("Go to page"),
+            ],
+          ),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            keyboardType:
+                TextInputType.number,
+            decoration: InputDecoration(
+              labelText: "Page number",
+              hintText:
+                  "1 - ${pages.length}",
+              border:
+                  const OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(
+                  dialogContext,
+                );
+              },
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final pageNumber =
+                    int.tryParse(
+                  controller.text.trim(),
+                );
+
+                if (pageNumber == null ||
+                    pageNumber < 1 ||
+                    pageNumber > pages.length) {
+                  _showMessage(
+                    "Enter page number between 1 and ${pages.length}",
+                  );
+                  return;
+                }
+
+                Navigator.pop(
+                  dialogContext,
+                );
+
+                _goToPage(pageNumber);
+              },
+              child: const Text("Go"),
+            ),
+          ],
+        );
+      },
+    ).then((_) {
+      controller.dispose();
+    });
+  }
+
+  // ============================================================
   // MESSAGE
   // ============================================================
 
@@ -2383,6 +4090,8 @@ class _ViewNotesState extends State<ViewNotes> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
+        behavior:
+            SnackBarBehavior.floating,
       ),
     );
   }
@@ -2393,11 +4102,22 @@ class _ViewNotesState extends State<ViewNotes> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        backgroundColor: backgroundColor,
+        drawer: const Drawerbar(),
+        appBar: const Header(),
+        body: const Center(
+          child:
+              CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: backgroundColor,
       drawer: const Drawerbar(),
       appBar: const Header(),
-
       body: Column(
         children: [
           _buildTopBar(),
@@ -2406,7 +4126,8 @@ class _ViewNotesState extends State<ViewNotes> {
             child: pages.isEmpty
                 ? _buildEmptyState()
                 : PageView.builder(
-                    controller: pageController,
+                    controller:
+                        pageController,
                     itemCount: pages.length,
                     onPageChanged: (index) {
                       setState(() {
@@ -2437,9 +4158,8 @@ class _ViewNotesState extends State<ViewNotes> {
   // ============================================================
 
   Widget _buildTopBar() {
-    final String title =
-        widget.note["title"]
-                ?.toString() ??
+    final title =
+        widget.note["title"]?.toString() ??
             "Note";
 
     return Container(
@@ -2447,7 +4167,7 @@ class _ViewNotesState extends State<ViewNotes> {
       padding:
           const EdgeInsets.symmetric(
         horizontal: 16,
-        vertical: 12,
+        vertical: 11,
       ),
       decoration: BoxDecoration(
         color: paperColor,
@@ -2460,70 +4180,41 @@ class _ViewNotesState extends State<ViewNotes> {
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              title,
-              maxLines: 1,
-              overflow:
-                  TextOverflow.ellipsis,
-              style: TextStyle(
-                color: primaryTextColor,
-                fontSize: 20,
-                fontWeight:
-                    FontWeight.w700,
-              ),
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow:
+                      TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: primaryTextColor,
+                    fontSize: 19,
+                    fontWeight:
+                        FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  isCustomizeMode
+                      ? "Customize layout"
+                      : "View note",
+                  style: TextStyle(
+                    color: secondaryTextColor,
+                    fontSize: 11,
+                  ),
+                ),
+              ],
             ),
           ),
 
-          const SizedBox(width: 10),
+          const SizedBox(width: 8),
 
-          if (isCustomizeMode) ...[
-            TextButton.icon(
-              onPressed:
-                  isSaving
-                      ? null
-                      : () {
-                          _loadSavedLayout();
-
-                          setState(() {
-                            isCustomizeMode =
-                                false;
-                          });
-                        },
-              icon: const Icon(
-                Icons.close,
-                size: 19,
-              ),
-              label:
-                  const Text("Cancel"),
-            ),
-
-            const SizedBox(width: 4),
-
-            ElevatedButton.icon(
-              onPressed:
-                  isSaving
-                      ? null
-                      : _saveLayout,
-              icon: isSaving
-                  ? const SizedBox(
-                      width: 17,
-                      height: 17,
-                      child:
-                          CircularProgressIndicator(
-                        strokeWidth: 2,
-                      ),
-                    )
-                  : const Icon(
-                      Icons.save_outlined,
-                      size: 18,
-                    ),
-              label: Text(
-                isSaving
-                    ? "Saving..."
-                    : "Save",
-              ),
-            ),
-          ] else ...[
+          if (isCustomizeMode)
+            ..._buildCustomizeActions()
+          else
             OutlinedButton.icon(
               onPressed: () {
                 setState(() {
@@ -2537,10 +4228,55 @@ class _ViewNotesState extends State<ViewNotes> {
               label:
                   const Text("Customize"),
             ),
-          ],
         ],
       ),
     );
+  }
+
+  List<Widget> _buildCustomizeActions() {
+    return [
+      TextButton.icon(
+        onPressed:
+            isSaving
+                ? null
+                : () {
+                    _loadSavedLayout();
+
+                    setState(() {
+                      isCustomizeMode = false;
+                    });
+                  },
+        icon: const Icon(
+          Icons.close,
+          size: 18,
+        ),
+        label: const Text("Cancel"),
+      ),
+
+      const SizedBox(width: 3),
+
+      ElevatedButton.icon(
+        onPressed:
+            isSaving ? null : _saveLayout,
+        icon: isSaving
+            ? const SizedBox(
+                width: 16,
+                height: 16,
+                child:
+                    CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              )
+            : const Icon(
+                Icons.save_outlined,
+                size: 18,
+              ),
+        label: Text(
+          isSaving ? "Saving" : "Save",
+        ),
+      ),
+    ];
   }
 
   // ============================================================
@@ -2550,15 +4286,13 @@ class _ViewNotesState extends State<ViewNotes> {
   Widget _buildNormalPage(
     int pageIndex,
   ) {
-    final List<_NoteBlockData>
-        pageBlocks =
-        pages[pageIndex];
+    final pageBlocks = pages[pageIndex];
 
     return Container(
       color: backgroundColor,
       child: SingleChildScrollView(
         padding:
-            const EdgeInsets.all(18),
+            const EdgeInsets.all(14),
         child: Center(
           child: Container(
             width: double.infinity,
@@ -2567,18 +4301,21 @@ class _ViewNotesState extends State<ViewNotes> {
               maxWidth: 850,
             ),
             padding:
-                const EdgeInsets.all(24),
+                const EdgeInsets.fromLTRB(
+              28,
+              30,
+              28,
+              40,
+            ),
             decoration: BoxDecoration(
               color: paperColor,
               borderRadius:
-                  BorderRadius.circular(8),
+                  BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black
-                      .withValues(
-                    alpha: isDark
-                        ? 0.25
-                        : 0.08,
+                      .withOpacity(
+                    isDark ? 0.25 : 0.07,
                   ),
                   blurRadius: 12,
                   offset:
@@ -2588,9 +4325,11 @@ class _ViewNotesState extends State<ViewNotes> {
             ),
             child: Column(
               crossAxisAlignment:
-                  CrossAxisAlignment
-                      .stretch,
+                  CrossAxisAlignment.stretch,
               children: [
+                if (pageBlocks.isEmpty)
+                  _buildEmptyPage(),
+
                 for (final block
                     in pageBlocks)
                   Padding(
@@ -2616,139 +4355,354 @@ class _ViewNotesState extends State<ViewNotes> {
   Widget _buildCustomizePage(
     int pageIndex,
   ) {
-    final List<_NoteBlockData>
-        pageBlocks =
-        pages[pageIndex];
+    final pageBlocks = pages[pageIndex];
 
     return Container(
       color: backgroundColor,
-      child: Center(
-        child: Container(
-          width: double.infinity,
-          constraints:
-              const BoxConstraints(
-            maxWidth: 850,
-          ),
-          margin:
-              const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: paperColor,
-            borderRadius:
-                BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black
-                    .withValues(
-                  alpha:
-                      isDark ? 0.25 : 0.08,
+      child: SingleChildScrollView(
+        padding:
+            const EdgeInsets.all(14),
+        child: Center(
+          child: Container(
+            width: double.infinity,
+            constraints:
+                const BoxConstraints(
+              maxWidth: 850,
+            ),
+            decoration: BoxDecoration(
+              color: paperColor,
+              borderRadius:
+                  BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black
+                      .withOpacity(
+                    isDark ? 0.25 : 0.07,
+                  ),
+                  blurRadius: 12,
+                  offset:
+                      const Offset(0, 4),
                 ),
-                blurRadius: 12,
-                offset:
-                    const Offset(0, 4),
-              ),
-            ],
-          ),
-          child:
-              ReorderableListView.builder(
-            padding:
-                const EdgeInsets.all(20),
-            buildDefaultDragHandles:
-                false,
-            itemCount:
-                pageBlocks.length,
-            onReorder:
-                (oldIndex, newIndex) {
-              _reorderBlock(
-                pageIndex,
-                oldIndex,
-                newIndex,
-              );
-            },
-            itemBuilder:
-                (context, index) {
-              final _NoteBlockData block =
-                  pageBlocks[index];
+              ],
+            ),
+            child: Column(
+              children: [
+                _buildCustomizePageHeader(
+                  pageIndex,
+                ),
 
-              return Container(
-                key: ValueKey(
-                  block.id,
-                ),
-                margin:
-                    const EdgeInsets.only(
-                  bottom: 14,
-                ),
-                padding:
-                    const EdgeInsets.all(12),
-                decoration:
-                    BoxDecoration(
-                  color: isDark
-                      ? const Color(
-                          0xFF252525,
-                        )
-                      : const Color(
-                          0xFFF9FAFB,
+                if (pageBlocks.isEmpty)
+                  Padding(
+                    padding:
+                        const EdgeInsets.all(
+                      30,
+                    ),
+                    child:
+                        _buildEmptyPage(),
+                  )
+                else
+                  ReorderableListView.builder(
+                    shrinkWrap: true,
+                    physics:
+                        const NeverScrollableScrollPhysics(),
+                    padding:
+                        const EdgeInsets.fromLTRB(
+                      18,
+                      8,
+                      18,
+                      24,
+                    ),
+                    buildDefaultDragHandles:
+                        false,
+                    itemCount:
+                        pageBlocks.length,
+                    onReorder:
+                        (oldIndex,
+                            newIndex) {
+                      _reorderBlock(
+                        pageIndex,
+                        oldIndex,
+                        newIndex,
+                      );
+                    },
+                    itemBuilder:
+                        (context, index) {
+                      final block =
+                          pageBlocks[index];
+
+                      return _buildCustomizeBlock(
+                        key: ValueKey(
+                          block.id,
                         ),
-                  border: Border.all(
-                    color: isDark
-                        ? Colors.white24
-                        : Colors.grey
-                            .shade300,
+                        block: block,
+                        pageIndex: pageIndex,
+                        blockIndex: index,
+                      );
+                    },
                   ),
-                  borderRadius:
-                      BorderRadius.circular(
-                    12,
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ============================================================
+  // CUSTOMIZE PAGE HEADER
+  // ============================================================
+
+  Widget _buildCustomizePageHeader(
+    int pageIndex,
+  ) {
+    return Container(
+      width: double.infinity,
+      padding:
+          const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark
+            ? const Color(0xFF292844)
+            : const Color(0xFFF0F0FF),
+        borderRadius:
+            const BorderRadius.vertical(
+          top: Radius.circular(10),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: primaryColor,
+              borderRadius:
+                  BorderRadius.circular(10),
+            ),
+            child: const Icon(
+              Icons.layers_outlined,
+              color: Colors.white,
+              size: 20,
+            ),
+          ),
+
+          const SizedBox(width: 12),
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Customize Page",
+                  style: TextStyle(
+                    color: primaryTextColor,
+                    fontWeight:
+                        FontWeight.w700,
+                    fontSize: 15,
                   ),
                 ),
-                child: Row(
-                  crossAxisAlignment:
-                      CrossAxisAlignment
-                          .start,
+                const SizedBox(height: 2),
+                Text(
+                  "Drag blocks up/down or move them to another page",
+                  style: TextStyle(
+                    color: secondaryTextColor,
+                    fontSize: 11,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(width: 8),
+
+          SizedBox(
+            width: 105,
+            child: DropdownButtonFormField<int>(
+              value: pageIndex,
+              isDense: true,
+              decoration:
+                  const InputDecoration(
+                labelText: "Page",
+                border:
+                    OutlineInputBorder(),
+                contentPadding:
+                    EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
+                ),
+              ),
+              items: List.generate(
+                pages.length,
+                (index) {
+                  return DropdownMenuItem<int>(
+                    value: index,
+                    child: Text(
+                      "${index + 1}",
+                    ),
+                  );
+                },
+              ),
+              onChanged: (value) {
+                if (value == null) {
+                  return;
+                }
+
+                pageController.animateToPage(
+                  value,
+                  duration:
+                      const Duration(
+                    milliseconds: 300,
+                  ),
+                  curve:
+                      Curves.easeInOut,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ============================================================
+  // CUSTOMIZE BLOCK
+  // ============================================================
+
+  Widget _buildCustomizeBlock({
+    required Key key,
+    required _NoteBlockData block,
+    required int pageIndex,
+    required int blockIndex,
+  }) {
+    return Container(
+      key: key,
+      margin:
+          const EdgeInsets.only(
+        bottom: 12,
+      ),
+      padding:
+          const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: cardColor,
+        border: Border.all(
+          color: borderColor,
+        ),
+        borderRadius:
+            BorderRadius.circular(14),
+      ),
+      child: Row(
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.stretch,
+              children: [
+                Row(
                   children: [
-                    Expanded(
-                      child:
-                          _buildBlock(
-                        block,
+                    Container(
+                      padding:
+                          const EdgeInsets.symmetric(
+                        horizontal: 9,
+                        vertical: 5,
+                      ),
+                      decoration:
+                          BoxDecoration(
+                        color: isDark
+                            ? Colors.white10
+                            : const Color(
+                                0xFFEAEAFF,
+                              ),
+                        borderRadius:
+                            BorderRadius.circular(
+                          8,
+                        ),
+                      ),
+                      child: Text(
+                        _getBlockTypeName(
+                          block.type,
+                        ),
+                        style: const TextStyle(
+                          color: primaryColor,
+                          fontSize: 11,
+                          fontWeight:
+                              FontWeight.w700,
+                        ),
                       ),
                     ),
 
-                    const SizedBox(
-                      width: 10,
-                    ),
+                    const SizedBox(width: 8),
 
-                    ReorderableDragStartListener(
-                      index: index,
-                      child: Container(
-                        padding:
-                            const EdgeInsets
-                                .all(8),
-                        decoration:
-                            BoxDecoration(
-                          color: isDark
-                              ? Colors.white10
-                              : Colors.black
-                                  .withValues(
-                                  alpha: 0.04,
-                                ),
-                          borderRadius:
-                              BorderRadius
-                                  .circular(
-                            8,
-                          ),
-                        ),
-                        child: Icon(
-                          Icons
-                              .drag_indicator,
-                          color:
-                              secondaryTextColor,
-                        ),
+                    Text(
+                      "Page ${pageIndex + 1}",
+                      style: TextStyle(
+                        color:
+                            secondaryTextColor,
+                        fontSize: 11,
                       ),
                     ),
                   ],
                 ),
-              );
-            },
+
+                const SizedBox(height: 10),
+
+                _buildBlock(block),
+
+                const SizedBox(height: 10),
+
+                Align(
+                  alignment:
+                      Alignment.centerLeft,
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      _showMoveToPageDialog(
+                        currentPageIndex:
+                            pageIndex,
+                        blockIndex:
+                            blockIndex,
+                      );
+                    },
+                    icon: const Icon(
+                      Icons
+                          .drive_file_move_outlined,
+                      size: 17,
+                    ),
+                    label:
+                        const Text(
+                      "Move to Page",
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+
+          const SizedBox(width: 8),
+
+          ReorderableDragStartListener(
+            index: blockIndex,
+            child: Container(
+              padding:
+                  const EdgeInsets.all(9),
+              decoration:
+                  BoxDecoration(
+                color: isDark
+                    ? Colors.white10
+                    : Colors.black
+                        .withOpacity(0.04),
+                borderRadius:
+                    BorderRadius.circular(9),
+              ),
+              child: Icon(
+                Icons.drag_indicator,
+                color:
+                    secondaryTextColor,
+                size: 25,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -2822,26 +4776,26 @@ class _ViewNotesState extends State<ViewNotes> {
 
     final double width =
         _getDoubleLayoutValue(
-          block,
-          "width",
-          220,
-        );
+      block,
+      "width",
+      320,
+    );
 
     final double height =
         _getDoubleLayoutValue(
-          block,
-          "height",
-          180,
-        );
+      block,
+      "height",
+      220,
+    );
 
-    final Alignment alignment =
+    final alignment =
         _getImageAlignment(block);
 
     return Align(
       alignment: alignment,
       child: ClipRRect(
         borderRadius:
-            BorderRadius.circular(10),
+            BorderRadius.circular(12),
         child: Image.network(
           block.value,
           width: width,
@@ -2856,12 +4810,11 @@ class _ViewNotesState extends State<ViewNotes> {
           },
           loadingBuilder:
               (
-                context,
-                child,
-                loadingProgress,
-              ) {
-            if (loadingProgress ==
-                null) {
+            context,
+            child,
+            loadingProgress,
+          ) {
+            if (loadingProgress == null) {
               return child;
             }
 
@@ -2880,8 +4833,8 @@ class _ViewNotesState extends State<ViewNotes> {
   }
 
   Widget _buildImagePlaceholder({
-    double width = 220,
-    double height = 180,
+    double width = 320,
+    double height = 220,
   }) {
     return Container(
       width: width,
@@ -2891,13 +4844,13 @@ class _ViewNotesState extends State<ViewNotes> {
             ? Colors.grey.shade800
             : Colors.grey.shade100,
         borderRadius:
-            BorderRadius.circular(10),
+            BorderRadius.circular(12),
       ),
       child: Center(
         child: Icon(
           Icons
               .image_not_supported_outlined,
-          size: 40,
+          size: 45,
           color: isDark
               ? Colors.white38
               : Colors.black26,
@@ -2911,7 +4864,7 @@ class _ViewNotesState extends State<ViewNotes> {
     String key,
     double defaultValue,
   ) {
-    final dynamic value =
+    final value =
         block.layoutData[key];
 
     if (value is num) {
@@ -2958,8 +4911,8 @@ class _ViewNotesState extends State<ViewNotes> {
     return Container(
       padding:
           const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 10,
+        horizontal: 14,
+        vertical: 9,
       ),
       decoration: BoxDecoration(
         color: paperColor,
@@ -2974,42 +4927,112 @@ class _ViewNotesState extends State<ViewNotes> {
             MainAxisAlignment.center,
         children: [
           IconButton(
+            tooltip: "Previous page",
             onPressed:
                 currentPage > 0
                     ? _previousPage
                     : null,
             icon: const Icon(
-              Icons.chevron_left,
+              Icons.chevron_left_rounded,
+              size: 28,
             ),
           ),
 
-          const SizedBox(width: 10),
+          const SizedBox(width: 6),
 
-          Text(
-            pages.isEmpty
-                ? "0 / 0"
-                : "${currentPage + 1} / ${pages.length}",
-            style: TextStyle(
-              color: primaryTextColor,
-              fontWeight:
-                  FontWeight.w600,
+          InkWell(
+            borderRadius:
+                BorderRadius.circular(10),
+            onTap:
+                pages.isEmpty
+                    ? null
+                    : _showGoToPageDialog,
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 9,
+              ),
+              decoration:
+                  BoxDecoration(
+                color: isDark
+                    ? const Color(0xFF292844)
+                    : const Color(0xFFEDEBFF),
+                borderRadius:
+                    BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisSize:
+                    MainAxisSize.min,
+                children: [
+                  Text(
+                    pages.isEmpty
+                        ? "0 / 0"
+                        : "${currentPage + 1} / ${pages.length}",
+                    style: TextStyle(
+                      color: primaryTextColor,
+                      fontWeight:
+                          FontWeight.w700,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Icon(
+                    Icons
+                        .keyboard_arrow_down_rounded,
+                    size: 17,
+                    color:
+                        secondaryTextColor,
+                  ),
+                ],
+              ),
             ),
           ),
 
-          const SizedBox(width: 10),
+          const SizedBox(width: 6),
 
           IconButton(
+            tooltip: "Next page",
             onPressed:
                 currentPage <
                         pages.length - 1
                     ? _nextPage
                     : null,
             icon: const Icon(
-              Icons.chevron_right,
+              Icons.chevron_right_rounded,
+              size: 28,
             ),
           ),
         ],
       ),
+    );
+  }
+
+  // ============================================================
+  // EMPTY PAGE
+  // ============================================================
+
+  Widget _buildEmptyPage() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons
+              .insert_drive_file_outlined,
+          size: 48,
+          color: secondaryTextColor,
+        ),
+        const SizedBox(height: 10),
+        Text(
+          "This page is empty",
+          style: TextStyle(
+            color: primaryTextColor,
+            fontSize: 15,
+            fontWeight:
+                FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 
@@ -3020,8 +5043,7 @@ class _ViewNotesState extends State<ViewNotes> {
   Widget _buildEmptyState() {
     return Center(
       child: Column(
-        mainAxisSize:
-            MainAxisSize.min,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             Icons.note_alt_outlined,
@@ -3042,6 +5064,46 @@ class _ViewNotesState extends State<ViewNotes> {
       ),
     );
   }
+
+  // ============================================================
+  // HELPERS
+  // ============================================================
+
+  String _getBlockTypeName(
+    String type,
+  ) {
+    switch (type) {
+      case "heading":
+        return "Heading";
+
+      case "subtitle":
+        return "Subtitle";
+
+      case "content":
+        return "Paragraph";
+
+      case "image":
+        return "Image";
+
+      default:
+        return "Block";
+    }
+  }
+
+  String _shortenText(
+    String text,
+    int maxLength,
+  ) {
+    final clean = text.trim();
+
+    if (clean.length <= maxLength) {
+      return clean.isEmpty
+          ? "No content"
+          : clean;
+    }
+
+    return "${clean.substring(0, maxLength)}...";
+  }
 }
 
 // ============================================================
@@ -3053,7 +5115,6 @@ class _NoteBlockData {
   final String type;
   final String value;
 
-  // Extra layout properties are preserved here.
   final Map<String, dynamic> layoutData;
 
   _NoteBlockData({
@@ -3061,6 +5122,5 @@ class _NoteBlockData {
     required this.type,
     required this.value,
     Map<String, dynamic>? layoutData,
-  }) : layoutData =
-            layoutData ?? {};
+  }) : layoutData = layoutData ?? {};
 }

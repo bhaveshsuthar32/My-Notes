@@ -1282,78 +1282,78 @@ class Drawerbar extends StatelessWidget {
                     ],
                   ),
 
-                  const SizedBox(height: 20),
+                  // const SizedBox(height: 20),
 
                   // ===================================================
                   // PROFILE
                   // ===================================================
-                  Row(
-                    children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: const Color(0xFF5B5CEB)
-                                .withOpacity(0.25),
-                            width: 2,
-                          ),
-                        ),
-                        child: ClipOval(
-                          child: Image.network(
-                            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-                            fit: BoxFit.cover,
-                            errorBuilder:
-                                (context, error, stackTrace) {
-                              return Container(
-                                color: isDark
-                                    ? const Color(0xFF302F50)
-                                    : const Color(0xFFEDEBFF),
-                                child: const Icon(
-                                  Icons.person_rounded,
-                                  color: Color(0xFF5B5CEB),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
+                  // Row(
+                  //   children: [
+                  //     Container(
+                  //       width: 48,
+                  //       height: 48,
+                  //       decoration: BoxDecoration(
+                  //         shape: BoxShape.circle,
+                  //         border: Border.all(
+                  //           color: const Color(0xFF5B5CEB)
+                  //               .withOpacity(0.25),
+                  //           width: 2,
+                  //         ),
+                  //       ),
+                  //       child: ClipOval(
+                  //         child: Image.network(
+                  //           "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                  //           fit: BoxFit.cover,
+                  //           errorBuilder:
+                  //               (context, error, stackTrace) {
+                  //             return Container(
+                  //               color: isDark
+                  //                   ? const Color(0xFF302F50)
+                  //                   : const Color(0xFFEDEBFF),
+                  //               child: const Icon(
+                  //                 Icons.person_rounded,
+                  //                 color: Color(0xFF5B5CEB),
+                  //               ),
+                  //             );
+                  //           },
+                  //         ),
+                  //       ),
+                  //     ),
 
-                      const SizedBox(width: 12),
+                  //     const SizedBox(width: 12),
 
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "James Martin",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: textColor,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
+                  //     Expanded(
+                  //       child: Column(
+                  //         crossAxisAlignment:
+                  //             CrossAxisAlignment.start,
+                  //         children: [
+                  //           Text(
+                  //             "James Martin",
+                  //             maxLines: 1,
+                  //             overflow: TextOverflow.ellipsis,
+                  //             style: TextStyle(
+                  //               color: textColor,
+                  //               fontSize: 14,
+                  //               fontWeight: FontWeight.w700,
+                  //             ),
+                  //           ),
 
-                            const SizedBox(height: 3),
+                  //           const SizedBox(height: 3),
 
-                            Text(
-                              "james012@gmail.com",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: secondaryColor,
-                                fontSize: 11,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  //           Text(
+                  //             "james012@gmail.com",
+                  //             maxLines: 1,
+                  //             overflow: TextOverflow.ellipsis,
+                  //             style: TextStyle(
+                  //               color: secondaryColor,
+                  //               fontSize: 11,
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),
