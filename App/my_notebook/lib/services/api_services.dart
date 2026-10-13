@@ -843,32 +843,124 @@ Future<bool> isLoggedIn() async {
     };
   }
 
+
+
+  // GET request with automatic token refresh and retry
+  Future<http.Response> _authorizedGet(
+    Uri uri, {
+    Map<String, String>? headers,
+  }) async {
+    Future<Map<String, String>> makeHeaders() async {
+      final token = await _getAccessToken();
+
+      return {
+        ...?headers,
+        "Authorization": "Bearer ${token ?? ''}",
+      };
+    }
+
+    var response = await http.get(
+      uri,
+      headers: await makeHeaders(),
+    );
+
+    if (response.statusCode == 401) {
+      final refreshed = await refreshAccessToken();
+
+      if (refreshed) {
+        response = await http.get(
+          uri,
+          headers: await makeHeaders(),
+        );
+      }
+    }
+
+    return response;
+  }
+
+  // POST request with automatic token refresh and retry
+  Future<http.Response> _authorizedPost(
+    Uri uri, {
+    Map<String, String>? headers,
+    Object? body,
+  }) async {
+    Future<Map<String, String>> makeHeaders() async {
+      final token = await _getAccessToken();
+
+      return {
+        ...?headers,
+        "Authorization": "Bearer ${token ?? ''}",
+      };
+    }
+
+    var response = await http.post(
+      uri,
+      headers: await makeHeaders(),
+      body: body,
+    );
+
+    if (response.statusCode == 401) {
+      final refreshed = await refreshAccessToken();
+
+      if (refreshed) {
+        response = await http.post(
+          uri,
+          headers: await makeHeaders(),
+          body: body,
+        );
+      }
+    }
+
+    return response;
+  }
+
   // ============================================================
   // GET NOTES
   // ============================================================
 
+  // Future<List<dynamic>> getNotesData() async {
+  //   try {
+  //     final headers = await _authHeaders();
+
+  //     final res = await http.get(
+  //       Uri.parse('$baseURL/getNotes'),
+  //       headers: headers,
+  //     );
+
+  //     if (res.statusCode == 200) {
+  //       final decoded = jsonDecode(res.body);
+
+  //       return decoded["data"];
+  //     } else {
+  //       throw Exception(
+  //         "Failed to load Notes data: ${res.statusCode}",
+  //       );
+  //     }
+  //   } catch (e) {
+  //     throw Exception("Error : $e");
+  //   }
+  // }
+
+  
   Future<List<dynamic>> getNotesData() async {
     try {
-      final headers = await _authHeaders();
-
-      final res = await http.get(
+      final res = await _authorizedGet(
         Uri.parse('$baseURL/getNotes'),
-        headers: headers,
       );
 
       if (res.statusCode == 200) {
         final decoded = jsonDecode(res.body);
-
         return decoded["data"];
-      } else {
-        throw Exception(
-          "Failed to load Notes data: ${res.statusCode}",
-        );
       }
+
+      throw Exception(
+        "Failed to load Notes data: ${res.statusCode}",
+      );
     } catch (e) {
-      throw Exception("Error : $e");
+      throw Exception("Error: $e");
     }
   }
+
 
   // ============================================================
   // GET NOTES LIST DATA
@@ -932,12 +1024,15 @@ Future<Map<String, dynamic>> getNoteDetailsAPI({
   required int notesId,
 }) async {
   try {
-    final headers = await _authHeaders();
+    // final headers = await _authHeaders();
 
-    final response = await http.get(
-      Uri.parse('$baseURL/note-details/$notesId'),
-      headers: headers,
-    );
+    // final response = await http.get(
+    //   Uri.parse('$baseURL/note-details/$notesId'),
+    //   headers: headers,
+    // );
+    final response = await _authorizedGet(
+  Uri.parse('$baseURL/note-details/$notesId'),
+);
 
     print(
       "NOTE DETAILS STATUS: ${response.statusCode}",
@@ -1344,6 +1439,7 @@ Future<Map<String, dynamic>> updateNotesLayoutAPI({
   //     return false;
   //   }
   // }
+
 Future<bool> refreshAccessToken() async {
   try {
     final refreshToken = await _getRefreshToken();
@@ -1701,30 +1797,59 @@ Future<bool> refreshAccessToken() async {
   }
 
 
-  // Get Profile
+//   // Get Profile
 
-  Future<Map<String, dynamic>> getProfileAPI() async {
+//   Future<Map<String, dynamic>> getProfileAPI() async {
+//   try {
+ 
+ 
+//  final headers = await _authHeaders();
+
+// final res = await http.get(
+//   Uri.parse('$baseURL/profile'),
+//   headers: headers,
+// );   // final headers = await _authHeaders();
+
+//     // final res = await http.get(
+//     //   Uri.parse('$baseURL/profile'),
+//     //   headers: headers,
+//     // );
+
+
+//     if (res.statusCode == 200) {
+//       final decoded = jsonDecode(res.body);
+
+//       return decoded["data"];
+//     } else {
+//       throw Exception(
+//         "Failed to load profile: ${res.statusCode}",
+//       );
+//     }
+//   } catch (e) {
+//     throw Exception(
+//       "Error: $e",
+//     );
+//   }
+// }
+
+
+Future<Map<String, dynamic>> getProfileAPI() async {
   try {
-    final headers = await _authHeaders();
-
-    final res = await http.get(
+    final res = await _authorizedGet(
       Uri.parse('$baseURL/profile'),
-      headers: headers,
     );
 
     if (res.statusCode == 200) {
       final decoded = jsonDecode(res.body);
 
-      return decoded["data"];
+      return Map<String, dynamic>.from(decoded["data"]);
     } else {
       throw Exception(
         "Failed to load profile: ${res.statusCode}",
       );
     }
   } catch (e) {
-    throw Exception(
-      "Error: $e",
-    );
+    throw Exception("Error: $e");
   }
 }
 
