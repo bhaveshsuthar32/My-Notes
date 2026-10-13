@@ -653,28 +653,114 @@ class ApiServices {
   await prefs.remove("refreshToken");
 }
 
+// Future<bool> isLoggedIn() async {
+//   final prefs = await SharedPreferences.getInstance();
+
+//   final accessToken = prefs.getString("accessToken");
+//   final refreshToken = prefs.getString("refreshToken");
+
+//   // No tokens -> not logged in
+//   if (accessToken == null || accessToken.isEmpty) {
+//     if (refreshToken == null || refreshToken.isEmpty) {
+//       return false;
+//     }
+
+//     // Access token missing, try refresh
+//     return await refreshAccessToken();
+//   }
+
+//   // Check whether current access token is still valid
+//   try {
+//     final parts = accessToken.split('.');
+
+//     if (parts.length != 3) {
+//       return await refreshAccessToken();
+//     }
+
+//     final payload = jsonDecode(
+//       utf8.decode(
+//         base64Url.decode(
+//           base64Url.normalize(parts[1]),
+//         ),
+//       ),
+//     );
+
+//     final exp = payload["exp"];
+
+//     if (exp == null) {
+//       return await refreshAccessToken();
+//     }
+
+//     final expiryTime =
+//         DateTime.fromMillisecondsSinceEpoch(exp * 1000);
+
+//     // Token still valid
+//     if (DateTime.now().isBefore(expiryTime)) {
+//       return true;
+//     }
+
+//     // Access token expired -> refresh
+//     debugPrint("ACCESS TOKEN EXPIRED. REFRESHING...");
+
+//     final refreshed = await refreshAccessToken();
+
+//     if (!refreshed) {
+//       await clearTokens();
+//     }
+
+//     return refreshed;
+//   } catch (e) {
+//     debugPrint("TOKEN CHECK ERROR: $e");
+
+//     final refreshed = await refreshAccessToken();
+
+//     if (!refreshed) {
+//       await clearTokens();
+//     }
+
+//     return refreshed;
+//   }
+// }
+
+
 Future<bool> isLoggedIn() async {
   final prefs = await SharedPreferences.getInstance();
 
   final accessToken = prefs.getString("accessToken");
   final refreshToken = prefs.getString("refreshToken");
 
-  // No tokens -> not logged in
+  debugPrint("ACCESS TOKEN EXISTS: ${accessToken != null && accessToken.isNotEmpty}");
+  debugPrint("REFRESH TOKEN EXISTS: ${refreshToken != null && refreshToken.isNotEmpty}");
+
+  
+
   if (accessToken == null || accessToken.isEmpty) {
-    if (refreshToken == null || refreshToken.isEmpty) {
-      return false;
+    debugPrint("ACCESS TOKEN MISSING");
+
+    final refreshed = await refreshAccessToken();
+
+    debugPrint("REFRESH RESULT: $refreshed");
+
+    if (!refreshed) {
+      await clearTokens();
     }
 
-    // Access token missing, try refresh
-    return await refreshAccessToken();
+    return refreshed;
   }
 
-  // Check whether current access token is still valid
   try {
     final parts = accessToken.split('.');
 
     if (parts.length != 3) {
-      return await refreshAccessToken();
+      debugPrint("INVALID ACCESS TOKEN FORMAT");
+
+      final refreshed = await refreshAccessToken();
+
+      if (!refreshed) {
+        await clearTokens();
+      }
+
+      return refreshed;
     }
 
     final payload = jsonDecode(
@@ -687,22 +773,23 @@ Future<bool> isLoggedIn() async {
 
     final exp = payload["exp"];
 
-    if (exp == null) {
-      return await refreshAccessToken();
-    }
-
     final expiryTime =
         DateTime.fromMillisecondsSinceEpoch(exp * 1000);
 
-    // Token still valid
+    debugPrint("ACCESS TOKEN EXPIRY: $expiryTime");
+    debugPrint("CURRENT TIME: ${DateTime.now()}");
+
     if (DateTime.now().isBefore(expiryTime)) {
+      debugPrint("ACCESS TOKEN VALID");
       return true;
     }
 
-    // Access token expired -> refresh
-    debugPrint("ACCESS TOKEN EXPIRED. REFRESHING...");
+    debugPrint("ACCESS TOKEN EXPIRED");
+    debugPrint("TRYING REFRESH...");
 
     final refreshed = await refreshAccessToken();
+
+    debugPrint("REFRESH RESULT: $refreshed");
 
     if (!refreshed) {
       await clearTokens();
@@ -721,7 +808,6 @@ Future<bool> isLoggedIn() async {
     return refreshed;
   }
 }
-
 
 
   // ============================================================
@@ -912,18 +998,122 @@ Future<List<dynamic>> getNotesDataList() async {
   // UPDATE NOTES LAYOUT
   // ============================================================
 
-  Future<Map<String, dynamic>> updateNotesLayoutAPI({
-    required int notesId,
-    required Map<String, dynamic> layout,
-  }) async {
-    try {
-      final Uri uri = Uri.parse(
-        "$baseURL/notes/$notesId/layout",
-      );
+  // Future<Map<String, dynamic>> updateNotesLayoutAPI({
+  //   required int notesId,
+  //   required Map<String, dynamic> layout,
+  // }) async {
+  //   try {
+  //     final Uri uri = Uri.parse(
+  //       "$baseURL/notes/$notesId/layout",
+  //     );
 
-      final headers = await _jsonAuthHeaders();
+  //     final headers = await _jsonAuthHeaders();
 
-      final response = await http.put(
+  //     final response = await http.put(
+  //       uri,
+  //       headers: headers,
+  //       body: jsonEncode({
+  //         "layout": layout,
+  //       }),
+  //     );
+
+  //     print(
+  //       "UPDATE LAYOUT STATUS: ${response.statusCode}",
+  //     );
+
+  //     print(
+  //       "UPDATE LAYOUT RESPONSE: ${response.body}",
+  //     );
+
+  //     if (response.statusCode >= 200 &&
+  //         response.statusCode < 300) {
+  //       final dynamic decodedData =
+  //           jsonDecode(response.body);
+
+  //       return Map<String, dynamic>.from(
+  //         decodedData,
+  //       );
+  //     }
+
+  //     String errorMessage;
+
+  //     try {
+  //       final dynamic decodedError =
+  //           jsonDecode(response.body);
+
+  //       errorMessage =
+  //           decodedError["message"]?.toString() ??
+  //               "Failed to update note layout";
+  //     } catch (e) {
+  //       errorMessage = response.body.isNotEmpty
+  //           ? response.body
+  //           : "Server error occurred";
+  //     }
+
+  //     throw Exception(
+  //       "Error ${response.statusCode}: $errorMessage",
+  //     );
+  //   } catch (e) {
+  //     throw Exception(
+  //       "Update layout error: $e",
+  //     );
+  //   }
+  // }
+
+
+
+Future<Map<String, dynamic>> updateNotesLayoutAPI({
+  required int notesId,
+  required Map<String, dynamic> layout,
+}) async {
+  try {
+    final Uri uri = Uri.parse(
+      "$baseURL/notes/$notesId/layout",
+    );
+
+    // First request
+    var headers = await _jsonAuthHeaders();
+
+    var response = await http.put(
+      uri,
+      headers: headers,
+      body: jsonEncode({
+        "layout": layout,
+      }),
+    );
+
+    print(
+      "UPDATE LAYOUT STATUS: ${response.statusCode}",
+    );
+
+    print(
+      "UPDATE LAYOUT RESPONSE: ${response.body}",
+    );
+
+    // =========================
+    // ACCESS TOKEN EXPIRED
+    // =========================
+    if (response.statusCode == 401) {
+      print("ACCESS TOKEN EXPIRED - TRYING REFRESH");
+
+      final refreshed = await refreshAccessToken();
+
+      if (!refreshed) {
+        print("TOKEN REFRESH FAILED");
+
+        throw Exception(
+          "Session expired. Please login again.",
+        );
+      }
+
+      print("TOKEN REFRESH SUCCESSFUL");
+      print("RETRYING UPDATE LAYOUT...");
+
+      // Get new access token
+      headers = await _jsonAuthHeaders();
+
+      // Retry same request
+      response = await http.put(
         uri,
         headers: headers,
         body: jsonEncode({
@@ -932,48 +1122,54 @@ Future<List<dynamic>> getNotesDataList() async {
       );
 
       print(
-        "UPDATE LAYOUT STATUS: ${response.statusCode}",
+        "RETRY UPDATE LAYOUT STATUS: ${response.statusCode}",
       );
 
       print(
-        "UPDATE LAYOUT RESPONSE: ${response.body}",
-      );
-
-      if (response.statusCode >= 200 &&
-          response.statusCode < 300) {
-        final dynamic decodedData =
-            jsonDecode(response.body);
-
-        return Map<String, dynamic>.from(
-          decodedData,
-        );
-      }
-
-      String errorMessage;
-
-      try {
-        final dynamic decodedError =
-            jsonDecode(response.body);
-
-        errorMessage =
-            decodedError["message"]?.toString() ??
-                "Failed to update note layout";
-      } catch (e) {
-        errorMessage = response.body.isNotEmpty
-            ? response.body
-            : "Server error occurred";
-      }
-
-      throw Exception(
-        "Error ${response.statusCode}: $errorMessage",
-      );
-    } catch (e) {
-      throw Exception(
-        "Update layout error: $e",
+        "RETRY UPDATE LAYOUT RESPONSE: ${response.body}",
       );
     }
-  }
 
+    // =========================
+    // SUCCESS
+    // =========================
+    if (response.statusCode >= 200 &&
+        response.statusCode < 300) {
+      final dynamic decodedData =
+          jsonDecode(response.body);
+
+      return Map<String, dynamic>.from(
+        decodedData,
+      );
+    }
+
+    // =========================
+    // ERROR
+    // =========================
+    String errorMessage;
+
+    try {
+      final dynamic decodedError =
+          jsonDecode(response.body);
+
+      errorMessage =
+          decodedError["message"]?.toString() ??
+              "Failed to update note layout";
+    } catch (e) {
+      errorMessage = response.body.isNotEmpty
+          ? response.body
+          : "Server error occurred";
+    }
+
+    throw Exception(
+      "Error ${response.statusCode}: $errorMessage",
+    );
+  } catch (e) {
+    throw Exception(
+      "Update layout error: $e",
+    );
+  }
+}
   // ============================================================
   // LOGIN
   // ============================================================
@@ -1104,50 +1300,111 @@ Future<List<dynamic>> getNotesDataList() async {
   }
 
 
-    Future<bool> refreshAccessToken() async {
-    try {
-      final refreshToken = await _getRefreshToken();
+  //   Future<bool> refreshAccessToken() async {
+  //   try {
+  //     final refreshToken = await _getRefreshToken();
 
-      if (refreshToken == null || refreshToken.isEmpty) {
+  //     if (refreshToken == null || refreshToken.isEmpty) {
+  //       return false;
+  //     }
+
+  //     final response = await http.post(
+  //       Uri.parse('$baseURL/refresh'),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: jsonEncode({
+  //         "refreshToken": refreshToken,
+  //       }),
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       final data = jsonDecode(response.body);
+
+  //       final newAccessToken = data["data"]["accessToken"];
+
+  //       if (newAccessToken == null ||
+  //           newAccessToken.toString().isEmpty) {
+  //         return false;
+  //       }
+
+  //       final prefs = await SharedPreferences.getInstance();
+
+  //       await prefs.setString(
+  //         "accessToken",
+  //         newAccessToken,
+  //       );
+
+  //       return true;
+  //     }
+
+  //     return false;
+  //   } catch (e) {
+  //     debugPrint("REFRESH ERROR: $e");
+  //     return false;
+  //   }
+  // }
+Future<bool> refreshAccessToken() async {
+  try {
+    final refreshToken = await _getRefreshToken();
+
+    debugPrint(
+      "REFRESH TOKEN EXISTS: "
+      "${refreshToken != null && refreshToken.isNotEmpty}",
+    );
+
+    if (refreshToken == null || refreshToken.isEmpty) {
+      debugPrint("REFRESH TOKEN MISSING");
+      return false;
+    }
+
+    final response = await http.post(
+      Uri.parse('$baseURL/refresh'),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        "refreshToken": refreshToken,
+      }),
+    );
+
+    debugPrint("REFRESH STATUS: ${response.statusCode}");
+    debugPrint("REFRESH RESPONSE: ${response.body}");
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      final newAccessToken = data["data"]["accessToken"];
+
+      if (newAccessToken == null ||
+          newAccessToken.toString().isEmpty) {
+        debugPrint("NEW ACCESS TOKEN MISSING");
         return false;
       }
 
-      final response = await http.post(
-        Uri.parse('$baseURL/refresh'),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: jsonEncode({
-          "refreshToken": refreshToken,
-        }),
+      final prefs = await SharedPreferences.getInstance();
+
+      await prefs.setString(
+        "accessToken",
+        newAccessToken,
       );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+      debugPrint("NEW ACCESS TOKEN SAVED");
 
-        final newAccessToken = data["data"]["accessToken"];
-
-        if (newAccessToken == null ||
-            newAccessToken.toString().isEmpty) {
-          return false;
-        }
-
-        final prefs = await SharedPreferences.getInstance();
-
-        await prefs.setString(
-          "accessToken",
-          newAccessToken,
-        );
-
-        return true;
-      }
-
-      return false;
-    } catch (e) {
-      debugPrint("REFRESH ERROR: $e");
-      return false;
+      return true;
     }
+
+    debugPrint(
+      "REFRESH FAILED: ${response.statusCode}",
+    );
+
+    return false;
+  } catch (e) {
+    debugPrint("REFRESH ERROR: $e");
+    return false;
   }
+}
+
 
   // ============================================================
   // LOGOUT
