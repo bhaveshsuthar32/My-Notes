@@ -1,3 +1,5 @@
+
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:my_notebook/services/api_services.dart';
 import 'package:my_notebook/user/components/drawerbar.dart';
 import 'package:my_notebook/user/components/header.dart';
+import 'package:my_notebook/user/components/bottom_nav.dart';
 
 class NoteBlock {
   final String id;
@@ -26,7 +29,9 @@ class NoteBlock {
 }
 
 class NewNotes extends StatefulWidget {
-  const NewNotes({super.key});
+  final ValueChanged<int>? onPageSelected;
+
+  const NewNotes({super.key, this.onPageSelected});
 
   @override
   State<NewNotes> createState() => _NewNotesState();
@@ -1260,8 +1265,17 @@ class _NewNotesState extends State<NewNotes> {
     return Scaffold(
       backgroundColor:
           backgroundColor,
-      drawer: Drawerbar(),
-      appBar:Header(),
+      drawer: Drawerbar(onPageSelected: widget.onPageSelected),
+      appBar: Header(),
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: 2,
+        onTap: (index) {
+          // NewNotes is opened as a route from the main RootPage.
+          // Close this route first, then let RootPage switch tabs.
+          Navigator.of(context).pop();
+          widget.onPageSelected?.call(index);
+        },
+      ),
       body:
           SafeArea(
         child:
@@ -1788,3 +1802,5 @@ class _ImageUrlDialogState
     );
   }
 }
+
+
