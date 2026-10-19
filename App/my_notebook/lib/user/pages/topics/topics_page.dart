@@ -1354,3 +1354,390 @@ Widget build(BuildContext context) {
     getTopics();
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+
+// import 'package:my_notebook/theme/theme_provider.dart';
+// import 'package:my_notebook/services/api_services.dart';
+// import 'package:my_notebook/user/pages/topics/topic_form.dart';
+
+// class TopicsPage extends StatefulWidget {
+//   final ValueChanged<int>? onPageSelected;
+
+//   const TopicsPage({
+//     super.key,
+//     this.onPageSelected,
+//   });
+
+//   @override
+//   State<TopicsPage> createState() => _TopicsPageState();
+// }
+
+// class _TopicsPageState extends State<TopicsPage> {
+//   List<dynamic> topics = [];
+
+//   bool isloading = true;
+//   String? errorMessage;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     getTopics();
+//   }
+
+//   Future<void> getTopics() async {
+//     if (!mounted) return;
+
+//     setState(() {
+//       isloading = true;
+//       errorMessage = null;
+//     });
+
+//     try {
+//       final data = await ApiServices().getTopicsAPI();
+
+//       if (!mounted) return;
+
+//       setState(() {
+//         topics = data;
+//         isloading = false;
+//         errorMessage = null;
+//       });
+//     } catch (e) {
+//       debugPrint('TOPICS API ERROR: $e');
+
+//       if (!mounted) return;
+
+//       setState(() {
+//         isloading = false;
+//         errorMessage = e.toString();
+//       });
+//     }
+//   }
+
+//   Future<void> _openTopicForm() async {
+//     await Navigator.push(
+//       context,
+//       MaterialPageRoute(
+//         builder: (context) => const TopicsForm(),
+//       ),
+//     );
+
+//     if (!mounted) return;
+
+//     await getTopics();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final themeProvider = Provider.of<ThemeProvider>(context);
+//     final isDark = themeProvider.isDarkMode;
+
+//     final backgroundColor =
+//         isDark ? const Color(0xFF121218) : const Color(0xFFF8F8FC);
+
+//     final cardColor =
+//         isDark ? Colors.grey.shade900 : Colors.white;
+
+//     final titleColor =
+//         isDark ? Colors.white : Colors.black87;
+
+//     final descriptionColor =
+//         isDark ? Colors.white70 : Colors.black54;
+
+//     return Container(
+//       color: backgroundColor,
+//       child: Stack(
+//         children: [
+//           Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Padding(
+//                 padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
+//                 child: Row(
+//                   children: [
+//                     Expanded(
+//                       child: Text(
+//                         'My Topics',
+//                         style: TextStyle(
+//                           color: titleColor,
+//                           fontSize: 24,
+//                           fontWeight: FontWeight.bold,
+//                         ),
+//                       ),
+//                     ),
+//                     IconButton(
+//                       tooltip: 'Refresh topics',
+//                       onPressed: isloading ? null : getTopics,
+//                       icon: Icon(
+//                         Icons.refresh_rounded,
+//                         color: titleColor,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+
+//               Expanded(
+//                 child: _buildBody(
+//                   isDark: isDark,
+//                   cardColor: cardColor,
+//                   titleColor: titleColor,
+//                   descriptionColor: descriptionColor,
+//                 ),
+//               ),
+//             ],
+//           ),
+
+//           Positioned(
+//             right: 20,
+//             bottom: 20,
+//             child: FloatingActionButton(
+//               heroTag: 'topics_add_button',
+//               onPressed: _openTopicForm,
+//               tooltip: 'Create Topic',
+//               child: const Icon(Icons.add),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   Widget _buildBody({
+//     required bool isDark,
+//     required Color cardColor,
+//     required Color titleColor,
+//     required Color descriptionColor,
+//   }) {
+//     if (isloading) {
+//       return const Center(
+//         child: CircularProgressIndicator(),
+//       );
+//     }
+
+//     if (errorMessage != null) {
+//       return Center(
+//         child: Padding(
+//           padding: const EdgeInsets.all(24),
+//           child: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               Icon(
+//                 Icons.error_outline_rounded,
+//                 size: 42,
+//                 color: isDark ? Colors.red[300] : Colors.red,
+//               ),
+//               const SizedBox(height: 12),
+//               Text(
+//                 'Unable to load topics',
+//                 style: TextStyle(
+//                   color: titleColor,
+//                   fontSize: 18,
+//                   fontWeight: FontWeight.w600,
+//                 ),
+//               ),
+//               const SizedBox(height: 8),
+//               Text(
+//                 errorMessage!,
+//                 textAlign: TextAlign.center,
+//                 style: TextStyle(
+//                   color: descriptionColor,
+//                   fontSize: 13,
+//                 ),
+//               ),
+//               const SizedBox(height: 16),
+//               ElevatedButton.icon(
+//                 onPressed: getTopics,
+//                 icon: const Icon(Icons.refresh),
+//                 label: const Text('Try Again'),
+//               ),
+//             ],
+//           ),
+//         ),
+//       );
+//     }
+
+//     if (topics.isEmpty) {
+//       return Center(
+//         child: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             Icon(
+//               Icons.topic_outlined,
+//               size: 54,
+//               color: descriptionColor,
+//             ),
+//             const SizedBox(height: 12),
+//             Text(
+//               'No Topics Found',
+//               style: TextStyle(
+//                 color: titleColor,
+//                 fontSize: 18,
+//                 fontWeight: FontWeight.w500,
+//               ),
+//             ),
+//             const SizedBox(height: 8),
+//             Text(
+//               'Tap + to create your first topic.',
+//               style: TextStyle(
+//                 color: descriptionColor,
+//                 fontSize: 14,
+//               ),
+//             ),
+//           ],
+//         ),
+//       );
+//     }
+
+//     return RefreshIndicator(
+//       onRefresh: getTopics,
+//       child: ListView.builder(
+//         padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+//         itemCount: topics.length,
+//         itemBuilder: (context, index) {
+//           final topic = topics[index];
+
+//           final imageUrl = topic['coverImage']?.toString();
+//           final name = topic['name']?.toString() ?? 'Untitled Topic';
+//           final description =
+//               topic['description']?.toString() ?? '';
+
+//           return Container(
+//             margin: const EdgeInsets.only(bottom: 16),
+//             decoration: BoxDecoration(
+//               color: cardColor,
+//               borderRadius: BorderRadius.circular(16),
+//               boxShadow: [
+//                 BoxShadow(
+//                   color: isDark ? Colors.black26 : Colors.black12,
+//                   blurRadius: 10,
+//                   offset: const Offset(0, 4),
+//                 ),
+//               ],
+//             ),
+//             child: Padding(
+//               padding: const EdgeInsets.all(14),
+//               child: Row(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Expanded(
+//                     flex: 3,
+//                     child: ClipRRect(
+//                       borderRadius: BorderRadius.circular(12),
+//                       child: imageUrl != null && imageUrl.isNotEmpty
+//                           ? Image.network(
+//                               imageUrl,
+//                               height: 110,
+//                               fit: BoxFit.cover,
+//                               errorBuilder: (context, error, stackTrace) {
+//                                 return _imagePlaceholder(isDark);
+//                               },
+//                             )
+//                           : _imagePlaceholder(isDark),
+//                     ),
+//                   ),
+//                   const SizedBox(width: 14),
+//                   Expanded(
+//                     flex: 7,
+//                     child: Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         Text(
+//                           name,
+//                           maxLines: 1,
+//                           overflow: TextOverflow.ellipsis,
+//                           style: TextStyle(
+//                             color: titleColor,
+//                             fontSize: 18,
+//                             fontWeight: FontWeight.bold,
+//                           ),
+//                         ),
+//                         const SizedBox(height: 6),
+//                         Text(
+//                           description.isEmpty
+//                               ? 'No description'
+//                               : description,
+//                           maxLines: 3,
+//                           overflow: TextOverflow.ellipsis,
+//                           style: TextStyle(
+//                             color: descriptionColor,
+//                             fontSize: 14,
+//                             height: 1.4,
+//                           ),
+//                         ),
+//                         const SizedBox(height: 12),
+//                         Row(
+//                           mainAxisAlignment: MainAxisAlignment.end,
+//                           children: [
+//                             IconButton(
+//                               tooltip: 'Edit',
+//                               onPressed: () {
+//                                 // Edit functionality was not implemented
+//                                 // in the original TopicsPage.
+//                               },
+//                               icon: Icon(
+//                                 Icons.edit_outlined,
+//                                 color: isDark
+//                                     ? Colors.lightBlue[200]
+//                                     : Colors.blue,
+//                               ),
+//                             ),
+//                             IconButton(
+//                               tooltip: 'Delete',
+//                               onPressed: () {
+//                                 // Delete functionality was not implemented
+//                                 // in the original TopicsPage.
+//                               },
+//                               icon: Icon(
+//                                 Icons.delete_outline,
+//                                 color: isDark
+//                                     ? Colors.red[300]
+//                                     : Colors.red,
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           );
+//         },
+//       ),
+//     );
+//   }
+
+//   Widget _imagePlaceholder(bool isDark) {
+//     return Container(
+//       height: 110,
+//       color: isDark ? Colors.blueGrey.shade900 : Colors.grey.shade200,
+//       alignment: Alignment.center,
+//       child: Icon(
+//         Icons.image_outlined,
+//         size: 35,
+//         color: isDark ? Colors.white54 : Colors.grey,
+//       ),
+//     );
+//   }
+// }
+
+
