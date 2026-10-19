@@ -339,3 +339,126 @@ class BottomNavBar extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import 'package:flutter/material.dart';
+
+// class BottomNavBar extends StatelessWidget {
+//   final int currentIndex;
+//   final ValueChanged<int> onTap;
+
+//   const BottomNavBar({
+//     super.key,
+//     required this.currentIndex,
+//     required this.onTap,
+//   });
+
+//   static const Color primaryColor = Color(0xFF5B5CEB);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+//     return Container(
+//       decoration: BoxDecoration(
+//         color: isDark ? const Color(0xFF17171F) : Colors.white,
+//         border: Border(
+//           top: BorderSide(
+//             color: isDark
+//                 ? const Color(0xFF2D2D38)
+//                 : const Color(0xFFEAEAF1),
+//           ),
+//         ),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.black.withOpacity(isDark ? 0.12 : 0.04),
+//             blurRadius: 12,
+//             offset: const Offset(0, -3),
+//           ),
+//         ],
+//       ),
+//       child: SafeArea(
+//         top: false,
+//         child: BottomNavigationBar(
+//           currentIndex: currentIndex,
+//           onTap: onTap,
+//           type: BottomNavigationBarType.fixed,
+//           backgroundColor:
+//               isDark ? const Color(0xFF17171F) : Colors.white,
+//           elevation: 0,
+//           selectedItemColor: primaryColor,
+//           unselectedItemColor:
+//               isDark ? Colors.white54 : const Color(0xFF9999A7),
+//           selectedFontSize: 11,
+//           unselectedFontSize: 10,
+//           showSelectedLabels: true,
+//           showUnselectedLabels: true,
+//           selectedLabelStyle: const TextStyle(
+//             fontWeight: FontWeight.w600,
+//           ),
+//           unselectedLabelStyle: const TextStyle(
+//             fontWeight: FontWeight.w500,
+//           ),
+//           items: const [
+//             BottomNavigationBarItem(
+//               icon: Icon(Icons.home_outlined),
+//               activeIcon: Icon(Icons.home_rounded),
+//               label: 'Home',
+//             ),
+//             BottomNavigationBarItem(
+//               icon: Icon(Icons.topic_outlined),
+//               activeIcon: Icon(Icons.topic_rounded),
+//               label: 'Topics',
+//             ),
+//             BottomNavigationBarItem(
+//               icon: Icon(Icons.notes_outlined),
+//               activeIcon: Icon(Icons.notes_rounded),
+//               label: 'Notes',
+//             ),
+//             BottomNavigationBarItem(
+//               icon: Icon(Icons.auto_awesome_outlined),
+//               activeIcon: Icon(Icons.auto_awesome),
+//               label: 'AI',
+//             ),
+//             BottomNavigationBarItem(
+//               icon: Icon(Icons.person_outline_rounded),
+//               activeIcon: Icon(Icons.person_rounded),
+//               label: 'Profile',
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

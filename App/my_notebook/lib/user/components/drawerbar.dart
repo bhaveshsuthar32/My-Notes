@@ -1753,6 +1753,755 @@
 
 
 
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+
+// import 'package:my_notebook/theme/theme_provider.dart';
+// import 'package:my_notebook/user/admin/admin.dart';
+// import 'package:my_notebook/user/pages/login/login.dart';
+// import 'package:my_notebook/user/pages/register/regitster.dart';
+// import 'package:my_notebook/user/pages/notes/new_notes_form.dart';
+
+// class Drawerbar extends StatelessWidget {
+//   final Function(int)? onPageSelected;
+
+//   const Drawerbar({
+//     super.key,
+//     this.onPageSelected,
+//   });
+
+//   // Close drawer once, then change the selected tab.
+//   void _selectPage(BuildContext context, int index) {
+//     Navigator.pop(context);
+//     onPageSelected?.call(index);
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final theme = Theme.of(context);
+//     final isDark = theme.brightness == Brightness.dark;
+
+//     final backgroundColor =
+//         isDark ? const Color(0xFF17171F) : Colors.white;
+
+//     final textColor =
+//         isDark ? const Color(0xFFF3F3F6) : const Color(0xFF252532);
+
+//     final secondaryColor =
+//         isDark ? const Color(0xFFA3A3B2) : const Color(0xFF777786);
+
+//     final dividerColor =
+//         isDark ? const Color(0xFF2D2D38) : const Color(0xFFEAEAF1);
+
+//     return Drawer(
+//       backgroundColor: backgroundColor,
+//       width: 300,
+//       child: SafeArea(
+//         child: Column(
+//           children: [
+//             // HEADER
+//             Container(
+//               width: double.infinity,
+//               padding: const EdgeInsets.fromLTRB(20, 22, 20, 20),
+//               decoration: BoxDecoration(
+//                 color: isDark
+//                     ? const Color(0xFF20202B)
+//                     : const Color(0xFFF7F7FC),
+//                 border: Border(
+//                   bottom: BorderSide(color: dividerColor),
+//                 ),
+//               ),
+//               child: Row(
+//                 children: [
+//                   Container(
+//                     width: 44,
+//                     height: 44,
+//                     decoration: BoxDecoration(
+//                       color: isDark
+//                           ? const Color(0xFF302F50)
+//                           : const Color(0xFFEDEBFF),
+//                       borderRadius: BorderRadius.circular(13),
+//                     ),
+//                     child: const Icon(
+//                       Icons.menu_book_rounded,
+//                       color: Color(0xFF5B5CEB),
+//                       size: 24,
+//                     ),
+//                   ),
+//                   const SizedBox(width: 12),
+//                   Expanded(
+//                     child: Text(
+//                       "My Notebook",
+//                       style: TextStyle(
+//                         color: textColor,
+//                         fontSize: 19,
+//                         fontWeight: FontWeight.w700,
+//                       ),
+//                     ),
+//                   ),
+//                   IconButton(
+//                     onPressed: () => Navigator.pop(context),
+//                     icon: Icon(
+//                       Icons.close_rounded,
+//                       color: secondaryColor,
+//                       size: 22,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+
+//             // MENU ITEMS
+//             Expanded(
+//               child: ListView(
+//                 padding: const EdgeInsets.fromLTRB(12, 14, 12, 10),
+//                 children: [
+//                   _sectionTitle(context, "GENERAL"),
+
+//                   _drawerItem(
+//                     context,
+//                     icon: Icons.home_outlined,
+//                     title: "Home",
+//                     onTap: () => _selectPage(context, 0),
+//                   ),
+
+//                   _drawerItem(
+//                     context,
+//                     icon: Icons.admin_panel_settings_outlined,
+//                     title: "Admin",
+//                     onTap: () {
+//                       Navigator.pop(context);
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                           builder: (_) => const Admin(),
+//                         ),
+//                       );
+//                     },
+//                   ),
+
+//                   _drawerItem(
+//                     context,
+//                     icon: Icons.login_rounded,
+//                     title: "Login",
+//                     onTap: () {
+//                       Navigator.pop(context);
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                           builder: (_) => const LoginPage(),
+//                         ),
+//                       );
+//                     },
+//                   ),
+
+//                   _drawerItem(
+//                     context,
+//                     icon: Icons.person_add_alt_1_rounded,
+//                     title: "Register",
+//                     onTap: () {
+//                       Navigator.pop(context);
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                           builder: (_) => const Regitster(),
+//                         ),
+//                       );
+//                     },
+//                   ),
+
+//                   const SizedBox(height: 14),
+
+//                   _sectionTitle(context, "NOTES"),
+
+//                   _drawerItem(
+//                     context,
+//                     icon: Icons.note_add_outlined,
+//                     title: "New Notes",
+//                     onTap: () {
+//                       Navigator.pop(context);
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                           builder: (_) => NewNotes(),
+//                         ),
+//                       );
+//                     },
+//                   ),
+
+//                   _drawerItem(
+//                     context,
+//                     icon: Icons.notes_rounded,
+//                     title: "Notes",
+//                     onTap: () => _selectPage(context, 2),
+//                   ),
+
+//                   _drawerItem(
+//                     context,
+//                     icon: Icons.topic_outlined,
+//                     title: "Topics",
+//                     onTap: () => _selectPage(context, 1),
+//                   ),
+
+//                   const SizedBox(height: 14),
+
+//                   _sectionTitle(context, "PREFERENCES"),
+
+//                   Consumer<ThemeProvider>(
+//                     builder: (context, themeProvider, child) {
+//                       return Container(
+//                         margin: const EdgeInsets.only(bottom: 6),
+//                         decoration: BoxDecoration(
+//                           color: isDark
+//                               ? const Color(0xFF22222D)
+//                               : const Color(0xFFF7F7FB),
+//                           borderRadius: BorderRadius.circular(14),
+//                         ),
+//                         child: SwitchListTile(
+//                           contentPadding:
+//                               const EdgeInsets.symmetric(horizontal: 14),
+//                           secondary: Container(
+//                             width: 38,
+//                             height: 38,
+//                             decoration: BoxDecoration(
+//                               color: isDark
+//                                   ? const Color(0xFF302F50)
+//                                   : const Color(0xFFEDEBFF),
+//                               borderRadius: BorderRadius.circular(11),
+//                             ),
+//                             child: Icon(
+//                               themeProvider.isDarkMode
+//                                   ? Icons.dark_mode_rounded
+//                                   : Icons.light_mode_rounded,
+//                               color: const Color(0xFF5B5CEB),
+//                               size: 20,
+//                             ),
+//                           ),
+//                           title: Text(
+//                             "Dark Mode",
+//                             style: TextStyle(
+//                               color: textColor,
+//                               fontSize: 13,
+//                               fontWeight: FontWeight.w600,
+//                             ),
+//                           ),
+//                           subtitle: Text(
+//                             themeProvider.isDarkMode
+//                                 ? "Dark theme enabled"
+//                                 : "Light theme enabled",
+//                             style: TextStyle(
+//                               color: secondaryColor,
+//                               fontSize: 10,
+//                             ),
+//                           ),
+//                           value: themeProvider.isDarkMode,
+//                           activeColor: const Color(0xFF5B5CEB),
+//                           onChanged: themeProvider.toggleTheme,
+//                         ),
+//                       );
+//                     },
+//                   ),
+//                 ],
+//               ),
+//             ),
+
+//             // FOOTER
+//             Container(
+//               padding: const EdgeInsets.fromLTRB(20, 10, 20, 16),
+//               decoration: BoxDecoration(
+//                 border: Border(
+//                   top: BorderSide(color: dividerColor),
+//                 ),
+//               ),
+//               child: Row(
+//                 children: [
+//                   Icon(
+//                     Icons.menu_book_rounded,
+//                     size: 17,
+//                     color: secondaryColor,
+//                   ),
+//                   const SizedBox(width: 7),
+//                   Text(
+//                     "My Notebook",
+//                     style: TextStyle(
+//                       color: secondaryColor,
+//                       fontSize: 10,
+//                       fontWeight: FontWeight.w500,
+//                     ),
+//                   ),
+//                   const Spacer(),
+//                   Text(
+//                     "v1.0.0",
+//                     style: TextStyle(
+//                       color: secondaryColor,
+//                       fontSize: 9,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _sectionTitle(BuildContext context, String title) {
+//     final isDark =
+//         Theme.of(context).brightness == Brightness.dark;
+
+//     return Padding(
+//       padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
+//       child: Text(
+//         title,
+//         style: TextStyle(
+//           color: isDark
+//               ? const Color(0xFF777785)
+//               : const Color(0xFF9999A7),
+//           fontSize: 9.5,
+//           fontWeight: FontWeight.w700,
+//           letterSpacing: 1.1,
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _drawerItem(
+//     BuildContext context, {
+//     required IconData icon,
+//     required String title,
+//     required VoidCallback onTap,
+//   }) {
+//     final theme = Theme.of(context);
+//     final isDark = theme.brightness == Brightness.dark;
+
+//     return Container(
+//       margin: const EdgeInsets.only(bottom: 4),
+//       child: Material(
+//         color: Colors.transparent,
+//         borderRadius: BorderRadius.circular(13),
+//         child: InkWell(
+//           onTap: onTap,
+//           borderRadius: BorderRadius.circular(13),
+//           splashColor: const Color(0xFF5B5CEB).withOpacity(0.08),
+//           child: Padding(
+//             padding: const EdgeInsets.symmetric(
+//               horizontal: 10,
+//               vertical: 9,
+//             ),
+//             child: Row(
+//               children: [
+//                 Container(
+//                   width: 38,
+//                   height: 38,
+//                   decoration: BoxDecoration(
+//                     color: isDark
+//                         ? const Color(0xFF252532)
+//                         : const Color(0xFFF4F3FC),
+//                     borderRadius: BorderRadius.circular(11),
+//                   ),
+//                   child: Icon(
+//                     icon,
+//                     color: isDark
+//                         ? const Color(0xFFAAA8F5)
+//                         : const Color(0xFF5B5CEB),
+//                     size: 20,
+//                   ),
+//                 ),
+//                 const SizedBox(width: 12),
+//                 Expanded(
+//                   child: Text(
+//                     title,
+//                     style: TextStyle(
+//                       color: theme.textTheme.bodyLarge?.color,
+//                       fontSize: 13,
+//                       fontWeight: FontWeight.w500,
+//                     ),
+//                   ),
+//                 ),
+//                 Icon(
+//                   Icons.chevron_right_rounded,
+//                   color: isDark
+//                       ? const Color(0xFF666672)
+//                       : const Color(0xFFB0B0BC),
+//                   size: 19,
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+
+
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+
+// import 'package:my_notebook/theme/theme_provider.dart';
+// import 'package:my_notebook/user/admin/admin.dart';
+// import 'package:my_notebook/user/pages/login/login.dart';
+// import 'package:my_notebook/user/pages/register/regitster.dart';
+// import 'package:my_notebook/user/pages/notes/new_notes_form.dart';
+
+// class Drawerbar extends StatelessWidget {
+//   final Function(int)? onPageSelected;
+
+//   const Drawerbar({
+//     super.key,
+//     this.onPageSelected,
+//   });
+
+//   void _selectPage(BuildContext context, int index) {
+//     Navigator.pop(context);
+//     onPageSelected?.call(index);
+//   }
+
+//   void _openPage(BuildContext context, Widget page) {
+//     Navigator.pop(context);
+
+//     Navigator.push(
+//       context,
+//       MaterialPageRoute(builder: (_) => page),
+//     );
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final theme = Theme.of(context);
+//     final isDark = theme.brightness == Brightness.dark;
+
+//     final backgroundColor =
+//         isDark ? const Color(0xFF17171F) : Colors.white;
+
+//     final textColor =
+//         isDark ? const Color(0xFFF3F3F6) : const Color(0xFF252532);
+
+//     final secondaryColor =
+//         isDark ? const Color(0xFFA3A3B2) : const Color(0xFF777786);
+
+//     final dividerColor =
+//         isDark ? const Color(0xFF2D2D38) : const Color(0xFFEAEAF1);
+
+//     return Drawer(
+//       backgroundColor: backgroundColor,
+//       width: 300,
+//       child: SafeArea(
+//         child: Column(
+//           children: [
+//             // HEADER
+//             Container(
+//               width: double.infinity,
+//               padding: const EdgeInsets.fromLTRB(20, 22, 20, 20),
+//               decoration: BoxDecoration(
+//                 color: isDark
+//                     ? const Color(0xFF20202B)
+//                     : const Color(0xFFF7F7FC),
+//                 border: Border(
+//                   bottom: BorderSide(color: dividerColor),
+//                 ),
+//               ),
+//               child: Row(
+//                 children: [
+//                   Container(
+//                     width: 44,
+//                     height: 44,
+//                     decoration: BoxDecoration(
+//                       color: isDark
+//                           ? const Color(0xFF302F50)
+//                           : const Color(0xFFEDEBFF),
+//                       borderRadius: BorderRadius.circular(13),
+//                     ),
+//                     child: const Icon(
+//                       Icons.menu_book_rounded,
+//                       color: Color(0xFF5B5CEB),
+//                       size: 24,
+//                     ),
+//                   ),
+//                   const SizedBox(width: 12),
+//                   Expanded(
+//                     child: Text(
+//                       'My Notebook',
+//                       style: TextStyle(
+//                         color: textColor,
+//                         fontSize: 19,
+//                         fontWeight: FontWeight.w700,
+//                       ),
+//                     ),
+//                   ),
+//                   IconButton(
+//                     onPressed: () => Navigator.pop(context),
+//                     icon: Icon(
+//                       Icons.close_rounded,
+//                       color: secondaryColor,
+//                       size: 22,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+
+//             // MENU ITEMS
+//             Expanded(
+//               child: ListView(
+//                 padding: const EdgeInsets.fromLTRB(12, 14, 12, 10),
+//                 children: [
+//                   _sectionTitle(context, 'GENERAL'),
+
+//                   _drawerItem(
+//                     context,
+//                     icon: Icons.home_outlined,
+//                     title: 'Home',
+//                     onTap: () => _selectPage(context, 0),
+//                   ),
+
+//                   _drawerItem(
+//                     context,
+//                     icon: Icons.admin_panel_settings_outlined,
+//                     title: 'Admin',
+//                     onTap: () => _openPage(context, const Admin()),
+//                   ),
+
+//                   _drawerItem(
+//                     context,
+//                     icon: Icons.login_rounded,
+//                     title: 'Login',
+//                     onTap: () => _openPage(context, const LoginPage()),
+//                   ),
+
+//                   _drawerItem(
+//                     context,
+//                     icon: Icons.person_add_alt_1_rounded,
+//                     title: 'Register',
+//                     onTap: () => _openPage(context, const Regitster()),
+//                   ),
+
+//                   const SizedBox(height: 14),
+
+//                   _sectionTitle(context, 'NOTES'),
+
+//                   _drawerItem(
+//                     context,
+//                     icon: Icons.note_add_outlined,
+//                     title: 'New Notes',
+//                     onTap: () =>
+//                         _openPage(context, NewNotes()),
+//                   ),
+
+//                   _drawerItem(
+//                     context,
+//                     icon: Icons.notes_rounded,
+//                     title: 'Notes',
+//                     onTap: () => _selectPage(context, 2),
+//                   ),
+
+//                   _drawerItem(
+//                     context,
+//                     icon: Icons.topic_outlined,
+//                     title: 'Topics',
+//                     onTap: () => _selectPage(context, 1),
+//                   ),
+
+//                   const SizedBox(height: 14),
+
+//                   _sectionTitle(context, 'PREFERENCES'),
+
+//                   Consumer<ThemeProvider>(
+//                     builder: (context, themeProvider, child) {
+//                       return Container(
+//                         margin: const EdgeInsets.only(bottom: 6),
+//                         decoration: BoxDecoration(
+//                           color: isDark
+//                               ? const Color(0xFF22222D)
+//                               : const Color(0xFFF7F7FB),
+//                           borderRadius: BorderRadius.circular(14),
+//                         ),
+//                         child: SwitchListTile(
+//                           contentPadding:
+//                               const EdgeInsets.symmetric(horizontal: 14),
+//                           secondary: Container(
+//                             width: 38,
+//                             height: 38,
+//                             decoration: BoxDecoration(
+//                               color: isDark
+//                                   ? const Color(0xFF302F50)
+//                                   : const Color(0xFFEDEBFF),
+//                               borderRadius: BorderRadius.circular(11),
+//                             ),
+//                             child: Icon(
+//                               themeProvider.isDarkMode
+//                                   ? Icons.dark_mode_rounded
+//                                   : Icons.light_mode_rounded,
+//                               color: const Color(0xFF5B5CEB),
+//                               size: 20,
+//                             ),
+//                           ),
+//                           title: Text(
+//                             'Dark Mode',
+//                             style: TextStyle(
+//                               color: textColor,
+//                               fontSize: 13,
+//                               fontWeight: FontWeight.w600,
+//                             ),
+//                           ),
+//                           subtitle: Text(
+//                             themeProvider.isDarkMode
+//                                 ? 'Dark theme enabled'
+//                                 : 'Light theme enabled',
+//                             style: TextStyle(
+//                               color: secondaryColor,
+//                               fontSize: 10,
+//                             ),
+//                           ),
+//                           value: themeProvider.isDarkMode,
+//                           activeColor: const Color(0xFF5B5CEB),
+//                           onChanged: themeProvider.toggleTheme,
+//                         ),
+//                       );
+//                     },
+//                   ),
+//                 ],
+//               ),
+//             ),
+
+//             // FOOTER
+//             Container(
+//               padding: const EdgeInsets.fromLTRB(20, 10, 20, 16),
+//               decoration: BoxDecoration(
+//                 border: Border(
+//                   top: BorderSide(color: dividerColor),
+//                 ),
+//               ),
+//               child: Row(
+//                 children: [
+//                   Icon(
+//                     Icons.menu_book_rounded,
+//                     size: 17,
+//                     color: secondaryColor,
+//                   ),
+//                   const SizedBox(width: 7),
+//                   Text(
+//                     'My Notebook',
+//                     style: TextStyle(
+//                       color: secondaryColor,
+//                       fontSize: 10,
+//                       fontWeight: FontWeight.w500,
+//                     ),
+//                   ),
+//                   const Spacer(),
+//                   Text(
+//                     'v1.0.0',
+//                     style: TextStyle(
+//                       color: secondaryColor,
+//                       fontSize: 9,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _sectionTitle(BuildContext context, String title) {
+//     final isDark =
+//         Theme.of(context).brightness == Brightness.dark;
+
+//     return Padding(
+//       padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
+//       child: Text(
+//         title,
+//         style: TextStyle(
+//           color: isDark
+//               ? const Color(0xFF777785)
+//               : const Color(0xFF9999A7),
+//           fontSize: 9.5,
+//           fontWeight: FontWeight.w700,
+//           letterSpacing: 1.1,
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _drawerItem(
+//     BuildContext context, {
+//     required IconData icon,
+//     required String title,
+//     required VoidCallback onTap,
+//   }) {
+//     final theme = Theme.of(context);
+//     final isDark = theme.brightness == Brightness.dark;
+
+//     return Container(
+//       margin: const EdgeInsets.only(bottom: 4),
+//       child: Material(
+//         color: Colors.transparent,
+//         borderRadius: BorderRadius.circular(13),
+//         child: InkWell(
+//           onTap: onTap,
+//           borderRadius: BorderRadius.circular(13),
+//           splashColor: const Color(0xFF5B5CEB).withOpacity(0.08),
+//           child: Padding(
+//             padding: const EdgeInsets.symmetric(
+//               horizontal: 10,
+//               vertical: 9,
+//             ),
+//             child: Row(
+//               children: [
+//                 Container(
+//                   width: 38,
+//                   height: 38,
+//                   decoration: BoxDecoration(
+//                     color: isDark
+//                         ? const Color(0xFF252532)
+//                         : const Color(0xFFF4F3FC),
+//                     borderRadius: BorderRadius.circular(11),
+//                   ),
+//                   child: Icon(
+//                     icon,
+//                     color: isDark
+//                         ? const Color(0xFFAAA8F5)
+//                         : const Color(0xFF5B5CEB),
+//                     size: 20,
+//                   ),
+//                 ),
+//                 const SizedBox(width: 12),
+//                 Expanded(
+//                   child: Text(
+//                     title,
+//                     style: TextStyle(
+//                       color: theme.textTheme.bodyLarge?.color,
+//                       fontSize: 13,
+//                       fontWeight: FontWeight.w500,
+//                     ),
+//                   ),
+//                 ),
+//                 Icon(
+//                   Icons.chevron_right_rounded,
+//                   color: isDark
+//                       ? const Color(0xFF666672)
+//                       : const Color(0xFFB0B0BC),
+//                   size: 19,
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+
+
+
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -1923,7 +2672,7 @@ class Drawerbar extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => NewNotes(),
+                          builder: (_) => NewNotes(onPageSelected: onPageSelected),
                         ),
                       );
                     },
@@ -2134,3 +2883,19 @@ class Drawerbar extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
