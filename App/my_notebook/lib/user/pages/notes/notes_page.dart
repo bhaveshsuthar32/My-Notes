@@ -12,11 +12,7 @@ class NotesPage extends StatefulWidget {
   final int? topicId;
   final String? topicName;
 
-  const NotesPage({
-    super.key,
-    this.topicId,
-    this.topicName,
-  });
+  const NotesPage({super.key, this.topicId, this.topicName});
 
   @override
   State<NotesPage> createState() => _NotesPageState();
@@ -54,15 +50,14 @@ class _NotesPageState extends State<NotesPage> {
     getNotes();
   }
 
-
   @override
-void didUpdateWidget(covariant NotesPage oldWidget) {
-  super.didUpdateWidget(oldWidget);
+  void didUpdateWidget(covariant NotesPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
 
-  if (oldWidget.topicId != widget.topicId) {
-    getNotes();
+    if (oldWidget.topicId != widget.topicId) {
+      getNotes();
+    }
   }
-}
 
   @override
   void dispose() {
@@ -99,77 +94,73 @@ void didUpdateWidget(covariant NotesPage oldWidget) {
   //   }
   // }
 
-
-Future<void> getNotes() async {
-  setState(() {
-    isLoading = true;
-    errorMessage = null;
-  });
-
-  try {
-    final api = ApiServices();
-
-    final List<dynamic> data = widget.topicId == null
-        ? await api.getNotesDataList()
-        : await api.getNotesByTopicAPI(widget.topicId!);
-
-    if (!mounted) return;
-
+  Future<void> getNotes() async {
     setState(() {
-      notes = data;
-      isLoading = false;
+      isLoading = true;
       errorMessage = null;
     });
 
-    _applyFilters();
-  } catch (e) {
-    debugPrint("NOTES API ERROR: $e");
+    try {
+      final api = ApiServices();
 
-    if (!mounted) return;
+      final List<dynamic> data = widget.topicId == null
+          ? await api.getNotesDataList()
+          : await api.getNotesByTopicAPI(widget.topicId!);
 
-    setState(() {
-      isLoading = false;
-      errorMessage = e.toString();
-    });
+      if (!mounted) return;
+
+      setState(() {
+        notes = data;
+        isLoading = false;
+        errorMessage = null;
+      });
+
+      _applyFilters();
+    } catch (e) {
+      debugPrint("NOTES API ERROR: $e");
+
+      if (!mounted) return;
+
+      setState(() {
+        isLoading = false;
+        errorMessage = e.toString();
+      });
+    }
   }
-}
 
+  // Future<void> getNotes() async {
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //       errorMessage = null;
+  //     });
 
+  //     final api = ApiServices();
 
-// Future<void> getNotes() async {
-//   try {
-//     setState(() {
-//       isLoading = true;
-//       errorMessage = null;
-//     });
+  //     final List<dynamic> data = widget.topicId == null
+  //         ? await api.getNotesDataList()
+  //         : await api.getNotesByTopicAPI(widget.topicId!);
 
-//     final api = ApiServices();
+  //     if (!mounted) return;
 
-//     final List<dynamic> data = widget.topicId == null
-//         ? await api.getNotesDataList()
-//         : await api.getNotesByTopicAPI(widget.topicId!);
+  //     setState(() {
+  //       notes = data;
+  //       isLoading = false;
+  //       errorMessage = null;
+  //     });
 
-//     if (!mounted) return;
+  //     _applyFilters();
+  //   } catch (e) {
+  //     debugPrint("NOTES API ERROR: $e");
 
-//     setState(() {
-//       notes = data;
-//       isLoading = false;
-//       errorMessage = null;
-//     });
+  //     if (!mounted) return;
 
-//     _applyFilters();
-//   } catch (e) {
-//     debugPrint("NOTES API ERROR: $e");
-
-//     if (!mounted) return;
-
-//     setState(() {
-//       isLoading = false;
-//       errorMessage = e.toString();
-//     });
-//   }
-// }
-
+  //     setState(() {
+  //       isLoading = false;
+  //       errorMessage = e.toString();
+  //     });
+  //   }
+  // }
 
   // ============================================================
   // SEARCH
@@ -1241,12 +1232,16 @@ Future<void> getNotes() async {
                 );
               }
 
+              // if (value == "delete") {
+              //   ScaffoldMessenger.of(context).showSnackBar(
+              //     const SnackBar(
+              //       content: Text("Delete functionality will be added later"),
+              //     ),
+              //   );
+              // }
+
               if (value == "delete") {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Delete functionality will be added later"),
-                  ),
-                );
+                _confirmDeleteNote(note);
               }
             },
             itemBuilder: (context) => [
@@ -1270,6 +1265,17 @@ Future<void> getNotes() async {
                   ],
                 ),
               ),
+
+              // const PopupMenuItem(
+              //   value: "delete",
+              //   child: Row(
+              //     children: [
+              //       Icon(Icons.delete_outline, size: 18, color: Colors.red),
+              //       SizedBox(width: 10),
+              //       Text("Delete"),
+              //     ],
+              //   ),
+              // ),
               const PopupMenuItem(
                 value: "delete",
                 child: Row(
@@ -1285,6 +1291,61 @@ Future<void> getNotes() async {
         ],
       ),
     );
+  }
+
+  Future<void> _confirmDeleteNote(dynamic note) async {
+    final noteId = int.tryParse(note['id']?.toString() ?? '');
+
+    if (noteId == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Invalid note ID')));
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Delete Note?'),
+        content: const Text(
+          'Are you sure you want to delete this note? This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    try {
+      await ApiServices().deleteNotesAPI(noteId);
+
+      if (!mounted) return;
+
+      setState(() {
+        notes.removeWhere((item) => item['id'].toString() == noteId.toString());
+      });
+
+      _applyFilters();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Note deleted successfully')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to delete note: $e')));
+    }
   }
 
   // ============================================================
@@ -1527,12 +1588,3 @@ Future<void> getNotes() async {
     );
   }
 }
-
-
-
-
-
-
-
-
-

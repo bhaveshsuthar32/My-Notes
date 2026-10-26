@@ -1109,6 +1109,59 @@ Future<List<dynamic>> getNotesDataList() async {
 }
 
 
+// Delete Note
+
+Future<bool> deleteNotesAPI(int notesId) async {
+  final uri = Uri.parse('$baseURL/delete-notes/$notesId');
+
+  var token = await _getAccessToken();
+
+  if (token == null || token.isEmpty) {
+    final refreshed = await refreshAccessToken();
+
+    if (!refreshed) {
+      throw Exception('Session expired. Please login again.');
+    }
+
+    token = await _getAccessToken();
+  }
+
+  var response = await http.delete(
+    uri,
+    headers: {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    },
+  );
+
+  if (response.statusCode == 401) {
+    final refreshed = await refreshAccessToken();
+
+    if (refreshed) {
+      token = await _getAccessToken();
+
+      response = await http.delete(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+    }
+  }
+
+  final decoded = jsonDecode(response.body);
+
+  if (response.statusCode == 200 && decoded['success'] == true) {
+    return true;
+  }
+
+  throw Exception(
+    decoded['message'] ?? 'Failed to delete note',
+  );
+}
+
+
 
   // ============================================================
   // UPDATE NOTES LAYOUT
