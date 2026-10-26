@@ -4387,7 +4387,7 @@ class _TopicsFormState extends State<TopicsForm> {
                           //   textColor,
                           // ),
 
-                          / _fieldTitle(
+                          // / _fieldTitle(
                           //   "Cover Image",
                           //   "*",
                           //   textColor,
@@ -4423,6 +4423,7 @@ class _TopicsFormState extends State<TopicsForm> {
                                   imagePreview(),
                             ),
                           ),
+                          
 
                           const SizedBox(height: 10),
 
