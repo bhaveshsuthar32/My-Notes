@@ -7,7 +7,16 @@ import 'package:my_notebook/user/pages/notes/view_notes.dart';
 // import 'package:my_notebook/user/pages/topics/topics_page.dart';
 
 class NotesPage extends StatefulWidget {
-  const NotesPage({super.key});
+  // const NotesPage({super.key});
+
+  final int? topicId;
+  final String? topicName;
+
+  const NotesPage({
+    super.key,
+    this.topicId,
+    this.topicName,
+  });
 
   @override
   State<NotesPage> createState() => _NotesPageState();
@@ -45,6 +54,16 @@ class _NotesPageState extends State<NotesPage> {
     getNotes();
   }
 
+
+  @override
+void didUpdateWidget(covariant NotesPage oldWidget) {
+  super.didUpdateWidget(oldWidget);
+
+  if (oldWidget.topicId != widget.topicId) {
+    getNotes();
+  }
+}
+
   @override
   void dispose() {
     searchController.dispose();
@@ -55,30 +74,102 @@ class _NotesPageState extends State<NotesPage> {
   // GET NOTES
   // ============================================================
 
-  Future<void> getNotes() async {
-    try {
-      final data = await ApiServices().getNotesDataList();
+  // Future<void> getNotes() async {
+  //   try {
+  //     final data = await ApiServices().getNotesDataList();
 
-      if (!mounted) return;
+  //     if (!mounted) return;
 
-      setState(() {
-        notes = data;
-        isLoading = false;
-        errorMessage = null;
-      });
+  //     setState(() {
+  //       notes = data;
+  //       isLoading = false;
+  //       errorMessage = null;
+  //     });
 
-      _applyFilters();
-    } catch (e) {
-      debugPrint("NOTES API ERROR: $e");
+  //     _applyFilters();
+  //   } catch (e) {
+  //     debugPrint("NOTES API ERROR: $e");
 
-      if (!mounted) return;
+  //     if (!mounted) return;
 
-      setState(() {
-        isLoading = false;
-        errorMessage = e.toString();
-      });
-    }
+  //     setState(() {
+  //       isLoading = false;
+  //       errorMessage = e.toString();
+  //     });
+  //   }
+  // }
+
+
+Future<void> getNotes() async {
+  setState(() {
+    isLoading = true;
+    errorMessage = null;
+  });
+
+  try {
+    final api = ApiServices();
+
+    final List<dynamic> data = widget.topicId == null
+        ? await api.getNotesDataList()
+        : await api.getNotesByTopicAPI(widget.topicId!);
+
+    if (!mounted) return;
+
+    setState(() {
+      notes = data;
+      isLoading = false;
+      errorMessage = null;
+    });
+
+    _applyFilters();
+  } catch (e) {
+    debugPrint("NOTES API ERROR: $e");
+
+    if (!mounted) return;
+
+    setState(() {
+      isLoading = false;
+      errorMessage = e.toString();
+    });
   }
+}
+
+
+
+// Future<void> getNotes() async {
+//   try {
+//     setState(() {
+//       isLoading = true;
+//       errorMessage = null;
+//     });
+
+//     final api = ApiServices();
+
+//     final List<dynamic> data = widget.topicId == null
+//         ? await api.getNotesDataList()
+//         : await api.getNotesByTopicAPI(widget.topicId!);
+
+//     if (!mounted) return;
+
+//     setState(() {
+//       notes = data;
+//       isLoading = false;
+//       errorMessage = null;
+//     });
+
+//     _applyFilters();
+//   } catch (e) {
+//     debugPrint("NOTES API ERROR: $e");
+
+//     if (!mounted) return;
+
+//     setState(() {
+//       isLoading = false;
+//       errorMessage = e.toString();
+//     });
+//   }
+// }
+
 
   // ============================================================
   // SEARCH
@@ -653,7 +744,8 @@ class _NotesPageState extends State<NotesPage> {
       children: [
         Expanded(
           child: Text(
-            "All Notes",
+            // "All Notes",
+            widget.topicName ?? "All Notes",
             style: TextStyle(
               color: isDark ? Colors.white : const Color(0xFF171721),
               fontSize: 27,

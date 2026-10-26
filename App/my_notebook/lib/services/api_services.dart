@@ -962,6 +962,27 @@ Future<bool> isLoggedIn() async {
   }
 
 
+Future<List<dynamic>> getNotesByTopicAPI(int topicId) async {
+  final res = await _authorizedGet(
+    Uri.parse('$baseURL/notesbytopic/$topicId'),
+  );
+
+  if (res.statusCode == 200) {
+    final decoded = jsonDecode(res.body);
+
+    if (decoded['success'] == true && decoded['data'] is List) {
+      return decoded['data'] as List<dynamic>;
+    }
+
+    throw Exception('Invalid notes response');
+  }
+
+  throw Exception(
+    'Failed to load topic notes: ${res.statusCode} - ${res.body}',
+  );
+}
+
+
   // ============================================================
   // GET NOTES LIST DATA
   // ============================================================
@@ -1600,63 +1621,175 @@ Future<bool> refreshAccessToken() async {
   // ADD TOPIC
   // ============================================================
 
-  Future<Map<String, dynamic>> addTopicAPI({
-    required String name,
-    required String description,
-    required String status,
-    String? imageUrl,
-    File? imageFile,
-  }) async {
-    final uri = Uri.parse(
-      "$baseURL/topics",
-    );
+  // Future<Map<String, dynamic>> addTopicAPI({
+  //   required String name,
+  //   required String description,
+  //   required String status,
+  //   String? imageUrl,
+  //   File? imageFile,
+  // }) async {
+  //   final uri = Uri.parse(
+  //     "$baseURL/topics",
+  //   );
 
-    final request = http.MultipartRequest(
-      "POST",
-      uri,
-    );
+  //   final request = http.MultipartRequest(
+  //     "POST",
+  //     uri,
+  //   );
 
-    // ----------------------------------------------------------
-    // AUTHORIZATION
-    // ----------------------------------------------------------
+  //   // ----------------------------------------------------------
+  //   // AUTHORIZATION
+  //   // ----------------------------------------------------------
 
+  //   final token = await _getAccessToken();
+
+  //   if (token == null || token.isEmpty) {
+  //     throw Exception(
+  //       "Authentication token not found. Please login again.",
+  //     );
+  //   }
+
+  //   request.headers["Authorization"] =
+  //       "Bearer $token";
+
+  //   // ----------------------------------------------------------
+  //   // TEXT FIELDS
+  //   // ----------------------------------------------------------
+
+  //   request.fields["name"] = name;
+
+  //   request.fields["description"] =
+  //       description;
+
+  //   request.fields["status"] =
+  //       status.toLowerCase();
+
+  //   // ----------------------------------------------------------
+  //   // URL OPTION
+  //   // ----------------------------------------------------------
+
+  //   if (imageFile == null &&
+  //       imageUrl != null &&
+  //       imageUrl.trim().isNotEmpty) {
+  //       request.fields["coverImageUrl"] =
+  //         imageUrl.trim();
+  //   }
+
+  //   // ----------------------------------------------------------
+  //   // GALLERY FILE OPTION
+  //   // ----------------------------------------------------------
+
+  //   if (imageFile != null) {
+  //     request.files.add(
+  //       await http.MultipartFile.fromPath(
+  //         "coverImage",
+  //         imageFile.path,
+  //       ),
+  //     );
+  //   }
+
+  //   // ----------------------------------------------------------
+  //   // SEND REQUEST
+  //   // ----------------------------------------------------------
+
+  //   final streamedResponse =
+  //       await request.send();
+
+  //   final response =
+  //       await http.Response.fromStream(
+  //     streamedResponse,
+  //   );
+
+  //   // ----------------------------------------------------------
+  //   // DEBUG
+  //   // ----------------------------------------------------------
+
+  //   print(
+  //     "STATUS CODE: ${response.statusCode}",
+  //   );
+
+  //   print(
+  //     "RESPONSE BODY: ${response.body}",
+  //   );
+
+  //   // ----------------------------------------------------------
+  //   // SUCCESS
+  //   // ----------------------------------------------------------
+
+  //   if (response.statusCode >= 200 &&
+  //       response.statusCode < 300) {
+  //     try {
+  //       final data =
+  //           jsonDecode(response.body);
+
+  //       return Map<String, dynamic>.from(
+  //         data,
+  //       );
+  //     } catch (e) {
+  //       throw Exception(
+  //         "Invalid JSON response: ${response.body}",
+  //       );
+  //     }
+  //   }
+
+  //   // ----------------------------------------------------------
+  //   // ERROR
+  //   // ----------------------------------------------------------
+
+  //   String errorMessage;
+
+  //   try {
+  //     final errorData =
+  //         jsonDecode(response.body);
+
+  //     errorMessage =
+  //         errorData["message"]?.toString() ??
+  //             "Failed to add topic";
+  //   } catch (e) {
+  //     errorMessage = response.body.isNotEmpty
+  //         ? response.body
+  //         : "Server error occurred";
+  //   }
+
+  //   throw Exception(
+  //     "Error ${response.statusCode}: $errorMessage",
+  //   );
+  // }
+
+
+
+
+  
+Future<Map<String, dynamic>> addTopicAPI({
+  required String name,
+  required String description,
+  required String status,
+  String? imageUrl,
+  File? imageFile,
+}) async {
+  final uri = Uri.parse("$baseURL/topics");
+
+  // Har attempt par nayi multipart request banegi.
+  Future<http.Response> sendRequest() async {
     final token = await _getAccessToken();
 
     if (token == null || token.isEmpty) {
-      throw Exception(
-        "Authentication token not found. Please login again.",
-      );
+      throw Exception("Access token missing. Please login again.");
     }
 
-    request.headers["Authorization"] =
-        "Bearer $token";
+    final request = http.MultipartRequest("POST", uri);
 
-    // ----------------------------------------------------------
-    // TEXT FIELDS
-    // ----------------------------------------------------------
+    request.headers["Authorization"] = "Bearer $token";
 
     request.fields["name"] = name;
-
-    request.fields["description"] =
-        description;
-
-    request.fields["status"] =
-        status.toLowerCase();
-
-    // ----------------------------------------------------------
-    // URL OPTION
-    // ----------------------------------------------------------
+    request.fields["description"] = description;
+    request.fields["status"] = status.toLowerCase();
 
     if (imageFile == null &&
         imageUrl != null &&
         imageUrl.trim().isNotEmpty) {
-        request.fields["coverImageUrl"] =
-          imageUrl.trim();
+      request.fields["coverImageUrl"] = imageUrl.trim();
     }
-
-    // ----------------------------------------------------------
-    // GALLERY FILE OPTION
-    // ----------------------------------------------------------
 
     if (imageFile != null) {
       request.files.add(
@@ -1667,73 +1800,60 @@ Future<bool> refreshAccessToken() async {
       );
     }
 
-    // ----------------------------------------------------------
-    // SEND REQUEST
-    // ----------------------------------------------------------
+    final streamedResponse = await request.send();
 
-    final streamedResponse =
-        await request.send();
-
-    final response =
-        await http.Response.fromStream(
-      streamedResponse,
-    );
-
-    // ----------------------------------------------------------
-    // DEBUG
-    // ----------------------------------------------------------
-
-    print(
-      "STATUS CODE: ${response.statusCode}",
-    );
-
-    print(
-      "RESPONSE BODY: ${response.body}",
-    );
-
-    // ----------------------------------------------------------
-    // SUCCESS
-    // ----------------------------------------------------------
-
-    if (response.statusCode >= 200 &&
-        response.statusCode < 300) {
-      try {
-        final data =
-            jsonDecode(response.body);
-
-        return Map<String, dynamic>.from(
-          data,
-        );
-      } catch (e) {
-        throw Exception(
-          "Invalid JSON response: ${response.body}",
-        );
-      }
-    }
-
-    // ----------------------------------------------------------
-    // ERROR
-    // ----------------------------------------------------------
-
-    String errorMessage;
-
-    try {
-      final errorData =
-          jsonDecode(response.body);
-
-      errorMessage =
-          errorData["message"]?.toString() ??
-              "Failed to add topic";
-    } catch (e) {
-      errorMessage = response.body.isNotEmpty
-          ? response.body
-          : "Server error occurred";
-    }
-
-    throw Exception(
-      "Error ${response.statusCode}: $errorMessage",
-    );
+    return await http.Response.fromStream(streamedResponse);
   }
+
+  // First attempt
+  var response = await sendRequest();
+
+  debugPrint("ADD TOPIC STATUS: ${response.statusCode}");
+  debugPrint("ADD TOPIC RESPONSE: ${response.body}");
+
+  // Token expired: refresh and retry once.
+  if (response.statusCode == 401) {
+    debugPrint("Access token expired. Refreshing token...");
+
+    final refreshed = await refreshAccessToken();
+
+    if (!refreshed) {
+      await clearTokens();
+      throw Exception("Session expired. Please login again.");
+    }
+
+    response = await sendRequest();
+
+    debugPrint("RETRY STATUS: ${response.statusCode}");
+    debugPrint("RETRY RESPONSE: ${response.body}");
+  }
+
+  // Success
+  if (response.statusCode >= 200 &&
+      response.statusCode < 300) {
+    final data = jsonDecode(response.body);
+
+    return Map<String, dynamic>.from(data);
+  }
+
+  // Error handling
+  String errorMessage;
+
+  try {
+    final errorData = jsonDecode(response.body);
+    errorMessage = errorData["message"]?.toString() ??
+        "Failed to add topic";
+  } catch (_) {
+    errorMessage = response.body.isNotEmpty
+        ? response.body
+        : "Server error occurred";
+  }
+
+  throw Exception(
+    "Error ${response.statusCode}: $errorMessage",
+  );
+}
+
 
   // ============================================================
   // GET TOPICS

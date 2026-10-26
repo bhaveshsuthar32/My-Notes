@@ -335,112 +335,263 @@
   // }
 
 
-    import 'package:flutter/material.dart';
-  import 'package:my_notebook/services/api_services.dart';
-  import 'package:my_notebook/user/components/bottom_nav.dart';
-  import 'package:my_notebook/user/components/drawerbar.dart';
-  import 'package:my_notebook/user/components/header.dart';
-  import 'package:my_notebook/user/pages/home.dart';
-  import 'package:my_notebook/user/pages/login/login.dart';
-  import 'package:my_notebook/user/pages/notes/notes_page.dart';
-  import 'package:my_notebook/user/pages/profile/profile_page.dart';
-  import 'package:my_notebook/user/pages/topics/topics_page.dart';
+  //   import 'package:flutter/material.dart';
+  // import 'package:my_notebook/services/api_services.dart';
+  // import 'package:my_notebook/user/components/bottom_nav.dart';
+  // import 'package:my_notebook/user/components/drawerbar.dart';
+  // import 'package:my_notebook/user/components/header.dart';
+  // import 'package:my_notebook/user/pages/home.dart';
+  // import 'package:my_notebook/user/pages/login/login.dart';
+  // import 'package:my_notebook/user/pages/notes/notes_page.dart';
+  // import 'package:my_notebook/user/pages/profile/profile_page.dart';
+  // import 'package:my_notebook/user/pages/topics/topics_page.dart';
 
-  class RootPage extends StatefulWidget {
-    const RootPage({super.key});
+  // class RootPage extends StatefulWidget {
+  //   const RootPage({super.key});
 
-    @override
-    State<RootPage> createState() => _RootPageState();
+  //   @override
+  //   State<RootPage> createState() => _RootPageState();
+  // }
+
+  // class _RootPageState extends State<RootPage> {
+  //   int _currentIndex = 0;
+
+  //   bool _isCheckingAuth = true;
+  //   bool _isLoggedIn = false;
+
+  //   final List<Widget> _pages = const [
+  //     Home(),
+  //     TopicsPage(),
+  //     NotesPage(),
+  //     Center(
+  //       child: Text("AI Assistant"),
+  //     ),
+  //     ProfilePage(),
+  //   ];
+
+  //   @override
+  //   void initState() {
+  //     super.initState();
+  //     _checkAuthentication();
+  //   }
+
+  //   Future<void> _checkAuthentication() async {
+  //     try {
+  //       final isLoggedIn = await ApiServices().isLoggedIn();
+
+  //       if (!mounted) return;
+
+  //       setState(() {
+  //         _isLoggedIn = isLoggedIn;
+  //         _isCheckingAuth = false;
+  //       });
+  //     } catch (e) {
+  //       debugPrint("AUTH CHECK ERROR: $e");
+
+  //       if (!mounted) return;
+
+  //       setState(() {
+  //         _isLoggedIn = false;
+  //         _isCheckingAuth = false;
+  //       });
+  //     }
+  //   }
+
+  //   void changePage(int index) {
+  //     if (index < 0 || index >= _pages.length) {
+  //       return;
+  //     }
+
+  //     if (!mounted) return;
+
+  //     setState(() {
+  //       _currentIndex = index;
+  //     });
+  //   }
+
+  //   @override
+  //   Widget build(BuildContext context) {
+  //     if (_isCheckingAuth) {
+  //       return const Scaffold(
+  //         body: Center(
+  //           child: CircularProgressIndicator(),
+  //         ),
+  //       );
+  //     }
+
+  //     if (!_isLoggedIn) {
+  //       return const LoginPage();
+  //     }
+
+  //     return Scaffold(
+  //       appBar: const Header(),
+
+  //       drawer: Drawerbar(
+  //         onPageSelected: changePage,
+  //       ),
+
+  //       body: IndexedStack(
+  //         index: _currentIndex,
+  //         children: _pages,
+  //       ),
+
+  //       bottomNavigationBar: BottomNavBar(
+  //         currentIndex: _currentIndex,
+  //         onTap: changePage,
+  //       ),
+  //     );
+  //   }
+  // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import 'package:flutter/material.dart';
+import 'package:my_notebook/services/api_services.dart';
+import 'package:my_notebook/user/components/bottom_nav.dart';
+import 'package:my_notebook/user/components/drawerbar.dart';
+import 'package:my_notebook/user/components/header.dart';
+import 'package:my_notebook/user/pages/home.dart';
+import 'package:my_notebook/user/pages/login/login.dart';
+import 'package:my_notebook/user/pages/notes/notes_page.dart';
+import 'package:my_notebook/user/pages/profile/profile_page.dart';
+import 'package:my_notebook/user/pages/topics/topics_page.dart';
+
+class RootPage extends StatefulWidget {
+  const RootPage({super.key});
+
+  @override
+  State<RootPage> createState() => _RootPageState();
+}
+
+class _RootPageState extends State<RootPage> {
+  int _currentIndex = 0;
+
+  bool _isCheckingAuth = true;
+  bool _isLoggedIn = false;
+
+  int? _selectedTopicId;
+  String? _selectedTopicName;
+
+  List<Widget> get _pages => [
+        const Home(),
+
+        TopicsPage(
+          onTopicSelected: openTopicNotes,
+        ),
+
+        NotesPage(
+          key: const ValueKey('notes-page'),
+          topicId: _selectedTopicId,
+          topicName: _selectedTopicName,
+        ),
+
+        const Center(
+          child: Text("AI Assistant"),
+        ),
+
+        const ProfilePage(),
+      ];
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAuthentication();
   }
 
-  class _RootPageState extends State<RootPage> {
-    int _currentIndex = 0;
-
-    bool _isCheckingAuth = true;
-    bool _isLoggedIn = false;
-
-    final List<Widget> _pages = const [
-      Home(),
-      TopicsPage(),
-      NotesPage(),
-      Center(
-        child: Text("AI Assistant"),
-      ),
-      ProfilePage(),
-    ];
-
-    @override
-    void initState() {
-      super.initState();
-      _checkAuthentication();
-    }
-
-    Future<void> _checkAuthentication() async {
-      try {
-        final isLoggedIn = await ApiServices().isLoggedIn();
-
-        if (!mounted) return;
-
-        setState(() {
-          _isLoggedIn = isLoggedIn;
-          _isCheckingAuth = false;
-        });
-      } catch (e) {
-        debugPrint("AUTH CHECK ERROR: $e");
-
-        if (!mounted) return;
-
-        setState(() {
-          _isLoggedIn = false;
-          _isCheckingAuth = false;
-        });
-      }
-    }
-
-    void changePage(int index) {
-      if (index < 0 || index >= _pages.length) {
-        return;
-      }
+  Future<void> _checkAuthentication() async {
+    try {
+      final isLoggedIn = await ApiServices().isLoggedIn();
 
       if (!mounted) return;
 
       setState(() {
-        _currentIndex = index;
+        _isLoggedIn = isLoggedIn;
+        _isCheckingAuth = false;
       });
-    }
+    } catch (e) {
+      debugPrint("AUTH CHECK ERROR: $e");
 
-    @override
-    Widget build(BuildContext context) {
-      if (_isCheckingAuth) {
-        return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
-      }
+      if (!mounted) return;
 
-      if (!_isLoggedIn) {
-        return const LoginPage();
-      }
-
-      return Scaffold(
-        appBar: const Header(),
-
-        drawer: Drawerbar(
-          onPageSelected: changePage,
-        ),
-
-        body: IndexedStack(
-          index: _currentIndex,
-          children: _pages,
-        ),
-
-        bottomNavigationBar: BottomNavBar(
-          currentIndex: _currentIndex,
-          onTap: changePage,
-        ),
-      );
+      setState(() {
+        _isLoggedIn = false;
+        _isCheckingAuth = false;
+      });
     }
   }
 
+  // Normal bottom navigation
+  void changePage(int index) {
+    if (index < 0 || index >= _pages.length) {
+      return;
+    }
 
+    if (!mounted) return;
+
+    setState(() {
+      _currentIndex = index;
+
+      // Notes tab se open karne par all notes show honge.
+      if (index == 2) {
+        _selectedTopicId = null;
+        _selectedTopicName = null;
+      }
+    });
+  }
+
+  // Topic select hone par existing Notes tab open karo.
+  void openTopicNotes(int topicId, String topicName) {
+    if (!mounted) return;
+
+    setState(() {
+      _selectedTopicId = topicId;
+      _selectedTopicName = topicName;
+      _currentIndex = 2;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isCheckingAuth) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (!_isLoggedIn) {
+      return const LoginPage();
+    }
+
+    return Scaffold(
+      appBar: const Header(),
+
+      drawer: Drawerbar(
+        onPageSelected: changePage,
+      ),
+
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _pages,
+      ),
+
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: _currentIndex,
+        onTap: changePage,
+      ),
+    );
+  }
+}

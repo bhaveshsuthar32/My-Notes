@@ -1,447 +1,14 @@
-// import 'package:flutter/material.dart';
-// import 'package:my_notebook/services/api_services.dart';
-// import 'package:my_notebook/user/components/drawerbar.dart';
-// import 'package:my_notebook/user/components/header.dart';
-
-// class TopicsPage extends StatefulWidget {
-//   const TopicsPage({super.key});
-
-//   @override
-//   State<TopicsPage> createState() => _TopicsPageState();
-// }
-
-// class _TopicsPageState extends State<TopicsPage> {
-//   List<dynamic> topics = [];
-
-//   bool isloading = true;
-//   String? errorMessage;
-
-//   @override
-//   void initState() {
-//     // TODO: implement initState
-//     super.initState();
-//     getTopics();
-//   }
-
-//   Future<void> getTopics() async {
-//     try {
-//       final data = await ApiServices().getTopicsAPI();
-//       setState(() {
-//         topics = data;
-//         isloading = false;
-//         errorMessage = null;
-//       });
-//     } catch (e) {
-//       print("API ERROR: $e");
-
-//       setState(() {
-//         isloading = false;
-//         errorMessage = e.toString();
-//       });
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: Header(),
-//       drawer: Drawerbar(),
-
-//       body: errorMessage != null
-//           ? Center(
-//               child: Text(
-//                 errorMessage!,
-//                 textAlign: TextAlign.center,
-
-//                 style: TextStyle(
-//                   // color: isDark
-//                   //     ? Colors.white
-//                   //     : Colors.black,
-//                 ),
-//               ),
-//             )
-//           : isloading
-//           ? const Center(child: CircularProgressIndicator())
-//           : topics.isEmpty
-//           ? Center(
-//               child: Text(
-//                 "No Notes Found",
-
-//                 style: TextStyle(
-//                   // color: isDark
-//                   //     ? Colors.white
-//                   //     : Colors.black,
-//                   fontSize: 18,
-//                   fontWeight: FontWeight.w500,
-//                 ),
-//               ),
-//             )
-//           : ListView.builder(
-            
-//             itemBuilder: (context, index) {
-//               final topic = topics[index];
-
-//               return Container(
-//                 child: Padding(padding: const EdgeInsets.all(22),
-
-//                 child: Row(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-
-//                   children: [
-//                     Expanded(
-//                       flex: 3,
-//                       child: Text(
-//                         topic['coverimage'].toString()
-//                       )),
-
-//                     Expanded(
-//                       flex: 7,
-//                       child: Column(
-//                       children: [
-//                         Text(
-//                           topic['name'].toString(),
-//                         ),
-//                         Text(
-//                           topic['description'].toString(),
-//                         ),
-
-//                         Row(
-//                           crossAxisAlignment: CrossAxisAlignment.end,
-
-//                           children: [
-//                             Text("edit"),
-//                             Text("delete")
-//                           ],
-//                         )
-//                       ],
-//                     ))
-//                   ],
-//                 ),
-                
-//                 ),
-//               );
-//             }),
-//     );
-//   }
-// }
-
-
-
-// import 'package:flutter/material.dart';
-// import 'package:my_notebook/theme/theme_provider.dart';
-// import 'package:my_notebook/user/pages/topics/topic_form.dart';
-// import 'package:provider/provider.dart';
-
-// import 'package:my_notebook/services/api_services.dart';
-// import 'package:my_notebook/user/components/drawerbar.dart';
-// import 'package:my_notebook/user/components/header.dart';
-
-// class TopicsPage extends StatefulWidget {
-//   const TopicsPage({super.key});
-
-//   @override
-//   State<TopicsPage> createState() => _TopicsPageState();
-// }
-
-// class _TopicsPageState extends State<TopicsPage> {
-//   List<dynamic> topics = [];
-
-//   bool isloading = true;
-//   String? errorMessage;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     getTopics();
-//   }
-
-//   Future<void> getTopics() async {
-//     try {
-//       final data = await ApiServices().getTopicsAPI();
-
-//       setState(() {
-//         topics = data;
-//         isloading = false;
-//         errorMessage = null;
-//       });
-//     } catch (e) {
-//       print("API ERROR: $e");
-
-//       setState(() {
-//         isloading = false;
-//         errorMessage = e.toString();
-//       });
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final themeProvider = Provider.of<ThemeProvider>(context);
-//     final isDark = themeProvider.isDarkMode;
-
-//     final cardColor = isDark
-//         ? Colors.grey.shade900
-//         : Colors.white;
-
-//     final titleColor = isDark
-//         ? Colors.white
-//         : Colors.black87;
-
-//     final descriptionColor = isDark
-//         ? Colors.white70
-//         : Colors.black54;
-
-//     return Scaffold(
-//       appBar: Header(),
-
-//       drawer: Drawerbar(),
-
-//       body: errorMessage != null
-//           ? Center(
-//               child: Padding(
-//                 padding: const EdgeInsets.all(20),
-//                 child: Text(
-//                   errorMessage!,
-//                   textAlign: TextAlign.center,
-//                   style: TextStyle(
-//                     color: isDark ? Colors.red[200] : Colors.red,
-//                     fontSize: 16,
-//                   ),
-//                 ),
-//               ),
-//             )
-//           : isloading
-//               ? const Center(
-//                   child: CircularProgressIndicator(),
-//                 )
-//               : topics.isEmpty
-//                   ? Center(
-//                       child: Text(
-//                         "No Topics Found",
-//                         style: TextStyle(
-//                           color: titleColor,
-//                           fontSize: 18,
-//                           fontWeight: FontWeight.w500,
-//                         ),
-//                       ),
-//                     )
-//                   : Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-
-//                         // TOP TEXT
-//                         Padding(
-//                           padding: const EdgeInsets.all(16),
-//                           child: Text(
-//                             "My Topics",
-//                             style: TextStyle(
-//                               color: titleColor,
-//                               fontSize: 24,
-//                               fontWeight: FontWeight.bold,
-//                             ),
-//                           ),
-//                         ),
-
-//                         // TOPIC LIST
-//                         Expanded(
-//                           child: ListView.builder(
-//                             padding: const EdgeInsets.symmetric(
-//                               horizontal: 16,
-//                             ),
-//                             itemCount: topics.length,
-//                             itemBuilder: (context, index) {
-//                               final topic = topics[index];
-
-//                               return Container(
-//                                 margin: const EdgeInsets.only(bottom: 16),
-
-//                                 decoration: BoxDecoration(
-//                                   color: cardColor,
-//                                   borderRadius: BorderRadius.circular(16),
-
-//                                   boxShadow: [
-//                                     BoxShadow(
-//                                       color: isDark
-//                                           ? Colors.black26
-//                                           : Colors.black12,
-//                                       blurRadius: 10,
-//                                       offset: const Offset(0, 4),
-//                                     ),
-//                                   ],
-//                                 ),
-
-//                                 child: Padding(
-//                                   padding: const EdgeInsets.all(14),
-
-//                                   child: Row(
-//                                     crossAxisAlignment:
-//                                         CrossAxisAlignment.start,
-
-//                                     children: [
-
-//                                       // IMAGE
-//                                       Expanded(
-//                                         flex: 3,
-//                                         child: ClipRRect(
-//                                           borderRadius:
-//                                               BorderRadius.circular(12),
-
-//                                           child: topic['coverImage'] != null
-//                                               ? Image.network(
-//                                                   topic['coverImage'].toString(),
-//                                                   height: 110,
-//                                                   fit: BoxFit.cover,
-
-//                                                   errorBuilder:
-//                                                       (context, error, stackTrace) {
-//                                                     return Container(
-//                                                       height: 110,
-//                                                       color: isDark
-//                                                           ? Colors.blueGrey[900]
-//                                                           : Colors.grey[200],
-
-//                                                       child: Icon(
-//                                                         Icons.image_not_supported,
-//                                                         color: isDark
-//                                                             ? Colors.white54
-//                                                             : Colors.grey,
-//                                                         size: 35,
-//                                                       ),
-//                                                     );
-//                                                   },
-//                                                 )
-//                                               : Container(
-//                                                   height: 110,
-//                                                   color: isDark
-//                                                       ? Colors.blueGrey[900]
-//                                                       : Colors.grey[200],
-
-//                                                   child: const Icon(
-//                                                     Icons.image,
-//                                                     size: 35,
-//                                                   ),
-//                                                 ),
-//                                         ),
-//                                       ),
-
-//                                       const SizedBox(width: 14),
-
-//                                       // RIGHT SIDE
-//                                       Expanded(
-//                                         flex: 7,
-//                                         child: Column(
-//                                           crossAxisAlignment:
-//                                               CrossAxisAlignment.start,
-
-//                                           children: [
-
-//                                             // TITLE
-//                                             Text(
-//                                               topic['name'].toString(),
-//                                               maxLines: 1,
-//                                               overflow: TextOverflow.ellipsis,
-
-//                                               style: TextStyle(
-//                                                 color: titleColor,
-//                                                 fontSize: 18,
-//                                                 fontWeight: FontWeight.bold,
-//                                               ),
-//                                             ),
-
-//                                             const SizedBox(height: 6),
-
-//                                             // DESCRIPTION
-//                                             Text(
-//                                               topic['description'].toString(),
-//                                               maxLines: 3,
-//                                               overflow: TextOverflow.ellipsis,
-
-//                                               style: TextStyle(
-//                                                 color: descriptionColor,
-//                                                 fontSize: 14,
-//                                                 height: 1.4,
-//                                               ),
-//                                             ),
-
-//                                             const SizedBox(height: 12),
-
-//                                             // BUTTONS
-//                                             Row(
-//                                               mainAxisAlignment:
-//                                                   MainAxisAlignment.end,
-
-//                                               children: [
-
-//                                                 // EDIT
-//                                                 IconButton(
-//                                                   tooltip: "Edit",
-
-//                                                   onPressed: () {},
-
-//                                                   icon: Icon(
-//                                                     Icons.edit_outlined,
-//                                                     color: isDark
-//                                                         ? Colors.lightBlue[200]
-//                                                         : Colors.blue,
-//                                                   ),
-//                                                 ),
-
-//                                                 // DELETE
-//                                                 IconButton(
-//                                                   tooltip: "Delete",
-
-//                                                   onPressed: () {},
-
-//                                                   icon: Icon(
-//                                                     Icons.delete_outline,
-//                                                     color: isDark
-//                                                         ? Colors.red[300]
-//                                                         : Colors.red,
-//                                                   ),
-//                                                 ),
-//                                               ],
-//                                             ),
-//                                           ],
-//                                         ),
-//                                       ),
-//                                     ],
-//                                   ),
-//                                 ),
-//                               );
-//                             },
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-
-//       // FLOATING ACTION BUTTON
-//       floatingActionButton: FloatingActionButton(
-//         onPressed: () {
-//           Navigator.push(
-//             context,
-//             MaterialPageRoute(
-//               builder: (context) => const TopicsForm(),
-//             ),
-//           );
-//         },
-
-//         child: const Icon(Icons.add),
-//       ),
-//     );
-//   }
-// }
-
-
-// // 
-
-
-
 import 'package:flutter/material.dart';
 import 'package:my_notebook/services/api_services.dart';
+import 'package:my_notebook/user/pages/notes/notes_page.dart';
 import 'package:my_notebook/user/pages/topics/topic_form.dart';
 
 class TopicsPage extends StatefulWidget {
-  const TopicsPage({super.key});
+  // const TopicsPage({super.key});
+
+  final void Function(int topicId, String topicName)? onTopicSelected;
+
+  const TopicsPage({super.key, this.onTopicSelected});
 
   @override
   State<TopicsPage> createState() => _TopicsPageState();
@@ -514,8 +81,7 @@ class _TopicsPageState extends State<TopicsPage> {
 
     return topics.where((topic) {
       final name = topic['name']?.toString().toLowerCase() ?? "";
-      final description =
-          topic['description']?.toString().toLowerCase() ?? "";
+      final description = topic['description']?.toString().toLowerCase() ?? "";
 
       return name.contains(query) || description.contains(query);
     }).toList();
@@ -540,20 +106,20 @@ class _TopicsPageState extends State<TopicsPage> {
   // }
 
   @override
-Widget build(BuildContext context) {
-  final theme = Theme.of(context);
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
 
-  return Scaffold(
-    backgroundColor: theme.scaffoldBackgroundColor,
-    body: SafeArea(
-      child: RefreshIndicator(
-        color: const Color(0xFF5B5CEB),
-        onRefresh: getTopics,
-        child: _buildBody(context),
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: SafeArea(
+        child: RefreshIndicator(
+          color: const Color(0xFF5B5CEB),
+          onRefresh: getTopics,
+          child: _buildBody(context),
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   // =========================================================
   // BODY
@@ -562,9 +128,7 @@ Widget build(BuildContext context) {
   Widget _buildBody(BuildContext context) {
     if (isloading) {
       return const Center(
-        child: CircularProgressIndicator(
-          color: Color(0xFF5B5CEB),
-        ),
+        child: CircularProgressIndicator(color: Color(0xFF5B5CEB)),
       );
     }
 
@@ -574,35 +138,26 @@ Widget build(BuildContext context) {
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(
-        16,
-        16,
-        16,
-        30,
-      ),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // ================= TITLE =================
-
           _buildTitle(context),
 
           const SizedBox(height: 16),
 
           // ================= SEARCH =================
-
           _buildSearchBar(context),
 
           const SizedBox(height: 22),
 
           // ================= TOPIC HEADER =================
-
           _buildTopicHeader(context),
 
           const SizedBox(height: 12),
 
           // ================= TOPICS =================
-
           if (filteredTopics.isEmpty)
             _buildEmptyState(context)
           else
@@ -678,11 +233,7 @@ Widget build(BuildContext context) {
               ),
             ],
           ),
-          child: const Icon(
-            Icons.add_rounded,
-            color: Colors.white,
-            size: 24,
-          ),
+          child: const Icon(Icons.add_rounded, color: Colors.white, size: 24),
         ),
       ),
     );
@@ -699,14 +250,10 @@ Widget build(BuildContext context) {
     return Container(
       height: 48,
       decoration: BoxDecoration(
-        color: isDark
-            ? const Color(0xFF24242F)
-            : const Color(0xFFF4F4FA),
+        color: isDark ? const Color(0xFF24242F) : const Color(0xFFF4F4FA),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: isDark
-              ? const Color(0xFF343440)
-              : const Color(0xFFE7E7F0),
+          color: isDark ? const Color(0xFF343440) : const Color(0xFFE7E7F0),
         ),
       ),
       child: TextField(
@@ -716,24 +263,17 @@ Widget build(BuildContext context) {
             searchText = value;
           });
         },
-        style: TextStyle(
-          color: theme.textTheme.bodyLarge?.color,
-          fontSize: 13,
-        ),
+        style: TextStyle(color: theme.textTheme.bodyLarge?.color, fontSize: 13),
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: "Search topics...",
           hintStyle: TextStyle(
-            color: isDark
-                ? const Color(0xFF92929F)
-                : const Color(0xFF8C8C9B),
+            color: isDark ? const Color(0xFF92929F) : const Color(0xFF8C8C9B),
             fontSize: 13,
           ),
           prefixIcon: Icon(
             Icons.search_rounded,
-            color: isDark
-                ? const Color(0xFFAAAAB8)
-                : const Color(0xFF68687A),
+            color: isDark ? const Color(0xFFAAAAB8) : const Color(0xFF68687A),
             size: 21,
           ),
           suffixIcon: searchText.isNotEmpty
@@ -754,9 +294,7 @@ Widget build(BuildContext context) {
                   ),
                 )
               : null,
-          contentPadding: const EdgeInsets.symmetric(
-            vertical: 14,
-          ),
+          contentPadding: const EdgeInsets.symmetric(vertical: 14),
         ),
       ),
     );
@@ -810,10 +348,7 @@ Widget build(BuildContext context) {
       children: filteredTopics.map((topic) {
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: _topicCard(
-            context,
-            topic,
-          ),
+          child: _topicCard(context, topic),
         );
       }).toList(),
     );
@@ -823,31 +358,65 @@ Widget build(BuildContext context) {
   // TOPIC CARD
   // =========================================================
 
-  Widget _topicCard(
-    BuildContext context,
-    dynamic topic,
-  ) {
+  Widget _topicCard(BuildContext context, dynamic topic) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final String name =
-        topic['name']?.toString() ?? "Untitled Topic";
+    final String name = topic['name']?.toString() ?? "Untitled Topic";
 
     final String description =
         topic['description']?.toString() ?? "No description available";
 
-    final String? image =
-        topic['coverImage']?.toString();
+    final String? image = topic['coverImage']?.toString();
 
-    final String status =
-        topic['status']?.toString() ?? "active";
+    final String status = topic['status']?.toString() ?? "active";
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
+        // onTap: () {
+        //   // Topic detail page
+
+        //   final topicId = int.tryParse(topic['id']?.toString() ?? '');
+
+        //   if (topicId == null) {
+        //     ScaffoldMessenger.of(
+        //       context,
+        //     ).showSnackBar(const SnackBar(content: Text('Invalid topic ID')));
+        //     return;
+        //   }
+
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (_) => NotesPage(topicId: topicId, topicName: name),
+        //     ),
+        //   );
+        // },
         onTap: () {
-          // Topic detail page
+          final topicId = int.tryParse(topic['id']?.toString() ?? '');
+
+          if (topicId == null) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text('Invalid topic ID')));
+            return;
+          }
+
+          if (widget.onTopicSelected != null) {
+            widget.onTopicSelected!(topicId, name);
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => NotesPage(topicId: topicId, topicName: name),
+              ),
+            );
+          }
         },
+
+
+        
         borderRadius: BorderRadius.circular(17),
         child: Container(
           width: double.infinity,
@@ -856,9 +425,7 @@ Widget build(BuildContext context) {
             color: theme.cardColor,
             borderRadius: BorderRadius.circular(17),
             border: Border.all(
-              color: isDark
-                  ? const Color(0xFF30303C)
-                  : const Color(0xFFE8E8F0),
+              color: isDark ? const Color(0xFF30303C) : const Color(0xFFE8E8F0),
             ),
             boxShadow: [
               if (!isDark)
@@ -875,18 +442,13 @@ Widget build(BuildContext context) {
               // =================================================
               // IMAGE
               // =================================================
-
-              _topicImage(
-                context,
-                image,
-              ),
+              _topicImage(context, image),
 
               const SizedBox(width: 12),
 
               // =================================================
               // CONTENT
               // =================================================
-
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -901,8 +463,7 @@ Widget build(BuildContext context) {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              color:
-                                  theme.textTheme.titleMedium?.color,
+                              color: theme.textTheme.titleMedium?.color,
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
                             ),
@@ -917,10 +478,7 @@ Widget build(BuildContext context) {
                           child: IconButton(
                             padding: EdgeInsets.zero,
                             onPressed: () {
-                              _showTopicMenu(
-                                context,
-                                topic,
-                              );
+                              _showTopicMenu(context, topic);
                             },
                             icon: Icon(
                               Icons.more_vert_rounded,
@@ -964,20 +522,19 @@ Widget build(BuildContext context) {
                           decoration: BoxDecoration(
                             color: status.toLowerCase() == "active"
                                 ? (isDark
-                                    ? const Color(0xFF163F31)
-                                    : const Color(0xFFE5F7EF))
+                                      ? const Color(0xFF163F31)
+                                      : const Color(0xFFE5F7EF))
                                 : (isDark
-                                    ? const Color(0xFF39321B)
-                                    : const Color(0xFFFFF3D9)),
+                                      ? const Color(0xFF39321B)
+                                      : const Color(0xFFFFF3D9)),
                             borderRadius: BorderRadius.circular(7),
                           ),
                           child: Text(
                             status,
                             style: TextStyle(
-                              color:
-                                  status.toLowerCase() == "active"
-                                      ? const Color(0xFF159566)
-                                      : const Color(0xFFB17A00),
+                              color: status.toLowerCase() == "active"
+                                  ? const Color(0xFF159566)
+                                  : const Color(0xFFB17A00),
                               fontSize: 9.5,
                               fontWeight: FontWeight.w600,
                             ),
@@ -1021,32 +578,22 @@ Widget build(BuildContext context) {
   // TOPIC IMAGE
   // =========================================================
 
-  Widget _topicImage(
-    BuildContext context,
-    String? image,
-  ) {
-    final isDark =
-        Theme.of(context).brightness == Brightness.dark;
+  Widget _topicImage(BuildContext context, String? image) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(13),
       child: SizedBox(
         width: 80,
         height: 90,
-        child: image != null &&
-                image.isNotEmpty &&
-                image != "null"
+        child: image != null && image.isNotEmpty && image != "null"
             ? Image.network(
                 image,
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) {
                   return _imagePlaceholder(isDark);
                 },
-                loadingBuilder: (
-                  context,
-                  child,
-                  loadingProgress,
-                ) {
+                loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) {
                     return child;
                   }
@@ -1065,9 +612,7 @@ Widget build(BuildContext context) {
 
   Widget _imagePlaceholder(bool isDark) {
     return Container(
-      color: isDark
-          ? const Color(0xFF292844)
-          : const Color(0xFFEDEBFF),
+      color: isDark ? const Color(0xFF292844) : const Color(0xFFEDEBFF),
       child: const Center(
         child: Icon(
           Icons.menu_book_rounded,
@@ -1084,9 +629,7 @@ Widget build(BuildContext context) {
 
   Widget _imageLoading(bool isDark) {
     return Container(
-      color: isDark
-          ? const Color(0xFF292844)
-          : const Color(0xFFF1F1FA),
+      color: isDark ? const Color(0xFF292844) : const Color(0xFFF1F1FA),
       child: const Center(
         child: SizedBox(
           width: 20,
@@ -1104,27 +647,19 @@ Widget build(BuildContext context) {
   // TOPIC MENU
   // =========================================================
 
-  void _showTopicMenu(
-    BuildContext context,
-    dynamic topic,
-  ) {
+  void _showTopicMenu(BuildContext context, dynamic topic) {
     final theme = Theme.of(context);
 
     showModalBottomSheet(
       context: context,
       backgroundColor: theme.cardColor,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(22),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
       ),
       builder: (context) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.only(
-              top: 8,
-              bottom: 12,
-            ),
+            padding: const EdgeInsets.only(top: 8, bottom: 12),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -1132,9 +667,7 @@ Widget build(BuildContext context) {
                 Container(
                   width: 38,
                   height: 4,
-                  margin: const EdgeInsets.only(
-                    bottom: 10,
-                  ),
+                  margin: const EdgeInsets.only(bottom: 10),
                   decoration: BoxDecoration(
                     color: Colors.grey.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(10),
@@ -1197,19 +730,14 @@ Widget build(BuildContext context) {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 45,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 45),
       child: Column(
         children: [
           Container(
             width: 76,
             height: 76,
             decoration: BoxDecoration(
-              color: isDark
-                  ? const Color(0xFF292844)
-                  : const Color(0xFFEDEBFF),
+              color: isDark ? const Color(0xFF292844) : const Color(0xFFEDEBFF),
               borderRadius: BorderRadius.circular(23),
             ),
             child: const Icon(
@@ -1222,9 +750,7 @@ Widget build(BuildContext context) {
           const SizedBox(height: 16),
 
           Text(
-            searchText.isNotEmpty
-                ? "No topics found"
-                : "No topics yet",
+            searchText.isNotEmpty ? "No topics found" : "No topics yet",
             style: TextStyle(
               color: theme.textTheme.titleMedium?.color,
               fontSize: 17,
@@ -1251,10 +777,7 @@ Widget build(BuildContext context) {
 
             ElevatedButton.icon(
               onPressed: _openCreateTopic,
-              icon: const Icon(
-                Icons.add_rounded,
-                size: 19,
-              ),
+              icon: const Icon(Icons.add_rounded, size: 19),
               label: const Text("Create Topic"),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF5B5CEB),
@@ -1288,11 +811,7 @@ Widget build(BuildContext context) {
       children: [
         const SizedBox(height: 100),
 
-        Icon(
-          Icons.error_outline_rounded,
-          color: Colors.red.shade400,
-          size: 50,
-        ),
+        Icon(Icons.error_outline_rounded, color: Colors.red.shade400, size: 50),
 
         const SizedBox(height: 15),
 
@@ -1344,9 +863,7 @@ Widget build(BuildContext context) {
   void _openCreateTopic() async {
     await Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => const TopicsForm(),
-      ),
+      MaterialPageRoute(builder: (context) => const TopicsForm()),
     );
 
     // Form se wapas aane ke baad
@@ -1354,390 +871,3 @@ Widget build(BuildContext context) {
     getTopics();
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-
-// import 'package:my_notebook/theme/theme_provider.dart';
-// import 'package:my_notebook/services/api_services.dart';
-// import 'package:my_notebook/user/pages/topics/topic_form.dart';
-
-// class TopicsPage extends StatefulWidget {
-//   final ValueChanged<int>? onPageSelected;
-
-//   const TopicsPage({
-//     super.key,
-//     this.onPageSelected,
-//   });
-
-//   @override
-//   State<TopicsPage> createState() => _TopicsPageState();
-// }
-
-// class _TopicsPageState extends State<TopicsPage> {
-//   List<dynamic> topics = [];
-
-//   bool isloading = true;
-//   String? errorMessage;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     getTopics();
-//   }
-
-//   Future<void> getTopics() async {
-//     if (!mounted) return;
-
-//     setState(() {
-//       isloading = true;
-//       errorMessage = null;
-//     });
-
-//     try {
-//       final data = await ApiServices().getTopicsAPI();
-
-//       if (!mounted) return;
-
-//       setState(() {
-//         topics = data;
-//         isloading = false;
-//         errorMessage = null;
-//       });
-//     } catch (e) {
-//       debugPrint('TOPICS API ERROR: $e');
-
-//       if (!mounted) return;
-
-//       setState(() {
-//         isloading = false;
-//         errorMessage = e.toString();
-//       });
-//     }
-//   }
-
-//   Future<void> _openTopicForm() async {
-//     await Navigator.push(
-//       context,
-//       MaterialPageRoute(
-//         builder: (context) => const TopicsForm(),
-//       ),
-//     );
-
-//     if (!mounted) return;
-
-//     await getTopics();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final themeProvider = Provider.of<ThemeProvider>(context);
-//     final isDark = themeProvider.isDarkMode;
-
-//     final backgroundColor =
-//         isDark ? const Color(0xFF121218) : const Color(0xFFF8F8FC);
-
-//     final cardColor =
-//         isDark ? Colors.grey.shade900 : Colors.white;
-
-//     final titleColor =
-//         isDark ? Colors.white : Colors.black87;
-
-//     final descriptionColor =
-//         isDark ? Colors.white70 : Colors.black54;
-
-//     return Container(
-//       color: backgroundColor,
-//       child: Stack(
-//         children: [
-//           Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Padding(
-//                 padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
-//                 child: Row(
-//                   children: [
-//                     Expanded(
-//                       child: Text(
-//                         'My Topics',
-//                         style: TextStyle(
-//                           color: titleColor,
-//                           fontSize: 24,
-//                           fontWeight: FontWeight.bold,
-//                         ),
-//                       ),
-//                     ),
-//                     IconButton(
-//                       tooltip: 'Refresh topics',
-//                       onPressed: isloading ? null : getTopics,
-//                       icon: Icon(
-//                         Icons.refresh_rounded,
-//                         color: titleColor,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-
-//               Expanded(
-//                 child: _buildBody(
-//                   isDark: isDark,
-//                   cardColor: cardColor,
-//                   titleColor: titleColor,
-//                   descriptionColor: descriptionColor,
-//                 ),
-//               ),
-//             ],
-//           ),
-
-//           Positioned(
-//             right: 20,
-//             bottom: 20,
-//             child: FloatingActionButton(
-//               heroTag: 'topics_add_button',
-//               onPressed: _openTopicForm,
-//               tooltip: 'Create Topic',
-//               child: const Icon(Icons.add),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-
-//   Widget _buildBody({
-//     required bool isDark,
-//     required Color cardColor,
-//     required Color titleColor,
-//     required Color descriptionColor,
-//   }) {
-//     if (isloading) {
-//       return const Center(
-//         child: CircularProgressIndicator(),
-//       );
-//     }
-
-//     if (errorMessage != null) {
-//       return Center(
-//         child: Padding(
-//           padding: const EdgeInsets.all(24),
-//           child: Column(
-//             mainAxisSize: MainAxisSize.min,
-//             children: [
-//               Icon(
-//                 Icons.error_outline_rounded,
-//                 size: 42,
-//                 color: isDark ? Colors.red[300] : Colors.red,
-//               ),
-//               const SizedBox(height: 12),
-//               Text(
-//                 'Unable to load topics',
-//                 style: TextStyle(
-//                   color: titleColor,
-//                   fontSize: 18,
-//                   fontWeight: FontWeight.w600,
-//                 ),
-//               ),
-//               const SizedBox(height: 8),
-//               Text(
-//                 errorMessage!,
-//                 textAlign: TextAlign.center,
-//                 style: TextStyle(
-//                   color: descriptionColor,
-//                   fontSize: 13,
-//                 ),
-//               ),
-//               const SizedBox(height: 16),
-//               ElevatedButton.icon(
-//                 onPressed: getTopics,
-//                 icon: const Icon(Icons.refresh),
-//                 label: const Text('Try Again'),
-//               ),
-//             ],
-//           ),
-//         ),
-//       );
-//     }
-
-//     if (topics.isEmpty) {
-//       return Center(
-//         child: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             Icon(
-//               Icons.topic_outlined,
-//               size: 54,
-//               color: descriptionColor,
-//             ),
-//             const SizedBox(height: 12),
-//             Text(
-//               'No Topics Found',
-//               style: TextStyle(
-//                 color: titleColor,
-//                 fontSize: 18,
-//                 fontWeight: FontWeight.w500,
-//               ),
-//             ),
-//             const SizedBox(height: 8),
-//             Text(
-//               'Tap + to create your first topic.',
-//               style: TextStyle(
-//                 color: descriptionColor,
-//                 fontSize: 14,
-//               ),
-//             ),
-//           ],
-//         ),
-//       );
-//     }
-
-//     return RefreshIndicator(
-//       onRefresh: getTopics,
-//       child: ListView.builder(
-//         padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
-//         itemCount: topics.length,
-//         itemBuilder: (context, index) {
-//           final topic = topics[index];
-
-//           final imageUrl = topic['coverImage']?.toString();
-//           final name = topic['name']?.toString() ?? 'Untitled Topic';
-//           final description =
-//               topic['description']?.toString() ?? '';
-
-//           return Container(
-//             margin: const EdgeInsets.only(bottom: 16),
-//             decoration: BoxDecoration(
-//               color: cardColor,
-//               borderRadius: BorderRadius.circular(16),
-//               boxShadow: [
-//                 BoxShadow(
-//                   color: isDark ? Colors.black26 : Colors.black12,
-//                   blurRadius: 10,
-//                   offset: const Offset(0, 4),
-//                 ),
-//               ],
-//             ),
-//             child: Padding(
-//               padding: const EdgeInsets.all(14),
-//               child: Row(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   Expanded(
-//                     flex: 3,
-//                     child: ClipRRect(
-//                       borderRadius: BorderRadius.circular(12),
-//                       child: imageUrl != null && imageUrl.isNotEmpty
-//                           ? Image.network(
-//                               imageUrl,
-//                               height: 110,
-//                               fit: BoxFit.cover,
-//                               errorBuilder: (context, error, stackTrace) {
-//                                 return _imagePlaceholder(isDark);
-//                               },
-//                             )
-//                           : _imagePlaceholder(isDark),
-//                     ),
-//                   ),
-//                   const SizedBox(width: 14),
-//                   Expanded(
-//                     flex: 7,
-//                     child: Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         Text(
-//                           name,
-//                           maxLines: 1,
-//                           overflow: TextOverflow.ellipsis,
-//                           style: TextStyle(
-//                             color: titleColor,
-//                             fontSize: 18,
-//                             fontWeight: FontWeight.bold,
-//                           ),
-//                         ),
-//                         const SizedBox(height: 6),
-//                         Text(
-//                           description.isEmpty
-//                               ? 'No description'
-//                               : description,
-//                           maxLines: 3,
-//                           overflow: TextOverflow.ellipsis,
-//                           style: TextStyle(
-//                             color: descriptionColor,
-//                             fontSize: 14,
-//                             height: 1.4,
-//                           ),
-//                         ),
-//                         const SizedBox(height: 12),
-//                         Row(
-//                           mainAxisAlignment: MainAxisAlignment.end,
-//                           children: [
-//                             IconButton(
-//                               tooltip: 'Edit',
-//                               onPressed: () {
-//                                 // Edit functionality was not implemented
-//                                 // in the original TopicsPage.
-//                               },
-//                               icon: Icon(
-//                                 Icons.edit_outlined,
-//                                 color: isDark
-//                                     ? Colors.lightBlue[200]
-//                                     : Colors.blue,
-//                               ),
-//                             ),
-//                             IconButton(
-//                               tooltip: 'Delete',
-//                               onPressed: () {
-//                                 // Delete functionality was not implemented
-//                                 // in the original TopicsPage.
-//                               },
-//                               icon: Icon(
-//                                 Icons.delete_outline,
-//                                 color: isDark
-//                                     ? Colors.red[300]
-//                                     : Colors.red,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-
-//   Widget _imagePlaceholder(bool isDark) {
-//     return Container(
-//       height: 110,
-//       color: isDark ? Colors.blueGrey.shade900 : Colors.grey.shade200,
-//       alignment: Alignment.center,
-//       child: Icon(
-//         Icons.image_outlined,
-//         size: 35,
-//         color: isDark ? Colors.white54 : Colors.grey,
-//       ),
-//     );
-//   }
-// }
-
-
