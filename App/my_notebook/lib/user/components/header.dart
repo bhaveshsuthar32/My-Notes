@@ -589,7 +589,8 @@ class _HeaderState extends State<Header> {
                 ),
                 child: ClipOval(
                   child: Image.network(
-                    "https://i.pravatar.cc/150?img=12",
+                    // "https://i.pravatar.cc/150?img=12",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRD7gYbCl149tU91lp5-CWNRgUCt8wm3fqOa9DgKOtDkA&s=10",
                     fit: BoxFit.cover,
                     errorBuilder: (
                       context,

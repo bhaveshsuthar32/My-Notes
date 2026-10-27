@@ -328,13 +328,13 @@ class _TopicsPageState extends State<TopicsPage> {
           ),
         ),
 
-        const SizedBox(width: 4),
+        // const SizedBox(width: 4),
 
-        Icon(
-          Icons.keyboard_arrow_down_rounded,
-          color: theme.textTheme.bodySmall?.color,
-          size: 18,
-        ),
+        // Icon(
+        //   Icons.keyboard_arrow_down_rounded,
+        //   color: theme.textTheme.bodySmall?.color,
+        //   size: 18,
+        // ),
       ],
     );
   }
@@ -574,6 +574,70 @@ class _TopicsPageState extends State<TopicsPage> {
     );
   }
 
+
+  // Delete Action
+
+  Future<void> _confirmDeleteTopic(dynamic topic) async {
+  final topicId = int.tryParse(topic['id']?.toString() ?? '');
+
+  if (topicId == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Invalid topic ID')),
+    );
+    return;
+  }
+
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('Delete Topic?'),
+      content: const Text(
+        'Are you sure you want to delete this topic?',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext, false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext, true),
+          child: const Text(
+            'Delete',
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  if (confirmed != true || !mounted) return;
+
+  try {
+    await ApiServices().deleteTopicAPI(topicId);
+
+    if (!mounted) return;
+
+    // Remove from the local list immediately.
+    setState(() {
+      topics.removeWhere(
+        (item) => item['id'].toString() == topicId.toString(),
+      );
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Topic deleted successfully'),
+      ),
+    );
+  } catch (e) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to delete topic: $e')),
+    );
+  }
+}
+
   // =========================================================
   // TOPIC IMAGE
   // =========================================================
@@ -710,6 +774,7 @@ class _TopicsPageState extends State<TopicsPage> {
                     Navigator.pop(context);
 
                     // Delete topic
+                    _confirmDeleteTopic(topic);
                   },
                 ),
               ],
