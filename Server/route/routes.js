@@ -28,7 +28,7 @@
 
 
 import express from "express";
-import { getProfile, getUser, login, logout, refreshAccessToken, registerUser } from "../controllers/admin.controller.js";
+import { getProfile, getUser, login, logout, refreshAccessToken, registerUser, verifyRegistrationOTP } from "../controllers/admin.controller.js";
 import { createNotes, deleteNotesById, getNoteDetailsById, getNotesByTopic, getNotesList, getNotesListData, updateNotesLayoutById } from "../controllers/notes.controller.js";
 import { createTopic, deleteTopicById, getTopicList, getTopicListById } from "../controllers/topics.controller.js";
 import upload from "../middleware/upload.js";
@@ -39,6 +39,10 @@ const router = express.Router();
 router.post("/register", registerUser);
 router.post("/login", login);
 router.post("/refresh", refreshAccessToken);
+// otp system
+router.post("/verify-registration-otp", verifyRegistrationOTP);
+
+
 
 router.post("/topics", authMiddleware, upload.single("coverImage"), createTopic);
 router.get("/getTopic", authMiddleware, getTopicList);
