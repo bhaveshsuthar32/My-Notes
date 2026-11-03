@@ -1514,6 +1514,47 @@ Future<Map<String, dynamic>> updateNotesLayoutAPI({
   //   }
   // }
 
+
+  // ============================================================
+// VERIFY REGISTRATION OTP
+// ============================================================
+
+Future<Map<String, dynamic>> verifyRegistrationOTP(
+  String email,
+  String otp,
+) async {
+  try {
+    final res = await http.post(
+      Uri.parse('$baseURL/verify-registration-otp'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'email': email.trim().toLowerCase(),
+        'otp': otp.trim(),
+      }),
+    );
+
+    debugPrint("VERIFY OTP STATUS: ${res.statusCode}");
+    debugPrint("VERIFY OTP RESPONSE: ${res.body}");
+
+    final decoded = jsonDecode(res.body);
+
+    if (res.statusCode == 200 ||
+        res.statusCode == 201) {
+      return Map<String, dynamic>.from(decoded);
+    } else {
+      final message =
+          decoded["message"]?.toString() ??
+              "OTP verification failed";
+
+      throw Exception(message);
+    }
+  } catch (e) {
+    throw Exception("OTP verification error: $e");
+  }
+}
+
 Future<bool> refreshAccessToken() async {
   try {
     final refreshToken = await _getRefreshToken();
